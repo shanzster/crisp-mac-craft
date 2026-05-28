@@ -83,7 +83,7 @@
     background: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
-    letter-spacing: -0.05em;
+    letter-spacing: -0.01em;
     -webkit-font-smoothing: antialiased;
     cursor: url('/cursor.svg') 0 0, auto;
   }
@@ -101,10 +101,10 @@
 
 @layer utilities {
   .tracking-tightest {
-    letter-spacing: -0.1em;
+    letter-spacing: -0.04em;
   }
   .tracking-compressed {
-    letter-spacing: -0.08em;
+    letter-spacing: -0.03em;
   }
   /* Text that looks "selected" like in macOS Finder */
   .selected-text {
@@ -225,6 +225,31 @@
   @keyframes gallery-marquee {
     0%   { transform: translateX(0); }
     100% { transform: translateX(-50%); }
+  }
+
+  /* Marquee animations for work detail page */
+  @keyframes marquee-left {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  @keyframes marquee-right {
+    0%   { transform: translateX(-50%); }
+    100% { transform: translateX(0); }
+  }
+
+  .animate-marquee-left {
+    animation: marquee-left 40s linear infinite;
+  }
+
+  .animate-marquee-right {
+    animation: marquee-right 40s linear infinite;
+  }
+
+  /* Pause on hover */
+  .animate-marquee-left:hover,
+  .animate-marquee-right:hover {
+    animation-play-state: paused;
   }
 
   @keyframes lb-bg-in {

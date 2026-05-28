@@ -274,11 +274,6 @@ function ServiceModal({
   return (
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center p-4"
-      style={{
-        background: "oklch(0.1 0.01 240 / 0.55)",
-        backdropFilter: "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)",
-      }}
       onClick={onClose}
     >
       <div

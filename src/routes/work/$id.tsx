@@ -544,7 +544,7 @@ function WorkDetail() {
           </div>
         ) : null}
 
-        {/* ── 6. Gallery marquee ── */}
+        {/* ── 6. Gallery ── */}
         <div className="mb-10">
           <p className="text-[10px] uppercase tracking-[0.22em] text-foreground/35 mb-4">Everything I Made</p>
           <div className="rounded-[14px] border border-border bg-card overflow-hidden mac-shadow">
@@ -557,41 +557,36 @@ function WorkDetail() {
               <span className="text-[11px] tracking-tight text-foreground/50">gallery.finder</span>
               <span className="text-[10px] tracking-tight text-foreground/30">{galleryPlaceholders.length} items</span>
             </div>
-            {/* Row 1 — scrolls left */}
-            <div className="overflow-hidden border-b border-border py-3">
-              <div
-                className="flex gap-3"
-                style={{ animation: "ticker 25s linear infinite", width: "max-content" }}
-              >
-                {[...galleryPlaceholders, ...galleryPlaceholders].map((_, i) => (
-                  <ImgBox
-                    key={i}
-                    src={galleryItems[i % galleryItems.length]}
-                    color={item.color}
-                    label={`item ${(i % galleryPlaceholders.length) + 1}`}
-                    style={{ width: 140, height: 140, flexShrink: 0, borderRadius: 10 }}
-                  />
+            <div className="py-4 space-y-3 overflow-hidden">
+              {/* Row 1 - Scrolls Left */}
+              <div className="relative flex gap-3 animate-marquee-left">
+                {[...galleryPlaceholders.slice(0, Math.ceil(galleryPlaceholders.length / 2)), ...galleryPlaceholders.slice(0, Math.ceil(galleryPlaceholders.length / 2))].map((_, i) => (
+                  <div key={`row1-${i}`} className="flex-shrink-0" style={{ width: 180 }}>
+                    <ImgBox
+                      src={galleryItems[i % Math.max(galleryItems.length, 1)]}
+                      color={item.color}
+                      label={`item ${i + 1}`}
+                      style={{ height: 160, borderRadius: 10 }}
+                    />
+                  </div>
                 ))}
               </div>
-            </div>
-            {/* Row 2 — scrolls right */}
-            <div className="overflow-hidden py-3">
-              <div
-                className="flex gap-3"
-                style={{
-                  animation: "ticker 30s linear infinite reverse",
-                  width: "max-content",
-                }}
-              >
-                {[...galleryPlaceholders, ...galleryPlaceholders].map((_, i) => (
-                  <ImgBox
-                    key={i}
-                    src={galleryItems[(i + 4) % Math.max(galleryItems.length, 1)]}
-                    color={item.color}
-                    label={`item ${((i + 4) % galleryPlaceholders.length) + 1}`}
-                    style={{ width: 140, height: 140, flexShrink: 0, borderRadius: 10 }}
-                  />
-                ))}
+              
+              {/* Row 2 - Scrolls Right */}
+              <div className="relative flex gap-3 animate-marquee-right">
+                {[...galleryPlaceholders.slice(Math.ceil(galleryPlaceholders.length / 2)), ...galleryPlaceholders.slice(Math.ceil(galleryPlaceholders.length / 2))].map((_, i) => {
+                  const actualIndex = Math.ceil(galleryPlaceholders.length / 2) + i;
+                  return (
+                    <div key={`row2-${i}`} className="flex-shrink-0" style={{ width: 180 }}>
+                      <ImgBox
+                        src={galleryItems[actualIndex % Math.max(galleryItems.length, 1)]}
+                        color={item.color}
+                        label={`item ${actualIndex + 1}`}
+                        style={{ height: 160, borderRadius: 10 }}
+                      />
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>

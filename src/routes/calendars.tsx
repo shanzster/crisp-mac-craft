@@ -2,18 +2,18 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { NavBar } from "@/components/NavBar";
 
-export const Route = createFileRoute("/graphics")({
-  component: GraphicsPage,
+export const Route = createFileRoute("/calendars")({
+  component: CalendarsPage,
   head: () => ({
     meta: [
-      { title: "Graphics — Shanzster" },
-      { name: "description", content: "Brand posts, story templates, promo graphics and more." },
+      { title: "Content Calendars — Shanzster" },
+      { name: "description", content: "Monthly editorial calendars, posting schedules, and campaign timelines." },
     ],
   }),
 });
 
 /* ─── DATA ─── */
-type Graphic = {
+type Calendar = {
   id: string;
   title: string;
   client: string;
@@ -22,44 +22,38 @@ type Graphic = {
   src?: string;
 };
 
-const GRAPHICS: Graphic[] = [
-  { id: "g1",  title: "Steal & Style — Brand Post",    client: "Steal & Style",    category: "Social Post",  bg: "linear-gradient(135deg, oklch(0.22 0.04 290), oklch(0.42 0.18 280))" },
-  { id: "g2",  title: "Story Template",                client: "Steal & Style",    category: "Story",        bg: "linear-gradient(135deg, oklch(0.32 0.12 300), oklch(0.55 0.20 285))" },
-  { id: "g3",  title: "Highlight Cover Set",           client: "Steal & Style",    category: "Profile",      bg: "linear-gradient(135deg, oklch(0.45 0.18 270), oklch(0.65 0.14 300))" },
-  { id: "g4",  title: "Promo Graphic",                 client: "Steal & Style",    category: "Promotion",    bg: "linear-gradient(135deg, oklch(0.60 0.22 285), oklch(0.40 0.20 270))" },
-  { id: "g5",  title: "Caption Card",                  client: "Steal & Style",    category: "Engagement",   bg: "linear-gradient(135deg, oklch(0.50 0.20 275), oklch(0.35 0.16 290))" },
-  { id: "g6",  title: "Collection Launch Graphic",     client: "Steal & Style",    category: "Launch",       bg: "linear-gradient(135deg, oklch(0.38 0.22 280), oklch(0.58 0.18 295))" },
-  { id: "g7",  title: "Destination Post",              client: "Masinloc Tourism", category: "Social Post",  bg: "linear-gradient(135deg, oklch(0.55 0.16 200), oklch(0.72 0.12 210))" },
-  { id: "g8",  title: "Food Feature Post",             client: "Junz Restaurant",  category: "Social Post",  bg: "linear-gradient(135deg, oklch(0.65 0.16 55),  oklch(0.78 0.12 70))"  },
-  { id: "g9",  title: "Product Showcase",              client: "CSA Print",        category: "Showcase",     bg: "linear-gradient(135deg, oklch(0.50 0.14 255), oklch(0.68 0.10 270))" },
-  { id: "g10", title: "Event Announcement",            client: "Masinloc Tourism", category: "Event",        bg: "linear-gradient(135deg, oklch(0.60 0.14 220), oklch(0.75 0.10 230))" },
-  { id: "g11", title: "Brand Voice Post",              client: "Steal & Style",    category: "Engagement",   bg: "linear-gradient(135deg, oklch(0.45 0.16 240), oklch(0.62 0.12 250))" },
-  { id: "g12", title: "Weekend Special Promo",         client: "Junz Restaurant",  category: "Promotion",    bg: "linear-gradient(135deg, oklch(0.70 0.14 60),  oklch(0.82 0.10 75))"  },
+const CALENDARS: Calendar[] = [
+  { id: "cal1", title: "Steal & Style — October 2024",    client: "Steal & Style",    category: "Monthly",   bg: "linear-gradient(135deg, oklch(0.55 0.14 240), oklch(0.72 0.10 250))" },
+  { id: "cal2", title: "Masinloc Tourism — Q4 2024",      client: "Masinloc Tourism", category: "Quarterly", bg: "linear-gradient(135deg, oklch(0.60 0.14 220), oklch(0.75 0.10 230))" },
+  { id: "cal3", title: "Junz Restaurant — November 2024", client: "Junz Restaurant",  category: "Monthly",   bg: "linear-gradient(135deg, oklch(0.65 0.14 55),  oklch(0.78 0.10 65))"  },
+  { id: "cal4", title: "CSA Print — Campaign Brief",      client: "CSA Print",        category: "Campaign",  bg: "linear-gradient(135deg, oklch(0.55 0.12 270), oklch(0.68 0.10 280))" },
+  { id: "cal5", title: "Holiday Campaign Timeline",       client: "Steal & Style",    category: "Campaign",  bg: "linear-gradient(135deg, oklch(0.50 0.16 240), oklch(0.65 0.12 255))" },
+  { id: "cal6", title: "Summer Content Strategy",         client: "Masinloc Tourism", category: "Seasonal",  bg: "linear-gradient(135deg, oklch(0.58 0.14 210), oklch(0.72 0.10 220))" },
 ];
 
-/* ─── GRAPHIC CARD ─── */
-function GraphicCard({ graphic, onClick }: { graphic: Graphic; onClick: () => void }) {
+/* ─── CALENDAR CARD ─── */
+function CalendarCard({ calendar, onClick }: { calendar: Calendar; onClick: () => void }) {
   return (
     <button 
       onClick={onClick}
       className="group relative w-full text-left cursor-pointer"
     >
-      {/* Graphic Preview */}
+      {/* Calendar Preview */}
       <div 
         className="relative w-full rounded-lg overflow-hidden border border-border/20 transition-all duration-300 hover:border-border/40 hover:shadow-lg hover:scale-[1.02]"
-        style={{ aspectRatio: "1 / 1", background: graphic.bg }}
+        style={{ aspectRatio: "16 / 9", background: calendar.bg }}
       >
-        {graphic.src ? (
+        {calendar.src ? (
           <img 
-            src={graphic.src} 
-            alt={graphic.title} 
+            src={calendar.src} 
+            alt={calendar.title} 
             className="w-full h-full object-contain"
           />
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center gap-2">
-            <span className="text-white/10 text-[32px]">✦</span>
+            <span className="text-white/10 text-[32px]">◈</span>
             <p className="text-white/12 text-[10px] tracking-[0.14em] uppercase">
-              Add Graphic
+              Add Calendar
             </p>
           </div>
         )}
@@ -67,7 +61,7 @@ function GraphicCard({ graphic, onClick }: { graphic: Graphic; onClick: () => vo
         {/* Category Badge */}
         <div className="absolute top-3 left-3">
           <span className="inline-block px-2.5 py-1 rounded-full bg-background/90 backdrop-blur-sm text-[9px] uppercase tracking-[0.2em] text-foreground/60 border border-border/30">
-            {graphic.category}
+            {calendar.category}
           </span>
         </div>
         
@@ -84,10 +78,10 @@ function GraphicCard({ graphic, onClick }: { graphic: Graphic; onClick: () => vo
       {/* Info */}
       <div className="mt-3">
         <h3 className="text-[13px] font-semibold tracking-tight text-foreground leading-snug group-hover:text-foreground/70 transition-colors">
-          {graphic.title}
+          {calendar.title}
         </h3>
         <p className="text-[11px] tracking-tight text-foreground/50 mt-1">
-          {graphic.client}
+          {calendar.client}
         </p>
       </div>
     </button>
@@ -96,14 +90,14 @@ function GraphicCard({ graphic, onClick }: { graphic: Graphic; onClick: () => vo
 
 /* ─── FULL VIEW MODAL ─── */
 function FullViewModal({ 
-  graphic, 
+  calendar, 
   onClose, 
   onNext, 
   onPrev,
   currentIndex,
   total
 }: { 
-  graphic: Graphic; 
+  calendar: Calendar; 
   onClose: () => void;
   onNext: () => void;
   onPrev: () => void;
@@ -157,22 +151,22 @@ function FullViewModal({
         className="relative max-w-5xl max-h-[85vh] w-full mx-6"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Graphic Display */}
+        {/* Calendar Display */}
         <div 
           className="relative w-full rounded-xl overflow-hidden border border-border shadow-2xl"
-          style={{ aspectRatio: "1 / 1", background: graphic.bg }}
+          style={{ aspectRatio: "16 / 9", background: calendar.bg }}
         >
-          {graphic.src ? (
+          {calendar.src ? (
             <img 
-              src={graphic.src} 
-              alt={graphic.title} 
+              src={calendar.src} 
+              alt={calendar.title} 
               className="w-full h-full object-contain"
             />
           ) : (
             <div className="w-full h-full flex flex-col items-center justify-center gap-3">
-              <span className="text-white/10 text-[48px]">✦</span>
+              <span className="text-white/10 text-[48px]">◈</span>
               <p className="text-white/12 text-[12px] tracking-[0.14em] uppercase">
-                Add Graphic
+                Add Calendar
               </p>
             </div>
           )}
@@ -183,17 +177,17 @@ function FullViewModal({
           <div>
             <div className="flex items-center gap-2 mb-2">
               <span className="inline-block px-2.5 py-1 rounded-full bg-card border border-border text-[9px] uppercase tracking-[0.2em] text-foreground/60">
-                {graphic.category}
+                {calendar.category}
               </span>
               <span className="text-[10px] text-foreground/30">
                 {currentIndex + 1} / {total}
               </span>
             </div>
             <h2 className="text-[18px] font-semibold tracking-tight text-foreground leading-snug">
-              {graphic.title}
+              {calendar.title}
             </h2>
             <p className="text-[13px] tracking-tight text-foreground/50 mt-1">
-              {graphic.client}
+              {calendar.client}
             </p>
           </div>
         </div>
@@ -203,24 +197,24 @@ function FullViewModal({
 }
 
 /* ─── PAGE ─── */
-function GraphicsPage() {
-  const [selectedGraphic, setSelectedGraphic] = useState<Graphic | null>(null);
+function CalendarsPage() {
+  const [selectedCalendar, setSelectedCalendar] = useState<Calendar | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
 
-  const openGraphic = (graphic: Graphic, index: number) => {
-    setSelectedGraphic(graphic);
+  const openCalendar = (calendar: Calendar, index: number) => {
+    setSelectedCalendar(calendar);
     setSelectedIndex(index);
   };
 
-  const closeGraphic = () => {
-    setSelectedGraphic(null);
+  const closeCalendar = () => {
+    setSelectedCalendar(null);
   };
 
   const goToNext = () => {
-    if (selectedIndex < GRAPHICS.length - 1) {
+    if (selectedIndex < CALENDARS.length - 1) {
       const nextIndex = selectedIndex + 1;
       setSelectedIndex(nextIndex);
-      setSelectedGraphic(GRAPHICS[nextIndex]);
+      setSelectedCalendar(CALENDARS[nextIndex]);
     }
   };
 
@@ -228,23 +222,9 @@ function GraphicsPage() {
     if (selectedIndex > 0) {
       const prevIndex = selectedIndex - 1;
       setSelectedIndex(prevIndex);
-      setSelectedGraphic(GRAPHICS[prevIndex]);
+      setSelectedCalendar(CALENDARS[prevIndex]);
     }
   };
-
-  // Keyboard navigation
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (!selectedGraphic) return;
-    
-    if (e.key === "Escape") closeGraphic();
-    if (e.key === "ArrowRight") goToNext();
-    if (e.key === "ArrowLeft") goToPrev();
-  };
-
-  // Add keyboard listener
-  if (typeof window !== "undefined") {
-    window.addEventListener("keydown", handleKeyDown);
-  }
 
   return (
     <div className="min-h-screen bg-background pb-32">
@@ -260,40 +240,40 @@ function GraphicsPage() {
         {/* Header */}
         <div className="mb-12">
           <p className="text-[10px] uppercase tracking-[0.26em] text-foreground/35 mb-3">
-            Gallery · Graphics
+            Gallery · Calendars
           </p>
           <h1 
             className="font-bold tracking-tightest text-foreground leading-[0.88]" 
             style={{ fontSize: "clamp(36px, 5vw, 64px)" }}
           >
-            Graphics & Visuals
+            Content Calendars
           </h1>
           <p className="mt-3 text-[13px] tracking-tight text-foreground/40 max-w-md">
-            Brand posts, story templates, promo graphics and more — {GRAPHICS.length} pieces showcasing social media design work.
+            Monthly editorial calendars, posting schedules, and campaign timelines — {CALENDARS.length} planning documents.
           </p>
         </div>
 
-        {/* Graphics Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
-          {GRAPHICS.map((graphic, index) => (
-            <GraphicCard 
-              key={graphic.id} 
-              graphic={graphic} 
-              onClick={() => openGraphic(graphic, index)}
+        {/* Calendars Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 lg:gap-10">
+          {CALENDARS.map((calendar, index) => (
+            <CalendarCard 
+              key={calendar.id} 
+              calendar={calendar} 
+              onClick={() => openCalendar(calendar, index)}
             />
           ))}
         </div>
       </main>
 
       {/* Full View Modal */}
-      {selectedGraphic && (
+      {selectedCalendar && (
         <FullViewModal
-          graphic={selectedGraphic}
-          onClose={closeGraphic}
+          calendar={selectedCalendar}
+          onClose={closeCalendar}
           onNext={goToNext}
           onPrev={goToPrev}
           currentIndex={selectedIndex}
-          total={GRAPHICS.length}
+          total={CALENDARS.length}
         />
       )}
     </div>

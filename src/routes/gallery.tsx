@@ -289,6 +289,12 @@ function GalleryPage() {
   function handleFolderClick(folder: Folder) {
     if (folder.id === "graphics") {
       navigate({ to: "/graphics" });
+    } else if (folder.id === "videos") {
+      navigate({ to: "/videos" });
+    } else if (folder.id === "calendars") {
+      navigate({ to: "/calendars" });
+    } else if (folder.id === "ads") {
+      navigate({ to: "/ads" });
     } else {
       setOpenFolder(folder);
     }

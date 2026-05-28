@@ -2,18 +2,18 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { NavBar } from "@/components/NavBar";
 
-export const Route = createFileRoute("/graphics")({
-  component: GraphicsPage,
+export const Route = createFileRoute("/ads")({
+  component: AdsPage,
   head: () => ({
     meta: [
-      { title: "Graphics — Shanzster" },
-      { name: "description", content: "Brand posts, story templates, promo graphics and more." },
+      { title: "Campaign Ads — Shanzster" },
+      { name: "description", content: "Meta ad creatives, story ads, carousel frames, and A/B test variants." },
     ],
   }),
 });
 
 /* ─── DATA ─── */
-type Graphic = {
+type Ad = {
   id: string;
   title: string;
   client: string;
@@ -22,44 +22,40 @@ type Graphic = {
   src?: string;
 };
 
-const GRAPHICS: Graphic[] = [
-  { id: "g1",  title: "Steal & Style — Brand Post",    client: "Steal & Style",    category: "Social Post",  bg: "linear-gradient(135deg, oklch(0.22 0.04 290), oklch(0.42 0.18 280))" },
-  { id: "g2",  title: "Story Template",                client: "Steal & Style",    category: "Story",        bg: "linear-gradient(135deg, oklch(0.32 0.12 300), oklch(0.55 0.20 285))" },
-  { id: "g3",  title: "Highlight Cover Set",           client: "Steal & Style",    category: "Profile",      bg: "linear-gradient(135deg, oklch(0.45 0.18 270), oklch(0.65 0.14 300))" },
-  { id: "g4",  title: "Promo Graphic",                 client: "Steal & Style",    category: "Promotion",    bg: "linear-gradient(135deg, oklch(0.60 0.22 285), oklch(0.40 0.20 270))" },
-  { id: "g5",  title: "Caption Card",                  client: "Steal & Style",    category: "Engagement",   bg: "linear-gradient(135deg, oklch(0.50 0.20 275), oklch(0.35 0.16 290))" },
-  { id: "g6",  title: "Collection Launch Graphic",     client: "Steal & Style",    category: "Launch",       bg: "linear-gradient(135deg, oklch(0.38 0.22 280), oklch(0.58 0.18 295))" },
-  { id: "g7",  title: "Destination Post",              client: "Masinloc Tourism", category: "Social Post",  bg: "linear-gradient(135deg, oklch(0.55 0.16 200), oklch(0.72 0.12 210))" },
-  { id: "g8",  title: "Food Feature Post",             client: "Junz Restaurant",  category: "Social Post",  bg: "linear-gradient(135deg, oklch(0.65 0.16 55),  oklch(0.78 0.12 70))"  },
-  { id: "g9",  title: "Product Showcase",              client: "CSA Print",        category: "Showcase",     bg: "linear-gradient(135deg, oklch(0.50 0.14 255), oklch(0.68 0.10 270))" },
-  { id: "g10", title: "Event Announcement",            client: "Masinloc Tourism", category: "Event",        bg: "linear-gradient(135deg, oklch(0.60 0.14 220), oklch(0.75 0.10 230))" },
-  { id: "g11", title: "Brand Voice Post",              client: "Steal & Style",    category: "Engagement",   bg: "linear-gradient(135deg, oklch(0.45 0.16 240), oklch(0.62 0.12 250))" },
-  { id: "g12", title: "Weekend Special Promo",         client: "Junz Restaurant",  category: "Promotion",    bg: "linear-gradient(135deg, oklch(0.70 0.14 60),  oklch(0.82 0.10 75))"  },
+const ADS: Ad[] = [
+  { id: "a1", title: "Meta Ad Creative",      client: "CSA Print",       category: "Meta Ads",  bg: "linear-gradient(135deg, oklch(0.38 0.20 255), oklch(0.55 0.18 260))" },
+  { id: "a2", title: "Story Ad",              client: "Junz Restaurant", category: "Stories",   bg: "linear-gradient(135deg, oklch(0.45 0.22 250), oklch(0.62 0.16 265))" },
+  { id: "a3", title: "Carousel Ad Frame",     client: "Steal & Style",   category: "Carousel",  bg: "linear-gradient(135deg, oklch(0.30 0.16 255), oklch(0.50 0.20 258))" },
+  { id: "a4", title: "A/B Test Variant",      client: "CSA Print",       category: "Testing",   bg: "linear-gradient(135deg, oklch(0.48 0.20 258), oklch(0.65 0.14 265))" },
+  { id: "a5", title: "Lookalike Audience Ad", client: "Steal & Style",   category: "Meta Ads",  bg: "linear-gradient(135deg, oklch(0.35 0.22 252), oklch(0.52 0.18 260))" },
+  { id: "a6", title: "Retargeting Creative",  client: "Junz Restaurant", category: "Retarget",  bg: "linear-gradient(135deg, oklch(0.42 0.18 255), oklch(0.58 0.14 262))" },
+  { id: "a7", title: "Lead Generation Ad",    client: "Masinloc Tourism",category: "Lead Gen",  bg: "linear-gradient(135deg, oklch(0.40 0.20 250), oklch(0.60 0.16 260))" },
+  { id: "a8", title: "Video Ad Creative",     client: "Steal & Style",   category: "Video Ads", bg: "linear-gradient(135deg, oklch(0.36 0.18 255), oklch(0.54 0.16 258))" },
 ];
 
-/* ─── GRAPHIC CARD ─── */
-function GraphicCard({ graphic, onClick }: { graphic: Graphic; onClick: () => void }) {
+/* ─── AD CARD ─── */
+function AdCard({ ad, onClick }: { ad: Ad; onClick: () => void }) {
   return (
     <button 
       onClick={onClick}
       className="group relative w-full text-left cursor-pointer"
     >
-      {/* Graphic Preview */}
+      {/* Ad Preview */}
       <div 
         className="relative w-full rounded-lg overflow-hidden border border-border/20 transition-all duration-300 hover:border-border/40 hover:shadow-lg hover:scale-[1.02]"
-        style={{ aspectRatio: "1 / 1", background: graphic.bg }}
+        style={{ aspectRatio: "1 / 1", background: ad.bg }}
       >
-        {graphic.src ? (
+        {ad.src ? (
           <img 
-            src={graphic.src} 
-            alt={graphic.title} 
+            src={ad.src} 
+            alt={ad.title} 
             className="w-full h-full object-contain"
           />
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center gap-2">
-            <span className="text-white/10 text-[32px]">✦</span>
+            <span className="text-white/10 text-[32px]">⬡</span>
             <p className="text-white/12 text-[10px] tracking-[0.14em] uppercase">
-              Add Graphic
+              Add Ad
             </p>
           </div>
         )}
@@ -67,7 +63,7 @@ function GraphicCard({ graphic, onClick }: { graphic: Graphic; onClick: () => vo
         {/* Category Badge */}
         <div className="absolute top-3 left-3">
           <span className="inline-block px-2.5 py-1 rounded-full bg-background/90 backdrop-blur-sm text-[9px] uppercase tracking-[0.2em] text-foreground/60 border border-border/30">
-            {graphic.category}
+            {ad.category}
           </span>
         </div>
         
@@ -84,10 +80,10 @@ function GraphicCard({ graphic, onClick }: { graphic: Graphic; onClick: () => vo
       {/* Info */}
       <div className="mt-3">
         <h3 className="text-[13px] font-semibold tracking-tight text-foreground leading-snug group-hover:text-foreground/70 transition-colors">
-          {graphic.title}
+          {ad.title}
         </h3>
         <p className="text-[11px] tracking-tight text-foreground/50 mt-1">
-          {graphic.client}
+          {ad.client}
         </p>
       </div>
     </button>
@@ -96,14 +92,14 @@ function GraphicCard({ graphic, onClick }: { graphic: Graphic; onClick: () => vo
 
 /* ─── FULL VIEW MODAL ─── */
 function FullViewModal({ 
-  graphic, 
+  ad, 
   onClose, 
   onNext, 
   onPrev,
   currentIndex,
   total
 }: { 
-  graphic: Graphic; 
+  ad: Ad; 
   onClose: () => void;
   onNext: () => void;
   onPrev: () => void;
@@ -154,25 +150,25 @@ function FullViewModal({
 
       {/* Content */}
       <div 
-        className="relative max-w-5xl max-h-[85vh] w-full mx-6"
+        className="relative max-w-3xl max-h-[85vh] w-full mx-6"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Graphic Display */}
+        {/* Ad Display */}
         <div 
           className="relative w-full rounded-xl overflow-hidden border border-border shadow-2xl"
-          style={{ aspectRatio: "1 / 1", background: graphic.bg }}
+          style={{ aspectRatio: "1 / 1", background: ad.bg }}
         >
-          {graphic.src ? (
+          {ad.src ? (
             <img 
-              src={graphic.src} 
-              alt={graphic.title} 
+              src={ad.src} 
+              alt={ad.title} 
               className="w-full h-full object-contain"
             />
           ) : (
             <div className="w-full h-full flex flex-col items-center justify-center gap-3">
-              <span className="text-white/10 text-[48px]">✦</span>
+              <span className="text-white/10 text-[48px]">⬡</span>
               <p className="text-white/12 text-[12px] tracking-[0.14em] uppercase">
-                Add Graphic
+                Add Ad
               </p>
             </div>
           )}
@@ -183,17 +179,17 @@ function FullViewModal({
           <div>
             <div className="flex items-center gap-2 mb-2">
               <span className="inline-block px-2.5 py-1 rounded-full bg-card border border-border text-[9px] uppercase tracking-[0.2em] text-foreground/60">
-                {graphic.category}
+                {ad.category}
               </span>
               <span className="text-[10px] text-foreground/30">
                 {currentIndex + 1} / {total}
               </span>
             </div>
             <h2 className="text-[18px] font-semibold tracking-tight text-foreground leading-snug">
-              {graphic.title}
+              {ad.title}
             </h2>
             <p className="text-[13px] tracking-tight text-foreground/50 mt-1">
-              {graphic.client}
+              {ad.client}
             </p>
           </div>
         </div>
@@ -203,24 +199,24 @@ function FullViewModal({
 }
 
 /* ─── PAGE ─── */
-function GraphicsPage() {
-  const [selectedGraphic, setSelectedGraphic] = useState<Graphic | null>(null);
+function AdsPage() {
+  const [selectedAd, setSelectedAd] = useState<Ad | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
 
-  const openGraphic = (graphic: Graphic, index: number) => {
-    setSelectedGraphic(graphic);
+  const openAd = (ad: Ad, index: number) => {
+    setSelectedAd(ad);
     setSelectedIndex(index);
   };
 
-  const closeGraphic = () => {
-    setSelectedGraphic(null);
+  const closeAd = () => {
+    setSelectedAd(null);
   };
 
   const goToNext = () => {
-    if (selectedIndex < GRAPHICS.length - 1) {
+    if (selectedIndex < ADS.length - 1) {
       const nextIndex = selectedIndex + 1;
       setSelectedIndex(nextIndex);
-      setSelectedGraphic(GRAPHICS[nextIndex]);
+      setSelectedAd(ADS[nextIndex]);
     }
   };
 
@@ -228,23 +224,9 @@ function GraphicsPage() {
     if (selectedIndex > 0) {
       const prevIndex = selectedIndex - 1;
       setSelectedIndex(prevIndex);
-      setSelectedGraphic(GRAPHICS[prevIndex]);
+      setSelectedAd(ADS[prevIndex]);
     }
   };
-
-  // Keyboard navigation
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (!selectedGraphic) return;
-    
-    if (e.key === "Escape") closeGraphic();
-    if (e.key === "ArrowRight") goToNext();
-    if (e.key === "ArrowLeft") goToPrev();
-  };
-
-  // Add keyboard listener
-  if (typeof window !== "undefined") {
-    window.addEventListener("keydown", handleKeyDown);
-  }
 
   return (
     <div className="min-h-screen bg-background pb-32">
@@ -260,40 +242,40 @@ function GraphicsPage() {
         {/* Header */}
         <div className="mb-12">
           <p className="text-[10px] uppercase tracking-[0.26em] text-foreground/35 mb-3">
-            Gallery · Graphics
+            Gallery · Ads
           </p>
           <h1 
             className="font-bold tracking-tightest text-foreground leading-[0.88]" 
             style={{ fontSize: "clamp(36px, 5vw, 64px)" }}
           >
-            Graphics & Visuals
+            Campaign Ads
           </h1>
           <p className="mt-3 text-[13px] tracking-tight text-foreground/40 max-w-md">
-            Brand posts, story templates, promo graphics and more — {GRAPHICS.length} pieces showcasing social media design work.
+            Meta ad creatives, story ads, carousel frames, and A/B test variants — {ADS.length} ad pieces.
           </p>
         </div>
 
-        {/* Graphics Grid */}
+        {/* Ads Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
-          {GRAPHICS.map((graphic, index) => (
-            <GraphicCard 
-              key={graphic.id} 
-              graphic={graphic} 
-              onClick={() => openGraphic(graphic, index)}
+          {ADS.map((ad, index) => (
+            <AdCard 
+              key={ad.id} 
+              ad={ad} 
+              onClick={() => openAd(ad, index)}
             />
           ))}
         </div>
       </main>
 
       {/* Full View Modal */}
-      {selectedGraphic && (
+      {selectedAd && (
         <FullViewModal
-          graphic={selectedGraphic}
-          onClose={closeGraphic}
+          ad={selectedAd}
+          onClose={closeAd}
           onNext={goToNext}
           onPrev={goToPrev}
           currentIndex={selectedIndex}
-          total={GRAPHICS.length}
+          total={ADS.length}
         />
       )}
     </div>

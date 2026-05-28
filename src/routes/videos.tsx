@@ -2,18 +2,18 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { NavBar } from "@/components/NavBar";
 
-export const Route = createFileRoute("/graphics")({
-  component: GraphicsPage,
+export const Route = createFileRoute("/videos")({
+  component: VideosPage,
   head: () => ({
     meta: [
-      { title: "Graphics — Shanzster" },
-      { name: "description", content: "Brand posts, story templates, promo graphics and more." },
+      { title: "Videos & Reels — Shanzster" },
+      { name: "description", content: "Reels, vlogs, promo videos, motion captions, and collection launches." },
     ],
   }),
 });
 
 /* ─── DATA ─── */
-type Graphic = {
+type Video = {
   id: string;
   title: string;
   client: string;
@@ -22,72 +22,70 @@ type Graphic = {
   src?: string;
 };
 
-const GRAPHICS: Graphic[] = [
-  { id: "g1",  title: "Steal & Style — Brand Post",    client: "Steal & Style",    category: "Social Post",  bg: "linear-gradient(135deg, oklch(0.22 0.04 290), oklch(0.42 0.18 280))" },
-  { id: "g2",  title: "Story Template",                client: "Steal & Style",    category: "Story",        bg: "linear-gradient(135deg, oklch(0.32 0.12 300), oklch(0.55 0.20 285))" },
-  { id: "g3",  title: "Highlight Cover Set",           client: "Steal & Style",    category: "Profile",      bg: "linear-gradient(135deg, oklch(0.45 0.18 270), oklch(0.65 0.14 300))" },
-  { id: "g4",  title: "Promo Graphic",                 client: "Steal & Style",    category: "Promotion",    bg: "linear-gradient(135deg, oklch(0.60 0.22 285), oklch(0.40 0.20 270))" },
-  { id: "g5",  title: "Caption Card",                  client: "Steal & Style",    category: "Engagement",   bg: "linear-gradient(135deg, oklch(0.50 0.20 275), oklch(0.35 0.16 290))" },
-  { id: "g6",  title: "Collection Launch Graphic",     client: "Steal & Style",    category: "Launch",       bg: "linear-gradient(135deg, oklch(0.38 0.22 280), oklch(0.58 0.18 295))" },
-  { id: "g7",  title: "Destination Post",              client: "Masinloc Tourism", category: "Social Post",  bg: "linear-gradient(135deg, oklch(0.55 0.16 200), oklch(0.72 0.12 210))" },
-  { id: "g8",  title: "Food Feature Post",             client: "Junz Restaurant",  category: "Social Post",  bg: "linear-gradient(135deg, oklch(0.65 0.16 55),  oklch(0.78 0.12 70))"  },
-  { id: "g9",  title: "Product Showcase",              client: "CSA Print",        category: "Showcase",     bg: "linear-gradient(135deg, oklch(0.50 0.14 255), oklch(0.68 0.10 270))" },
-  { id: "g10", title: "Event Announcement",            client: "Masinloc Tourism", category: "Event",        bg: "linear-gradient(135deg, oklch(0.60 0.14 220), oklch(0.75 0.10 230))" },
-  { id: "g11", title: "Brand Voice Post",              client: "Steal & Style",    category: "Engagement",   bg: "linear-gradient(135deg, oklch(0.45 0.16 240), oklch(0.62 0.12 250))" },
-  { id: "g12", title: "Weekend Special Promo",         client: "Junz Restaurant",  category: "Promotion",    bg: "linear-gradient(135deg, oklch(0.70 0.14 60),  oklch(0.82 0.10 75))"  },
+const VIDEOS: Video[] = [
+  { id: "v1", title: "Collection Launch Reel",   client: "Steal & Style",    category: "Reel",       bg: "linear-gradient(135deg, oklch(0.14 0.02 240), oklch(0.28 0.06 250))" },
+  { id: "v2", title: "Promotional Video",        client: "Masinloc Tourism", category: "Promo",      bg: "linear-gradient(135deg, oklch(0.18 0.03 240), oklch(0.32 0.08 245))" },
+  { id: "v3", title: "Vlog Edit",                client: "Steal & Style",    category: "Vlog",       bg: "linear-gradient(135deg, oklch(0.22 0.04 240), oklch(0.40 0.10 255))" },
+  { id: "v4", title: "Motion Caption Overlay",   client: "Steal & Style",    category: "Motion",     bg: "linear-gradient(135deg, oklch(0.16 0.02 240), oklch(0.30 0.07 248))" },
+  { id: "v5", title: "Freeze Frame Reel",        client: "Steal & Style",    category: "Reel",       bg: "linear-gradient(135deg, oklch(0.20 0.03 240), oklch(0.35 0.09 252))" },
+  { id: "v6", title: "Restaurant Promo",         client: "Junz Restaurant",  category: "Promo",      bg: "linear-gradient(135deg, oklch(0.18 0.02 240), oklch(0.28 0.06 248))" },
+  { id: "v7", title: "Behind the Scenes",        client: "Steal & Style",    category: "BTS",        bg: "linear-gradient(135deg, oklch(0.15 0.02 240), oklch(0.26 0.06 246))" },
+  { id: "v8", title: "Product Showcase Video",   client: "CSA Print",        category: "Showcase",   bg: "linear-gradient(135deg, oklch(0.19 0.03 240), oklch(0.33 0.08 250))" },
 ];
 
-/* ─── GRAPHIC CARD ─── */
-function GraphicCard({ graphic, onClick }: { graphic: Graphic; onClick: () => void }) {
+/* ─── VIDEO CARD ─── */
+function VideoCard({ video, onClick }: { video: Video; onClick: () => void }) {
   return (
     <button 
       onClick={onClick}
       className="group relative w-full text-left cursor-pointer"
     >
-      {/* Graphic Preview */}
+      {/* Video Preview */}
       <div 
         className="relative w-full rounded-lg overflow-hidden border border-border/20 transition-all duration-300 hover:border-border/40 hover:shadow-lg hover:scale-[1.02]"
-        style={{ aspectRatio: "1 / 1", background: graphic.bg }}
+        style={{ aspectRatio: "9 / 16", background: video.bg }}
       >
-        {graphic.src ? (
-          <img 
-            src={graphic.src} 
-            alt={graphic.title} 
-            className="w-full h-full object-contain"
+        {video.src ? (
+          <video 
+            src={video.src} 
+            className="w-full h-full object-cover"
+            muted
+            loop
+            playsInline
           />
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center gap-2">
-            <span className="text-white/10 text-[32px]">✦</span>
+            <span className="text-white/10 text-[32px]">▶</span>
             <p className="text-white/12 text-[10px] tracking-[0.14em] uppercase">
-              Add Graphic
+              Add Video
             </p>
           </div>
         )}
         
+        {/* Play Icon Overlay */}
+        <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/20 transition-colors duration-300">
+          <div className="w-14 h-14 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" className="text-foreground ml-1">
+              <path d="M5 3L17 10L5 17V3Z" />
+            </svg>
+          </div>
+        </div>
+        
         {/* Category Badge */}
         <div className="absolute top-3 left-3">
           <span className="inline-block px-2.5 py-1 rounded-full bg-background/90 backdrop-blur-sm text-[9px] uppercase tracking-[0.2em] text-foreground/60 border border-border/30">
-            {graphic.category}
+            {video.category}
           </span>
-        </div>
-        
-        {/* Hover Overlay */}
-        <div className="absolute inset-0 bg-background/0 group-hover:bg-background/10 transition-colors duration-300 flex items-center justify-center">
-          <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <div className="px-4 py-2 rounded-full bg-background/90 backdrop-blur-sm border border-border text-[11px] tracking-tight text-foreground">
-              View Full Size
-            </div>
-          </div>
         </div>
       </div>
 
       {/* Info */}
       <div className="mt-3">
         <h3 className="text-[13px] font-semibold tracking-tight text-foreground leading-snug group-hover:text-foreground/70 transition-colors">
-          {graphic.title}
+          {video.title}
         </h3>
         <p className="text-[11px] tracking-tight text-foreground/50 mt-1">
-          {graphic.client}
+          {video.client}
         </p>
       </div>
     </button>
@@ -96,14 +94,14 @@ function GraphicCard({ graphic, onClick }: { graphic: Graphic; onClick: () => vo
 
 /* ─── FULL VIEW MODAL ─── */
 function FullViewModal({ 
-  graphic, 
+  video, 
   onClose, 
   onNext, 
   onPrev,
   currentIndex,
   total
 }: { 
-  graphic: Graphic; 
+  video: Video; 
   onClose: () => void;
   onNext: () => void;
   onPrev: () => void;
@@ -154,25 +152,27 @@ function FullViewModal({
 
       {/* Content */}
       <div 
-        className="relative max-w-5xl max-h-[85vh] w-full mx-6"
+        className="relative max-w-2xl max-h-[85vh] w-full mx-6"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Graphic Display */}
+        {/* Video Display */}
         <div 
           className="relative w-full rounded-xl overflow-hidden border border-border shadow-2xl"
-          style={{ aspectRatio: "1 / 1", background: graphic.bg }}
+          style={{ aspectRatio: "9 / 16", background: video.bg }}
         >
-          {graphic.src ? (
-            <img 
-              src={graphic.src} 
-              alt={graphic.title} 
-              className="w-full h-full object-contain"
+          {video.src ? (
+            <video 
+              src={video.src} 
+              className="w-full h-full object-cover"
+              controls
+              autoPlay
+              loop
             />
           ) : (
             <div className="w-full h-full flex flex-col items-center justify-center gap-3">
-              <span className="text-white/10 text-[48px]">✦</span>
+              <span className="text-white/10 text-[48px]">▶</span>
               <p className="text-white/12 text-[12px] tracking-[0.14em] uppercase">
-                Add Graphic
+                Add Video
               </p>
             </div>
           )}
@@ -183,17 +183,17 @@ function FullViewModal({
           <div>
             <div className="flex items-center gap-2 mb-2">
               <span className="inline-block px-2.5 py-1 rounded-full bg-card border border-border text-[9px] uppercase tracking-[0.2em] text-foreground/60">
-                {graphic.category}
+                {video.category}
               </span>
               <span className="text-[10px] text-foreground/30">
                 {currentIndex + 1} / {total}
               </span>
             </div>
             <h2 className="text-[18px] font-semibold tracking-tight text-foreground leading-snug">
-              {graphic.title}
+              {video.title}
             </h2>
             <p className="text-[13px] tracking-tight text-foreground/50 mt-1">
-              {graphic.client}
+              {video.client}
             </p>
           </div>
         </div>
@@ -203,24 +203,24 @@ function FullViewModal({
 }
 
 /* ─── PAGE ─── */
-function GraphicsPage() {
-  const [selectedGraphic, setSelectedGraphic] = useState<Graphic | null>(null);
+function VideosPage() {
+  const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
 
-  const openGraphic = (graphic: Graphic, index: number) => {
-    setSelectedGraphic(graphic);
+  const openVideo = (video: Video, index: number) => {
+    setSelectedVideo(video);
     setSelectedIndex(index);
   };
 
-  const closeGraphic = () => {
-    setSelectedGraphic(null);
+  const closeVideo = () => {
+    setSelectedVideo(null);
   };
 
   const goToNext = () => {
-    if (selectedIndex < GRAPHICS.length - 1) {
+    if (selectedIndex < VIDEOS.length - 1) {
       const nextIndex = selectedIndex + 1;
       setSelectedIndex(nextIndex);
-      setSelectedGraphic(GRAPHICS[nextIndex]);
+      setSelectedVideo(VIDEOS[nextIndex]);
     }
   };
 
@@ -228,23 +228,9 @@ function GraphicsPage() {
     if (selectedIndex > 0) {
       const prevIndex = selectedIndex - 1;
       setSelectedIndex(prevIndex);
-      setSelectedGraphic(GRAPHICS[prevIndex]);
+      setSelectedVideo(VIDEOS[prevIndex]);
     }
   };
-
-  // Keyboard navigation
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (!selectedGraphic) return;
-    
-    if (e.key === "Escape") closeGraphic();
-    if (e.key === "ArrowRight") goToNext();
-    if (e.key === "ArrowLeft") goToPrev();
-  };
-
-  // Add keyboard listener
-  if (typeof window !== "undefined") {
-    window.addEventListener("keydown", handleKeyDown);
-  }
 
   return (
     <div className="min-h-screen bg-background pb-32">
@@ -260,40 +246,40 @@ function GraphicsPage() {
         {/* Header */}
         <div className="mb-12">
           <p className="text-[10px] uppercase tracking-[0.26em] text-foreground/35 mb-3">
-            Gallery · Graphics
+            Gallery · Videos
           </p>
           <h1 
             className="font-bold tracking-tightest text-foreground leading-[0.88]" 
             style={{ fontSize: "clamp(36px, 5vw, 64px)" }}
           >
-            Graphics & Visuals
+            Videos & Reels
           </h1>
           <p className="mt-3 text-[13px] tracking-tight text-foreground/40 max-w-md">
-            Brand posts, story templates, promo graphics and more — {GRAPHICS.length} pieces showcasing social media design work.
+            Reels, vlogs, promo videos, motion captions, and collection launches — {VIDEOS.length} video pieces.
           </p>
         </div>
 
-        {/* Graphics Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
-          {GRAPHICS.map((graphic, index) => (
-            <GraphicCard 
-              key={graphic.id} 
-              graphic={graphic} 
-              onClick={() => openGraphic(graphic, index)}
+        {/* Videos Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 lg:gap-8">
+          {VIDEOS.map((video, index) => (
+            <VideoCard 
+              key={video.id} 
+              video={video} 
+              onClick={() => openVideo(video, index)}
             />
           ))}
         </div>
       </main>
 
       {/* Full View Modal */}
-      {selectedGraphic && (
+      {selectedVideo && (
         <FullViewModal
-          graphic={selectedGraphic}
-          onClose={closeGraphic}
+          video={selectedVideo}
+          onClose={closeVideo}
           onNext={goToNext}
           onPrev={goToPrev}
           currentIndex={selectedIndex}
-          total={GRAPHICS.length}
+          total={VIDEOS.length}
         />
       )}
     </div>
