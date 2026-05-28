@@ -8,6 +8,12 @@ import { AboutScene } from "@/components/AboutScene";
 import { WorkFolderScene } from "@/components/WorkFolder";
 import { WORK_ITEMS } from "@/lib/work-data";
 import { Reveal } from "@/hooks/useScrollReveal";
+import logoImage from "@/image_reference/logos/Shanzster_Logo.png";
+import photoshopLogo from "@/image_reference/logos/PS.png";
+import illustratorLogo from "@/image_reference/logos/AI.png";
+import canvaLogo from "@/image_reference/logos/canva.png";
+import capcutLogo from "@/image_reference/logos/capcut.png";
+import metaLogo from "@/image_reference/logos/meta.png";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -25,6 +31,22 @@ export const Route = createFileRoute("/")({
     ],
   }),
 });
+
+type WorkFolderData = {
+  id: string;
+  label: string;
+  subtitle: string;
+  folderColor: string;
+  tabColor: string;
+  items: {
+    id: string;
+    title: string;
+    tag: string;
+    description: string;
+    result: string;
+    color: string;
+  }[];
+};
 
 const WORK_FOLDERS: WorkFolderData[] = [
   {
@@ -271,7 +293,7 @@ function Hero() {
           {/* Eyebrow */}
           <div className="flex flex-col items-center gap-2 mb-3 hero-drop hero-drop-1">
             <img
-              src="/src/image_reference/logos/Shanzster_Logo.png"
+              src={logoImage}
               alt="Shanzster Logo"
               className="h-8 w-auto object-contain"
             />
@@ -419,7 +441,7 @@ const TOOLS = [
     how: "I use Photoshop for retouching campaign photos, building social media templates, and creating high-quality thumbnails and promotional visuals that stop the scroll.",
     usedFor: ["Campaign visuals", "Photo retouching", "Thumbnail design", "Ad creatives"],
     lineX: -70, lineY: 38, labelAlign: "right" as const,
-    icon: <img src="/src/image_reference/logos/PS.png" alt="Photoshop" className="w-full h-full object-cover rounded-[16px]" />,
+    icon: <img src={photoshopLogo} alt="Photoshop" className="w-full h-full object-cover rounded-[16px]" />,
   },
   {
     name: "Illustrator",
@@ -428,7 +450,7 @@ const TOOLS = [
     how: "Illustrator is my go-to for building brand identities from scratch — logos, icon sets, brand guidelines, and print-ready assets that scale perfectly at any size.",
     usedFor: ["Logo design", "Brand identity", "Icon sets", "Print assets"],
     lineX: 70, lineY: -38, labelAlign: "left" as const,
-    icon: <img src="/src/image_reference/logos/AI.png" alt="Illustrator" className="w-full h-full object-cover rounded-[16px]" />,
+    icon: <img src={illustratorLogo} alt="Illustrator" className="w-full h-full object-cover rounded-[16px]" />,
   },
   {
     name: "Canva",
@@ -437,7 +459,7 @@ const TOOLS = [
     how: "Canva is where I build fast, on-brand content at scale — social posts, stories, decks, and client-ready presentations. I use it to maintain visual consistency across all platforms.",
     usedFor: ["Social posts", "Stories", "Pitch decks", "Brand templates"],
     lineX: 70, lineY: 44, labelAlign: "left" as const,
-    icon: <img src="/src/image_reference/logos/canva.png" alt="Canva" className="w-full h-full object-cover rounded-[16px]" />,
+    icon: <img src={canvaLogo} alt="Canva" className="w-full h-full object-cover rounded-[16px]" />,
   },
   {
     name: "CapCut",
@@ -446,7 +468,7 @@ const TOOLS = [
     how: "CapCut is my primary video editor for Reels and short-form content. I use it for freeze-frame edits, motion captions, sound design, and cinematic cuts that drive replays.",
     usedFor: ["Reels editing", "Motion captions", "Vlogs", "Promo videos"],
     lineX: -70, lineY: 44, labelAlign: "right" as const,
-    icon: <img src="/src/image_reference/logos/capcut.png" alt="CapCut" className="w-full h-full object-cover rounded-[16px]" />,
+    icon: <img src={capcutLogo} alt="CapCut" className="w-full h-full object-cover rounded-[16px]" />,
   },
   // ── Marketing ──
   {
@@ -456,7 +478,7 @@ const TOOLS = [
     how: "I use Meta Ads Manager to plan, launch, and optimize paid campaigns on Facebook and Instagram — from audience targeting and creative testing to budget management and performance reporting.",
     usedFor: ["Campaign setup", "Audience targeting", "A/B testing", "Performance reports"],
     lineX: -70, lineY: -38, labelAlign: "right" as const,
-    icon: <img src="/src/image_reference/logos/meta.png" alt="Meta Ads" className="w-full h-full object-cover rounded-[16px]" />,
+    icon: <img src={metaLogo} alt="Meta Ads" className="w-full h-full object-cover rounded-[16px]" />,
   },
   {
     name: "SocialBlade",

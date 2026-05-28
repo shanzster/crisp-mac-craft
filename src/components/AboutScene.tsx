@@ -1,3 +1,5 @@
+import profileImage from "@/image_reference/profile.png";
+
 export function AboutScene() {
   return (
     <div
@@ -6,7 +8,7 @@ export function AboutScene() {
     >
       {/* Full-bleed profile photo */}
       <img
-        src="/src/image_reference/profile.png"
+        src={profileImage}
         alt="Shanzster"
         className="absolute inset-0 w-full h-full object-cover object-top"
         style={{ mixBlendMode: "multiply" }}

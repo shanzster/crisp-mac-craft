@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
+import photoshopLogo from "@/image_reference/logos/PS.png";
+import capcutLogo from "@/image_reference/logos/capcut.png";
+import illustratorLogo from "@/image_reference/logos/AI.png";
+import metaLogo from "@/image_reference/logos/meta.png";
+import canvaLogo from "@/image_reference/logos/canva.png";
 
 /* ─── Service data ─── */
 export type Service = {
@@ -103,7 +108,7 @@ const DESKTOP_ELEMENTS = [
     label: "Photoshop",
     top: "5%",
     left: "16%",
-    icon: <img src="/src/image_reference/logos/PS.png" alt="Photoshop" className="w-full h-full object-cover" />,
+    icon: <img src={photoshopLogo} alt="Photoshop" className="w-full h-full object-cover" />,
   },
   {
     id: "app-capcut",
@@ -111,7 +116,7 @@ const DESKTOP_ELEMENTS = [
     label: "CapCut",
     top: "38%",
     left: "4%",
-    icon: <img src="/src/image_reference/logos/capcut.png" alt="CapCut" className="w-full h-full object-cover" />,
+    icon: <img src={capcutLogo} alt="CapCut" className="w-full h-full object-cover" />,
   },
   {
     id: "app-illustrator",
@@ -119,7 +124,7 @@ const DESKTOP_ELEMENTS = [
     label: "Illustrator",
     top: "58%",
     left: "16%",
-    icon: <img src="/src/image_reference/logos/AI.png" alt="Illustrator" className="w-full h-full object-cover" />,
+    icon: <img src={illustratorLogo} alt="Illustrator" className="w-full h-full object-cover" />,
   },
   {
     id: "folder-portfolio-sm",
@@ -160,7 +165,7 @@ const DESKTOP_ELEMENTS = [
     label: "Meta Ads",
     top: "38%",
     right: "4%",
-    icon: <img src="/src/image_reference/logos/meta.png" alt="Meta Ads" className="w-full h-full object-cover" />,
+    icon: <img src={metaLogo} alt="Meta Ads" className="w-full h-full object-cover" />,
   },
   {
     id: "app-canva",
@@ -168,7 +173,7 @@ const DESKTOP_ELEMENTS = [
     label: "Canva",
     top: "58%",
     right: "16%",
-    icon: <img src="/src/image_reference/logos/canva.png" alt="Canva" className="w-full h-full object-cover" />,
+    icon: <img src={canvaLogo} alt="Canva" className="w-full h-full object-cover" />,
   },
   {
     id: "file-campaign",

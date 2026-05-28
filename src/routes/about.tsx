@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { NavBar } from "@/components/NavBar";
+import profileImage from "@/image_reference/profile.png";
 
 export const Route = createFileRoute("/about")({
   component: AboutPage,
@@ -220,7 +221,7 @@ function AboutPage() {
             >
               {/* Swap this src for your real profile photo */}
               <img
-                src="/src/image_reference/profile.png"
+                src={profileImage}
                 alt="Shanzster"
                 className="absolute inset-0 w-full h-full object-cover object-top"
                 onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
