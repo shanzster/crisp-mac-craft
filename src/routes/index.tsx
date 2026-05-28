@@ -318,16 +318,16 @@ function Hero() {
         </div>
 
         {/* ── CTAs — below the folder ── */}
-        <div className="flex items-center justify-center gap-3 py-5 hero-drop hero-drop-6" style={{ flexShrink: 0 }}>
+        <div className="flex items-center justify-center gap-3 py-4 hero-drop hero-drop-6" style={{ flexShrink: 0 }}>
           <a
             href="#work"
-            className="rounded-full bg-foreground px-5 py-2 text-[12px] tracking-tight text-background transition hover:opacity-85"
+            className="rounded-full bg-foreground px-4 py-1.5 sm:px-5 sm:py-2 text-[11px] sm:text-[12px] tracking-tight text-background transition hover:opacity-85"
           >
             See the work →
           </a>
           <a
             href="#contact"
-            className="rounded-full border border-border bg-card px-5 py-2 text-[12px] tracking-tight text-foreground transition hover:bg-secondary"
+            className="rounded-full border border-border bg-card px-4 py-1.5 sm:px-5 sm:py-2 text-[11px] sm:text-[12px] tracking-tight text-foreground transition hover:bg-secondary"
           >
             Hire me
           </a>
@@ -335,7 +335,7 @@ function Hero() {
 
         {/* ── Stats strip — pinned to bottom ── */}
         <div
-          className="grid grid-cols-4 divide-x divide-border border-t border-border/40 hero-drop hero-drop-7"
+          className="grid grid-cols-2 sm:grid-cols-4 divide-x sm:divide-x divide-border border-t border-border/40 hero-drop hero-drop-7"
           style={{ flexShrink: 0 }}
         >
           <Stat value="6+" label="brands managed" />
@@ -376,9 +376,9 @@ function Hero() {
 
 function Stat({ value, label }: { value: string; label: string }) {
   return (
-    <div className="px-5 py-4">
-      <div className="text-[28px] leading-none tracking-tightest font-bold">{value}</div>
-      <div className="mt-1.5 text-[10px] uppercase tracking-[0.16em] text-foreground/45">
+    <div className="px-3 py-2 sm:px-5 sm:py-4">
+      <div className="text-[22px] sm:text-[28px] leading-none tracking-tightest font-bold">{value}</div>
+      <div className="mt-1 text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-foreground/45">
         {label}
       </div>
     </div>

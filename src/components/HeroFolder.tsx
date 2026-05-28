@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 
 /* ─── Service data ─── */
 export type Service = {
@@ -271,9 +272,10 @@ function ServiceModal({
   service: Service;
   onClose: () => void;
 }) {
-  return (
+  const modal = (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+      className="fixed inset-0 flex items-center justify-center p-4"
+      style={{ zIndex: 99999, background: 'rgba(0,0,0,0.6)' }}
       onClick={onClose}
     >
       <div
@@ -340,6 +342,8 @@ function ServiceModal({
       </div>
     </div>
   );
+
+  return createPortal(modal, document.body);
 }
 
 /* ─── Paper card ─── */
@@ -441,7 +445,7 @@ function BigFolder({ open }: { open: boolean }) {
   return (
     <div
       className="relative select-none cursor-default"
-      style={{ width: 320, height: 260, perspective: 1100 }}
+      style={{ width: 'min(320px, 80vw)', height: 'min(260px, 65vh)', perspective: 1100 }}
     >
       {/* Shadow */}
       <div
@@ -504,6 +508,27 @@ export function HeroFolder() {
   const [open, setOpen] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [activeService, setActiveService] = useState<Service | null>(null);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [mobileModalOpen, setMobileModalOpen] = useState(false);
+
+  useEffect(() => {
+    const m = () => setIsMobile(window.matchMedia('(max-width: 767px)').matches);
+    m();
+    window.addEventListener('resize', m);
+    return () => window.removeEventListener('resize', m);
+  }, []);
+
+  // lock background scroll when any modal is open
+  useEffect(() => {
+    const locked = mobileModalOpen || !!activeService;
+    const prev = document.body.style.overflow;
+    if (locked) document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = prev; };
+  }, [mobileModalOpen, activeService]);
+
+  // mobile modal accordion state
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  const [modalExpandedIndex, setModalExpandedIndex] = useState<number | null>(null);
 
   return (
     <>
@@ -511,46 +536,119 @@ export function HeroFolder() {
         <ServiceModal service={activeService} onClose={() => setActiveService(null)} />
       )}
 
+      {mobileModalOpen && createPortal(
+        <div className="fixed inset-0 flex items-center justify-center p-2" style={{ zIndex: 99999, background: 'rgba(0,0,0,0.6)' }} onClick={() => setMobileModalOpen(false)}>
+          <div className="w-full rounded-[12px] border border-border bg-card p-3" style={{ width: '100%', maxWidth: 360, margin: '0 8px' }} onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="font-semibold text-sm">Choose a service</h3>
+              <button onClick={() => setMobileModalOpen(false)} className="text-sm text-foreground/60">Close</button>
+            </div>
+            <div style={{ maxHeight: '78vh', overflow: 'auto' }} className="space-y-2">
+              {SERVICES.map((s, i) => (
+                <div key={s.label} className="rounded-[10px] border border-border bg-secondary/5 p-2">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-start gap-3">
+                      <span className="text-[18px]" style={{ color: 'var(--folder)' }}>{s.icon}</span>
+                      <div>
+                        <div className="text-sm font-semibold text-foreground">{s.label}</div>
+                        <div className="text-[11px] text-foreground/60">{s.tagline}</div>
+                      </div>
+                    </div>
+                    <button onClick={() => setModalExpandedIndex(modalExpandedIndex === i ? null : i)} className="text-sm text-foreground/50">{modalExpandedIndex === i ? 'Hide' : 'Show'}</button>
+                  </div>
+                  {modalExpandedIndex === i && (
+                    <div className="mt-2 text-[13px] text-foreground/75">
+                      {s.story.map((p, idx) => (<p key={idx} className="mt-1 text-[13px]">{p}</p>))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>, document.body)
+      }
+
       {/* Fill parent height entirely */}
       <div className="relative w-full h-full">
-        {/* ── Static desktop elements ── */}
-        {DESKTOP_ELEMENTS.map((el) => (
+        {/* ── Static desktop elements (hidden on small screens) ── */}
+        <div className="hidden md:block">{DESKTOP_ELEMENTS.map((el) => (
           <DesktopItem key={el.id} el={el} />
-        ))}
+        ))}</div>
 
         {/* ── Interactive folder zone (centered, anchored to bottom) ── */}
         <div
           className="absolute left-1/2 -translate-x-1/2 bottom-0"
-          style={{ width: 700 }}
-          onMouseEnter={() => setOpen(true)}
+          style={{ width: '90vw', maxWidth: 700 }}
+          onMouseEnter={() => !isMobile && setOpen(true)}
           onMouseLeave={() => {
-            setOpen(false);
-            setHoveredIndex(null);
+            if (!isMobile) {
+              setOpen(false);
+              setHoveredIndex(null);
+            }
+          }}
+          onClick={() => {
+            if (isMobile) {
+              setMobileModalOpen(true);
+            } else {
+              setOpen((o) => !o);
+            }
           }}
         >
-          {/* Papers */}
-          {SERVICES.map((s, i) => (
-            <ServicePaper
-              key={s.label}
-              service={s}
-              index={i}
-              open={open}
-              hoveredIndex={hoveredIndex}
-              onHover={setHoveredIndex}
-              onLeave={() => setHoveredIndex(null)}
-              onClick={setActiveService}
-            />
-          ))}
+          {/* Papers (desktop only) */}
+          <div className="hidden md:block">
+            {SERVICES.map((s, i) => (
+              <ServicePaper
+                key={s.label}
+                service={s}
+                index={i}
+                open={open}
+                hoveredIndex={hoveredIndex}
+                onHover={setHoveredIndex}
+                onLeave={() => setHoveredIndex(null)}
+                onClick={setActiveService}
+              />
+            ))}
+          </div>
 
-          {/* Big folder */}
+          {/* Mobile grid: show by default on mobile (no folder open needed) */}
+          {isMobile && (
+            <div
+              className="md:hidden absolute left-1/2 -translate-x-1/2"
+              style={{ bottom: 'calc(100% + 12px)', width: '100%', zIndex: 20 }}
+            >
+              <div className="mx-auto grid grid-cols-2 gap-2" style={{ width: 'min(360px, calc(100% - 24px))', maxHeight: '56vh', overflow: 'auto' }}>
+                {SERVICES.slice(0, 6).map((s, i) => (
+                    <div key={s.label} className="rounded-[10px] p-2 bg-paper border border-border/60 text-left shadow-sm">
+                    <div className="flex items-start gap-3">
+                      <span className="text-[18px]" style={{ color: 'var(--folder)' }}>{s.icon}</span>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                          <div className="text-sm font-semibold tracking-tight text-foreground">{s.label}</div>
+                            <button onClick={() => { setExpandedIndex(expandedIndex === i ? null : i); }} className="text-[11px] text-foreground/50">{expandedIndex === i ? 'close' : 'open'}</button>
+                        </div>
+                          <div className="mt-1 text-[11px] text-foreground/60">{s.tagline}</div>
+                          {expandedIndex === i && (
+                            <div className="mt-2 text-[12.5px] text-foreground/75">
+                              {s.story.map((p, idx) => (<p key={idx} className="mt-1 text-[12.5px]">{p}</p>))}
+                            </div>
+                          )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Big folder (visible on all sizes) */}
           <div className="flex justify-center pb-6" style={{ paddingTop: 260 }}>
             <BigFolder open={open} />
           </div>
         </div>
 
-        {/* Hover hint — bottom center above folder */}
+        {/* Hover hint — bottom center above folder (desktop only) */}
         <div
-          className="absolute left-1/2 -translate-x-1/2 pointer-events-none"
+          className="hidden md:block absolute left-1/2 -translate-x-1/2 pointer-events-none"
           style={{ bottom: 8, opacity: open ? 0 : 1, transition: "opacity 0.3s" }}
         >
           <p className="text-[10px] tracking-[0.2em] uppercase text-foreground/25">
