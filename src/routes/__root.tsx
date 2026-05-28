@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import {
   Outlet,
   Link,
@@ -7,6 +8,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
+import { createPortal } from "react-dom";
 import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
@@ -109,9 +111,63 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const [showMobileNotice, setShowMobileNotice] = useState(false);
+
+  useEffect(() => {
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+    const dismissed = window.sessionStorage.getItem("mobile-site-notice-dismissed") === "1";
+    if (isMobile && !dismissed) {
+      setShowMobileNotice(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    const previous = document.body.style.overflow;
+    if (showMobileNotice) {
+      document.body.style.overflow = "hidden";
+    }
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [showMobileNotice]);
+
+  const closeMobileNotice = () => {
+    window.sessionStorage.setItem("mobile-site-notice-dismissed", "1");
+    setShowMobileNotice(false);
+  };
+
+  const mobileNotice = showMobileNotice ? createPortal(
+    <div
+      className="fixed inset-0 z-[200] flex items-center justify-center bg-black/55 px-4"
+      onClick={closeMobileNotice}
+    >
+      <div
+        className="w-full max-w-sm rounded-[20px] border border-border bg-card p-5 text-center mac-shadow"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <p className="text-[11px] uppercase tracking-[0.22em] text-foreground/45">
+          Best viewed on desktop
+        </p>
+        <h2 className="mt-3 text-[22px] font-bold tracking-tightest text-foreground">
+          This portfolio is better viewed on Desktop
+        </h2>
+        <p className="mt-3 text-sm leading-relaxed text-foreground/65">
+          You can continue on mobile, but the full layout is designed for a larger screen.
+        </p>
+        <button
+          onClick={closeMobileNotice}
+          className="mt-5 inline-flex items-center justify-center rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background transition hover:opacity-90"
+        >
+          Continue anyway
+        </button>
+      </div>
+    </div>,
+    document.body,
+  ) : null;
 
   return (
     <QueryClientProvider client={queryClient}>
+      {mobileNotice}
       <Outlet />
     </QueryClientProvider>
   );
