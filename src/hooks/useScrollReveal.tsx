@@ -36,6 +36,11 @@ export function Reveal({
   className?: string;
 }) {
   const { ref, visible } = useScrollReveal();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <div
@@ -44,7 +49,7 @@ export function Reveal({
       style={{
         opacity: visible ? 1 : 0,
         transform: visible ? "translateY(0px)" : "translateY(28px)",
-        transition: `opacity 0.7s ease ${delay}ms, transform 0.7s cubic-bezier(.2,.8,.2,1) ${delay}ms`,
+        animation: mounted && visible ? `fade-up-in 0.7s cubic-bezier(.2,.8,.2,1) ${delay}ms both` : undefined,
       }}
     >
       {children}
