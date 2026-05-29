@@ -120,8 +120,7 @@ function RootComponent() {
 
   useEffect(() => {
     const isMobile = window.matchMedia("(max-width: 767px)").matches;
-    const seen = localStorage.getItem("seenMobileModal");
-    if (isMobile && !seen) {
+    if (isMobile) {
       setShowMobileModal(true);
     }
   }, []);
@@ -143,16 +142,12 @@ function RootComponent() {
                   href="https://instagram.com/shanzster.zip"
                   target="_blank"
                   rel="noopener noreferrer"
-                  onClick={() => {
-                    localStorage.setItem("seenMobileModal", "1");
-                  }}
                   className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
                 >
                   View on Instagram
                 </a>
                 <button
                   onClick={() => {
-                    localStorage.setItem("seenMobileModal", "1");
                     setShowMobileModal(false);
                   }}
                   className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"

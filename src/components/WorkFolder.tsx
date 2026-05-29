@@ -236,18 +236,26 @@ function BigFolder({ open, isMobile }: { open: boolean; isMobile?: boolean }) {
 export function WorkFolderScene({ items }: { items: WorkItem[] }) {
   const [open, setOpen] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isCompactDevice, setIsCompactDevice] = useState(false);
   const [activeMobileItem, setActiveMobileItem] = useState<WorkItem | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 767px)");
-    const updateIsMobile = () => setIsMobile(mediaQuery.matches);
+    const touchQuery = window.matchMedia("(pointer: coarse)");
+    const updateIsMobile = () => {
+      const hasTouch = navigator.maxTouchPoints > 0;
+      setIsCompactDevice(mediaQuery.matches || touchQuery.matches || hasTouch);
+    };
 
     updateIsMobile();
     mediaQuery.addEventListener("change", updateIsMobile);
+    touchQuery.addEventListener("change", updateIsMobile);
 
-    return () => mediaQuery.removeEventListener("change", updateIsMobile);
+    return () => {
+      mediaQuery.removeEventListener("change", updateIsMobile);
+      touchQuery.removeEventListener("change", updateIsMobile);
+    };
   }, []);
 
   useEffect(() => {
@@ -289,7 +297,7 @@ export function WorkFolderScene({ items }: { items: WorkItem[] }) {
 
   return (
     <div className="flex flex-col items-center w-full">
-      {activeMobileItem && isMobile && (
+      {activeMobileItem && isCompactDevice && (
         <MobileWorkPreviewModal
           item={activeMobileItem}
           onClose={() => setActiveMobileItem(null)}
@@ -299,7 +307,7 @@ export function WorkFolderScene({ items }: { items: WorkItem[] }) {
 
       <div
         className="relative flex items-center justify-center w-full"
-        style={{ height: isMobile ? 300 : 720 }}
+        style={{ height: isCompactDevice ? 300 : 720 }}
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => {
           setOpen(false);
@@ -317,13 +325,13 @@ export function WorkFolderScene({ items }: { items: WorkItem[] }) {
             onHover={setHoveredIndex}
             onLeave={() => setHoveredIndex(null)}
             onSelect={(selectedItem) => {
-              if (isMobile) {
+              if (isCompactDevice) {
                 setActiveMobileItem(selectedItem);
               }
               setOpen(false);
               setHoveredIndex(null);
             }}
-            isMobile={isMobile}
+            isMobile={isCompactDevice}
           />
         ))}
 
@@ -343,12 +351,12 @@ export function WorkFolderScene({ items }: { items: WorkItem[] }) {
           }}
           aria-label="Toggle selected work folder"
         >
-          <BigFolder open={open} isMobile={isMobile} />
+          <BigFolder open={open} isMobile={isCompactDevice} />
         </button>
       </div>
 
       <p className="mt-2 text-[10px] uppercase tracking-[0.2em] text-foreground/25">
-        {isMobile ? "tap to open · tap a card to view" : "hover to open · click a card to view"}
+        {isCompactDevice ? "tap to open · tap a card to view" : "hover to open · click a card to view"}
       </p>
     </div>
   );
