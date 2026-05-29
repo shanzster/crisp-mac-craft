@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "@tanstack/react-router";
 import { type WorkItem } from "@/lib/work-data";
@@ -239,6 +239,22 @@ export function WorkFolderScene({ items }: { items: WorkItem[] }) {
   const [isCompactDevice, setIsCompactDevice] = useState(false);
   const [activeMobileItem, setActiveMobileItem] = useState<WorkItem | null>(null);
   const navigate = useNavigate();
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const cancelClose = () => {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  };
+
+  const scheduleClose = () => {
+    cancelClose();
+    closeTimer.current = setTimeout(() => {
+      setOpen(false);
+      setHoveredIndex(null);
+    }, 120); // 120ms grace period — enough to move from folder to card
+  };
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 767px)");
@@ -292,6 +308,7 @@ export function WorkFolderScene({ items }: { items: WorkItem[] }) {
       window.removeEventListener("focus", resetScene);
       window.removeEventListener("pageshow", resetScene);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
+      cancelClose();
     };
   }, []);
 
@@ -311,15 +328,8 @@ export function WorkFolderScene({ items }: { items: WorkItem[] }) {
       <div
         className="relative flex items-center justify-center w-full"
         style={{ height: isCompactDevice ? 300 : 720 }}
-        onMouseEnter={isCompactDevice ? undefined : () => setOpen(true)}
-        onMouseLeave={
-          isCompactDevice
-            ? undefined
-            : () => {
-                setOpen(false);
-                setHoveredIndex(null);
-              }
-        }
+        onMouseEnter={isCompactDevice ? undefined : () => { cancelClose(); setOpen(true); }}
+        onMouseLeave={isCompactDevice ? undefined : scheduleClose}
       >
         {/* Cards */}
         {visible.map((item, i) => (
@@ -329,7 +339,7 @@ export function WorkFolderScene({ items }: { items: WorkItem[] }) {
             index={i}
             open={open}
             hoveredIndex={hoveredIndex}
-            onHover={setHoveredIndex}
+            onHover={(idx) => { cancelClose(); setHoveredIndex(idx); }}
             onLeave={() => setHoveredIndex(null)}
             onSelect={(selectedItem) => {
               if (isCompactDevice) {
@@ -351,15 +361,8 @@ export function WorkFolderScene({ items }: { items: WorkItem[] }) {
             setOpen((current) => !current);
             setHoveredIndex(null);
           }}
-          onMouseEnter={isCompactDevice ? undefined : () => setOpen(true)}
-          onMouseLeave={
-            isCompactDevice
-              ? undefined
-              : () => {
-                  setOpen(false);
-                  setHoveredIndex(null);
-                }
-          }
+          onMouseEnter={isCompactDevice ? undefined : () => { cancelClose(); setOpen(true); }}
+          onMouseLeave={isCompactDevice ? undefined : scheduleClose}
           aria-label="Toggle selected work folder"
         >
           <BigFolder open={open} isMobile={isCompactDevice} />

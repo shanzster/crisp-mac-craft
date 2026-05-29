@@ -251,7 +251,7 @@ function Index() {
   return (
     <div className="min-h-screen bg-background">
       <NavBar />
-      <main className="mx-auto max-w-[1400px] px-6 pb-28 pt-6 sm:px-10">
+      <main className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-10 pb-28 pt-6">
         <Hero />
         <Reveal><About /></Reveal>
         <Reveal delay={50}><Toolkit /></Reveal>
@@ -288,21 +288,21 @@ function Hero() {
       <div className="relative z-10 flex h-full flex-col">
 
         {/* ── Text block — centered, fixed height ── */}
-        <div className="flex flex-col items-center justify-center px-8 pt-6 pb-2 text-center sm:px-14" style={{ flexShrink: 0 }}>
+        <div className="flex flex-col items-center justify-center px-4 sm:px-8 lg:px-14 pt-6 pb-2 text-center" style={{ flexShrink: 0 }}>
 
           {/* Eyebrow */}
           <div className="flex flex-col items-center gap-2 mb-3 hero-drop hero-drop-1">
             <img
               src={logoImage}
               alt="Shanzster Logo"
-              className="h-8 w-auto object-contain"
+              className="h-6 sm:h-8 w-auto object-contain"
             />
             <div className="flex items-center gap-2">
               <span
                 className="h-1.5 w-1.5 rounded-full"
                 style={{ background: "var(--traffic-green)" }}
               />
-              <p className="text-[11px] uppercase tracking-[0.26em] text-foreground/40">
+              <p className="text-[9px] sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.26em] text-foreground/40 text-center">
                 Social Media Manager · Content Creator · Available 2026
               </p>
             </div>
@@ -311,14 +311,14 @@ function Hero() {
           {/* Headline */}
           <h1
             className="font-bold tracking-tightest text-foreground leading-[0.9] hero-drop hero-drop-2"
-            style={{ fontSize: "clamp(38px, 6vw, 88px)" }}
+            style={{ fontSize: "clamp(32px, 7vw, 88px)" }}
           >
             Your One Man
           </h1>
           <h1
             className="font-bold tracking-tightest leading-[0.9] hero-drop hero-drop-3"
             style={{
-              fontSize: "clamp(38px, 6vw, 88px)",
+              fontSize: "clamp(32px, 7vw, 88px)",
               color: "oklch(0.18 0.01 240 / 0.25)",
             }}
           >
@@ -326,7 +326,7 @@ function Hero() {
           </h1>
 
           {/* Sub-line */}
-          <p className="mt-3 text-[clamp(13px,1.3vw,16px)] tracking-tight text-foreground/45 max-w-sm hero-drop hero-drop-4">
+          <p className="mt-3 text-[clamp(12px,1.8vw,16px)] tracking-tight text-foreground/45 max-w-sm hero-drop hero-drop-4">
             <SelectingRoles />
             <span className="blink text-foreground/40">|</span>
           </p>
@@ -591,20 +591,20 @@ function ToolsShowcase() {
 
 function About() {
   return (
-    <section id="about" className="mt-20" style={{ minHeight: "calc(100dvh - 5rem)" }}>
+    <section id="about" className="mt-16 sm:mt-20">
       <SectionHeader index="01" title="About" />
 
-      <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2" style={{ minHeight: "calc(100% - 3rem)" }}>
+      <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
 
         {/* ── LEFT: editorial layout ── */}
-        <div className="flex flex-col rounded-[16px] border border-border bg-card h-full" style={{ overflow: 'visible' }}>
+        <div className="flex flex-col rounded-[16px] border border-border bg-card overflow-hidden">
 
           {/* Punchy statement */}
-          <div className="px-8 pt-8 pb-6 border-b border-border">
+          <div className="px-5 sm:px-8 pt-6 sm:pt-8 pb-6 border-b border-border">
             <p className="text-[10px] uppercase tracking-[0.26em] text-foreground/35 mb-3">01 — who i am</p>
             <p
               className="font-bold tracking-tightest text-foreground leading-[0.92]"
-              style={{ fontSize: "clamp(26px, 2.6vw, 40px)" }}
+              style={{ fontSize: "clamp(22px, 3vw, 40px)" }}
             >
               I grow pages.<br />
               <span style={{ color: "oklch(0.18 0.01 240 / 0.28)" }}>Build brands.</span><br />
@@ -632,7 +632,7 @@ function About() {
           </div>
 
           {/* Clients */}
-          <div className="px-8 py-5 border-b border-border">
+          <div className="px-5 sm:px-8 py-5 border-b border-border">
             <p className="text-[10px] uppercase tracking-[0.26em] text-foreground/35 mb-4">02 — clients</p>
             <div className="grid grid-cols-2 gap-2">
               {[
@@ -650,7 +650,7 @@ function About() {
           </div>
 
           {/* Skills */}
-          <div className="px-8 py-5 flex-1">
+          <div className="px-5 sm:px-8 py-5 flex-1">
             <p className="text-[10px] uppercase tracking-[0.26em] text-foreground/35 mb-4">03 — tools &amp; skills</p>
             <div className="space-y-3">
               {[
@@ -673,7 +673,7 @@ function About() {
         </div>
 
         {/* ── RIGHT: photo ── */}
-        <div className="h-full">
+        <div className="min-h-[400px] lg:min-h-0 lg:h-full">
           <AboutScene />
         </div>
 
