@@ -542,13 +542,13 @@ export function HeroFolder() {
       )}
 
       {mobileModalOpen && createPortal(
-        <div className="fixed inset-0 flex items-center justify-center p-2" style={{ zIndex: 99999, background: 'rgba(0,0,0,0.6)' }} onClick={() => setMobileModalOpen(false)}>
-          <div className="w-full rounded-[12px] border border-border bg-card p-3" style={{ width: '100%', maxWidth: 360, margin: '0 8px' }} onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 flex items-center justify-center p-2" style={{ zIndex: 99999, background: 'rgba(0,0,0,0.6)', overflowX: 'hidden' }} onClick={() => setMobileModalOpen(false)}>
+          <div className="w-full rounded-[12px] border border-border bg-card p-2 sm:p-3" style={{ margin: '0 16px', width: 'auto', maxWidth: 360, boxSizing: 'border-box', overflowX: 'hidden', wordBreak: 'break-word', overflowWrap: 'break-word' }} onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-2">
               <h3 className="font-semibold text-sm">Choose a service</h3>
               <button onClick={() => setMobileModalOpen(false)} className="text-sm text-foreground/60">Close</button>
             </div>
-            <div style={{ maxHeight: '78vh', overflow: 'auto' }} className="space-y-2">
+            <div style={{ maxHeight: '78vh', overflowY: 'auto', overflowX: 'hidden' }} className="space-y-2">
               {SERVICES.map((s, i) => (
                 <div key={s.label} className="rounded-[10px] border border-border bg-secondary/5 p-2">
                   <div className="flex items-start justify-between gap-3">
@@ -580,10 +580,10 @@ export function HeroFolder() {
           <DesktopItem key={el.id} el={el} />
         ))}</div>
 
-        {/* ── Interactive folder zone (centered, anchored to bottom) ── */}
+        {/* ── Interactive folder zone (block-level, centered) ── */}
         <div
-          className="absolute left-1/2 -translate-x-1/2 bottom-0"
-          style={{ width: '90vw', maxWidth: 700 }}
+          className="w-full flex items-center justify-center"
+          style={{ width: '90vw', maxWidth: 700, margin: '0 auto' }}
           onMouseEnter={() => !isMobile && setOpen(true)}
           onMouseLeave={() => {
             if (!isMobile) {
@@ -600,53 +600,23 @@ export function HeroFolder() {
           }}
         >
           {/* Papers (desktop only) */}
-          <div className="hidden md:block">
-            {SERVICES.map((s, i) => (
-              <ServicePaper
-                key={s.label}
-                service={s}
-                index={i}
-                open={open}
-                hoveredIndex={hoveredIndex}
-                onHover={setHoveredIndex}
-                onLeave={() => setHoveredIndex(null)}
-                onClick={setActiveService}
-              />
-            ))}
-          </div>
+          <div className="hidden md:block">{SERVICES.map((s, i) => (
+            <ServicePaper
+              key={s.label}
+              service={s}
+              index={i}
+              open={open}
+              hoveredIndex={hoveredIndex}
+              onHover={setHoveredIndex}
+              onLeave={() => setHoveredIndex(null)}
+              onClick={setActiveService}
+            />
+          ))}</div>
 
-          {/* Mobile grid: show by default on mobile (no folder open needed) */}
-          {isMobile && (
-            <div
-              className="md:hidden absolute left-1/2 -translate-x-1/2"
-              style={{ bottom: 'calc(100% + 12px)', width: '100%', zIndex: 20 }}
-            >
-              <div className="mx-auto grid grid-cols-2 gap-2" style={{ width: 'min(360px, calc(100% - 24px))', maxHeight: '56vh', overflow: 'auto' }}>
-                {SERVICES.slice(0, 6).map((s, i) => (
-                    <div key={s.label} className="rounded-[10px] p-2 bg-paper border border-border/60 text-left shadow-sm">
-                    <div className="flex items-start gap-3">
-                      <span className="text-[18px]" style={{ color: 'var(--folder)' }}>{s.icon}</span>
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between">
-                          <div className="text-sm font-semibold tracking-tight text-foreground">{s.label}</div>
-                            <button onClick={() => { setExpandedIndex(expandedIndex === i ? null : i); }} className="text-[11px] text-foreground/50">{expandedIndex === i ? 'close' : 'open'}</button>
-                        </div>
-                          <div className="mt-1 text-[11px] text-foreground/60">{s.tagline}</div>
-                          {expandedIndex === i && (
-                            <div className="mt-2 text-[12.5px] text-foreground/75">
-                              {s.story.map((p, idx) => (<p key={idx} className="mt-1 text-[12.5px]">{p}</p>))}
-                            </div>
-                          )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+          {/* Mobile grid hidden — rely on modal when folder is clicked on mobile */}
 
           {/* Big folder (visible on all sizes) */}
-          <div className="flex justify-center pb-6" style={{ paddingTop: 260 }}>
+          <div className="flex justify-center pb-6 mt-6">
             <BigFolder open={open} />
           </div>
         </div>

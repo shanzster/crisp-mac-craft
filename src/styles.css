@@ -258,6 +258,14 @@
   }
 
   @keyframes fade-up-in {
+  
+  /* Prevent horizontal panning/scroll on narrow viewports (mobile) so the layout stays fixed */
+  @media (max-width: 767px) {
+    html, body {
+      overflow-x: hidden;
+      touch-action: pan-y; /* allow vertical scrolling only */
+    }
+  }
     from { opacity: 0; transform: translateY(10px); }
     to   { opacity: 1; transform: translateY(0); }
   }

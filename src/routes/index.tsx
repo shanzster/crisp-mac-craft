@@ -591,13 +591,13 @@ function ToolsShowcase() {
 
 function About() {
   return (
-    <section id="about" className="mt-20" style={{ height: "calc(100dvh - 5rem)" }}>
+    <section id="about" className="mt-20" style={{ minHeight: "calc(100dvh - 5rem)" }}>
       <SectionHeader index="01" title="About" />
 
-      <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2" style={{ height: "calc(100% - 3rem)" }}>
+      <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2" style={{ minHeight: "calc(100% - 3rem)" }}>
 
         {/* ── LEFT: editorial layout ── */}
-        <div className="flex flex-col rounded-[16px] border border-border bg-card overflow-hidden h-full">
+        <div className="flex flex-col rounded-[16px] border border-border bg-card h-full" style={{ overflow: 'visible' }}>
 
           {/* Punchy statement */}
           <div className="px-8 pt-8 pb-6 border-b border-border">
@@ -759,12 +759,12 @@ function Work() {
           </div>
         </div>
 
-        {/* ── Center: folder — overflow visible so cards escape ── */}
-        <div className="flex flex-col items-center" style={{ overflow: "visible" }}>
+        {/* ── Center: folder — hide overflow on small screens to prevent horizontal pan ── */}
+        <div className="flex flex-col items-center overflow-hidden md:overflow-visible">
           <p className="text-[10px] uppercase tracking-[0.22em] text-foreground/30 mb-6">
             hover to open · click to view
           </p>
-          <div style={{ overflow: "visible", width: "100%" }}>
+          <div className="w-full overflow-hidden md:overflow-visible">
             <WorkFolderScene items={WORK_ITEMS} />
           </div>
         </div>
