@@ -245,16 +245,19 @@ export function WorkFolderScene({ items }: { items: WorkItem[] }) {
     const touchQuery = window.matchMedia("(pointer: coarse)");
     const updateIsMobile = () => {
       const hasTouch = navigator.maxTouchPoints > 0;
-      setIsCompactDevice(mediaQuery.matches || touchQuery.matches || hasTouch);
+      const isKnownMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+      setIsCompactDevice(mediaQuery.matches || touchQuery.matches || hasTouch || isKnownMobile);
     };
 
     updateIsMobile();
     mediaQuery.addEventListener("change", updateIsMobile);
     touchQuery.addEventListener("change", updateIsMobile);
+    window.addEventListener("orientationchange", updateIsMobile);
 
     return () => {
       mediaQuery.removeEventListener("change", updateIsMobile);
       touchQuery.removeEventListener("change", updateIsMobile);
+      window.removeEventListener("orientationchange", updateIsMobile);
     };
   }, []);
 
@@ -308,11 +311,15 @@ export function WorkFolderScene({ items }: { items: WorkItem[] }) {
       <div
         className="relative flex items-center justify-center w-full"
         style={{ height: isCompactDevice ? 300 : 720 }}
-        onMouseEnter={() => setOpen(true)}
-        onMouseLeave={() => {
-          setOpen(false);
-          setHoveredIndex(null);
-        }}
+        onMouseEnter={isCompactDevice ? undefined : () => setOpen(true)}
+        onMouseLeave={
+          isCompactDevice
+            ? undefined
+            : () => {
+                setOpen(false);
+                setHoveredIndex(null);
+              }
+        }
       >
         {/* Cards */}
         {visible.map((item, i) => (
@@ -344,11 +351,15 @@ export function WorkFolderScene({ items }: { items: WorkItem[] }) {
             setOpen((current) => !current);
             setHoveredIndex(null);
           }}
-          onMouseEnter={() => setOpen(true)}
-          onMouseLeave={() => {
-            setOpen(false);
-            setHoveredIndex(null);
-          }}
+          onMouseEnter={isCompactDevice ? undefined : () => setOpen(true)}
+          onMouseLeave={
+            isCompactDevice
+              ? undefined
+              : () => {
+                  setOpen(false);
+                  setHoveredIndex(null);
+                }
+          }
           aria-label="Toggle selected work folder"
         >
           <BigFolder open={open} isMobile={isCompactDevice} />

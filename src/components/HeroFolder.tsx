@@ -513,14 +513,24 @@ export function HeroFolder() {
   const [open, setOpen] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [activeService, setActiveService] = useState<Service | null>(null);
-  const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [isCompactDevice, setIsCompactDevice] = useState<boolean>(false);
   const [mobileModalOpen, setMobileModalOpen] = useState(false);
 
   useEffect(() => {
-    const m = () => setIsMobile(window.matchMedia('(max-width: 767px)').matches);
+    const m = () => {
+      const widthQuery = window.matchMedia('(max-width: 767px)');
+      const touchQuery = window.matchMedia('(pointer: coarse)');
+      const hasTouch = navigator.maxTouchPoints > 0;
+      const isKnownMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+      setIsCompactDevice(widthQuery.matches || touchQuery.matches || hasTouch || isKnownMobile);
+    };
     m();
     window.addEventListener('resize', m);
-    return () => window.removeEventListener('resize', m);
+    window.addEventListener('orientationchange', m);
+    return () => {
+      window.removeEventListener('resize', m);
+      window.removeEventListener('orientationchange', m);
+    };
   }, []);
 
   // lock background scroll when any modal is open
@@ -584,15 +594,15 @@ export function HeroFolder() {
         <div
           className="w-full flex items-center justify-center"
           style={{ width: '90vw', maxWidth: 700, margin: '0 auto' }}
-          onMouseEnter={() => !isMobile && setOpen(true)}
+          onMouseEnter={() => !isCompactDevice && setOpen(true)}
           onMouseLeave={() => {
-            if (!isMobile) {
+            if (!isCompactDevice) {
               setOpen(false);
               setHoveredIndex(null);
             }
           }}
           onClick={() => {
-            if (isMobile) {
+            if (isCompactDevice) {
               setMobileModalOpen(true);
             } else {
               setOpen((o) => !o);
@@ -617,7 +627,7 @@ export function HeroFolder() {
 
           {/* Big folder (visible on all sizes) */}
           <div className="flex justify-center pb-6 mt-6">
-            <BigFolder open={open} />
+            <BigFolder open={open} isMobile={isCompactDevice} />
           </div>
         </div>
 

@@ -98,18 +98,27 @@ const DOCK_ITEMS = [
 export function NavBar() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [tooltip, setTooltip] = useState<string | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isCompactDevice, setIsCompactDevice] = useState(false);
 
   useEffect(() => {
-    const update = () => setIsMobile(window.matchMedia("(max-width: 767px)").matches);
+    const update = () => {
+      const widthQuery = window.matchMedia("(max-width: 767px)");
+      const touchQuery = window.matchMedia("(pointer: coarse)");
+      const hasTouch = navigator.maxTouchPoints > 0;
+      const isKnownMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+
+      setIsCompactDevice(widthQuery.matches || touchQuery.matches || hasTouch || isKnownMobile);
+    };
+
     update();
     window.addEventListener("resize", update);
+    window.addEventListener("orientationchange", update);
     return () => window.removeEventListener("resize", update);
   }, []);
 
   // Magnification: items near hovered one scale up too
   const getScale = (i: number) => {
-    if (isMobile) return 1;
+    if (isCompactDevice) return 1;
     if (hoveredIndex === null) return 1;
     const dist = Math.abs(i - hoveredIndex);
     if (dist === 0) return 1.55;
@@ -128,7 +137,7 @@ export function NavBar() {
           className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 pointer-events-none"
           style={{
             transform: `translateX(-50%)`,
-            bottom: isMobile ? "calc(env(safe-area-inset-bottom, 0px) + 68px)" : 92,
+            bottom: isCompactDevice ? "calc(env(safe-area-inset-bottom, 0px) + 68px)" : 92,
           }}
         >
           <div
@@ -149,9 +158,9 @@ export function NavBar() {
       <div
         className="fixed left-1/2 z-50"
         style={{
-          bottom: isMobile ? "calc(env(safe-area-inset-bottom, 0px) + 8px)" : 20,
+          bottom: isCompactDevice ? "calc(env(safe-area-inset-bottom, 0px) + 8px)" : 20,
           transform: "translateX(-50%)",
-          width: isMobile ? "100%" : "auto",
+          width: isCompactDevice ? "100%" : "auto",
           pointerEvents: "none",
         }}
       >
@@ -159,8 +168,8 @@ export function NavBar() {
           className="mx-auto flex w-fit items-end rounded-[20px]"
           style={{
             pointerEvents: "auto",
-            gap: isMobile ? 4 : 8,
-            padding: isMobile ? "4px 6px" : "8px 16px",
+            gap: isCompactDevice ? 4 : 8,
+            padding: isCompactDevice ? "4px 6px" : "8px 16px",
             background: "oklch(0.97 0.005 240 / 0.72)",
             backdropFilter: "blur(28px) saturate(1.8)",
             WebkitBackdropFilter: "blur(28px) saturate(1.8)",
@@ -177,7 +186,7 @@ export function NavBar() {
                   className="self-center mx-1"
                   style={{
                     width: 1,
-                    height: isMobile ? 18 : 32,
+                    height: isCompactDevice ? 18 : 32,
                     background: "oklch(0.18 0.01 240 / 0.15)",
                   }}
                 />
@@ -197,7 +206,7 @@ export function NavBar() {
                   transition: "transform 0.2s cubic-bezier(.2,.8,.2,1)",
                   transform: `scale(${scale})`,
                   transformOrigin: "bottom center",
-                  margin: isMobile ? "0 1px" : undefined,
+                  margin: isCompactDevice ? "0 1px" : undefined,
                 }}
                 onMouseEnter={() => {
                   setHoveredIndex(realIndex);
@@ -209,7 +218,7 @@ export function NavBar() {
                 }}
               >
                 <div
-                  style={{ width: isMobile ? 30 : 48, height: isMobile ? 30 : 48 }}
+                  style={{ width: isCompactDevice ? 30 : 48, height: isCompactDevice ? 30 : 48 }}
                   className="rounded-[12px] overflow-hidden shadow-[0_2px_8px_-2px_oklch(0.2_0.02_240/0.25)]"
                 >
                   {navItem.icon}
@@ -223,7 +232,7 @@ export function NavBar() {
         <div
           className="mx-auto mt-1 rounded-full"
           style={{
-            width: isMobile ? "52%" : "60%",
+            width: isCompactDevice ? "52%" : "60%",
             height: 1,
             background: "linear-gradient(90deg, transparent, oklch(0.18 0.01 240 / 0.12), transparent)",
           }}
