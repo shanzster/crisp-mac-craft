@@ -313,7 +313,7 @@ function Hero() {
             className="font-bold tracking-tightest text-foreground leading-[0.9] hero-drop hero-drop-2"
             style={{ fontSize: "clamp(32px, 7vw, 88px)" }}
           >
-            Your One Man
+            Bilat this is new version
           </h1>
           <h1
             className="font-bold tracking-tightest leading-[0.9] hero-drop hero-drop-3"
