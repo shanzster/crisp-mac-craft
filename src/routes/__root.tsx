@@ -5,10 +5,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
-  HeadContent,
-  Scripts,
 } from "@tanstack/react-router";
-import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
   return (
@@ -68,61 +65,17 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-    ],
-    links: [
-      {
-        rel: "icon",
-        type: "image/svg+xml",
-        href: "/favicon.svg",
-      },
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
-    ],
-  }),
-  shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
   errorComponent: ErrorComponent,
 });
 
-function RootShell({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  );
-}
-
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   const [showMobileModal, setShowMobileModal] = useState(false);
-  const [runtimeHost, setRuntimeHost] = useState("");
-  const runtimeMode = import.meta.env.DEV ? "DEV" : "PREVIEW/PROD";
 
   useEffect(() => {
-    setRuntimeHost(window.location.host);
-
     const isNarrowViewport = window.matchMedia("(max-width: 767px)").matches;
     const isTabletWidth = window.matchMedia("(max-width: 1024px)").matches;
     const hasTouch = navigator.maxTouchPoints > 0;
@@ -136,14 +89,6 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div
-        className="fixed left-2 top-2 z-[1000] rounded-[8px] border border-border bg-card/90 px-2 py-1 text-[10px] tracking-tight text-foreground/80"
-        style={{ pointerEvents: "none", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }}
-      >
-        runtime: {runtimeMode}
-        {runtimeHost ? ` | host: ${runtimeHost}` : ""}
-      </div>
-
       <Outlet />
       {showMobileModal && (
         <div
@@ -158,7 +103,7 @@ function RootComponent() {
           <div
             className="relative w-full"
             style={{
-              width: 'calc(100% - 32px)',
+              width: "calc(100% - 32px)",
               maxWidth: 520,
               animation: "slideUp 0.35s cubic-bezier(.2,.8,.2,1) both",
             }}
@@ -166,7 +111,7 @@ function RootComponent() {
           >
             <div
               className="w-full rounded-[12px] overflow-hidden border border-white/10 bg-secondary p-4 sm:p-6"
-              style={{ boxShadow: "0 32px 80px -16px oklch(0.04 0.01 240 / 0.8)", boxSizing: 'border-box' }}
+              style={{ boxShadow: "0 32px 80px -16px oklch(0.04 0.01 240 / 0.8)", boxSizing: "border-box" }}
             >
               <h3 className="text-lg font-semibold tracking-tight text-foreground">
                 This portfolio is optimized for desktop view
@@ -201,7 +146,7 @@ function RootComponent() {
         }
         @keyframes slideUp {
           from { opacity: 0; transform: translateY(24px) scale(0.97); }
-          to   { opacity: 1; transform: translateY(0)    scale(1);    }
+          to   { opacity: 1; transform: translateY(0) scale(1); }
         }
       `}</style>
     </QueryClientProvider>
