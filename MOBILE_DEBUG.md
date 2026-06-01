@@ -1,58 +1,77 @@
 # Mobile Detection & Production Bug Tracker
 
-## Overall Status: 🟡 IN PROGRESS
+## Overall Status: 🟡 AWAITING DEPLOY VERIFICATION
 
 ---
 
-## Problem 1 (CRITICAL): JS bundle not loading in production
-**Error:** `Failed to fetch dynamically imported module: .../@id/virtual:tanstack-start-client-entry`
+## Problem 1 (CRITICAL): 404:NOT_FOUND in production
+**Symptom:** Site shows `404: NOT_FOUND` / `Code: NOT_FOUND` on Vercel
 
-**Root cause (CONFIRMED):**
-`vite.config.ts` was adding `nitro({ preset: "vercel" })` as an extra plugin. But `@lovable.dev/vite-tanstack-config` already includes `tanstackStart()` which has Nitro built in. Two Nitro instances conflict — virtual modules like `virtual:tanstack-start-client-entry` get registered incorrectly and fail at runtime in production.
+**Root cause (CONFIRMED via audit):**
+The `nitro` plugin in `vite.config.ts` is REQUIRED — it generates the `.vercel/output` folder that Vercel needs to serve the app. Without it, `vite build` runs but produces no Vercel-compatible output, so Vercel has nothing to serve → 404.
 
-Because the client JS never loads, `useEffect` never runs, `useIsClient` never flips to `true`, and ALL mobile detection stays at its SSR default (`false`). This is why the debug chip shows all false on your phone.
+The plugin was incorrectly removed in commit `522813e` ("ok na daw").
 
-**Fix applied:** Removed `nitro({ preset: "vercel" })` and its import from `vite.config.ts`.
+Additionally, `nitro` was listed as a runtime `dependency` instead of `devDependency`. This caused npm to potentially hoist a conflicting version alongside TanStack Start's internal Nitro.
+
+**Fixes applied:**
+1. Restored `nitro({ preset: "vercel" })` plugin in `vite.config.ts`
+2. Moved `"nitro"` from `dependencies` → `devDependencies` in `package.json`
 
 **Status: ✅ FIXED — needs deploy to verify**
 
 ---
 
-## Problem 2 (secondary): Mobile detection returning false after hydration
-**Root cause (CONFIRMED):**
-`HeroFolder.tsx` used `isCompactDevice` directly in JSX without the `useIsClient` guard. On SSR, server renders with `isCompactDevice = false`. Client hydrates but React sees HTML already matches server output and doesn't re-render — stuck as desktop.
+## Problem 2: `virtual:tanstack-start-client-entry` fetch error
+**Symptom:** `Failed to fetch dynamically imported module: .../@id/virtual:tanstack-start-client-entry`
 
-**Fix applied:**
-- Added `useIsClient` import to `HeroFolder.tsx`
-- Derived `const isMobile = isClient && isCompactDevice`
-- Replaced all JSX uses of `isCompactDevice` with `isMobile`
-- Expanded UA regex in all 4 files to catch: `CriOS`, `FxiOS`, `OPiOS`, `EdgA`, `SamsungBrowser`
+**Root cause:** This was a symptom of Problem 1 — when the build output is broken, the SSR server tries to import virtual modules that were never properly bundled.
 
-**Files changed:**
-- `src/components/HeroFolder.tsx` — main fix
-- `src/components/NavBar.tsx` — UA regex
-- `src/components/WorkFolder.tsx` — UA regex (already had `isClient` guard)
-- `src/routes/__root.tsx` — UA regex
+**Status: ✅ Should be resolved by Problem 1 fix**
 
-**Status: ✅ FIXED — will only be verifiable once Problem 1 is resolved**
+---
+
+## Problem 3: Mobile detection returning `false` in prod
+**Symptom:** Debug chip shows all `false` on phone in production
+
+**Root cause:** Two issues:
+1. Client JS never loaded (Problem 1) → `useEffect` never ran → everything stayed at SSR default `false`
+2. `HeroFolder.tsx` used `isCompactDevice` directly in JSX without `useIsClient` guard
+
+**Fixes applied:**
+- `HeroFolder.tsx`: Added `useIsClient`, derived `isMobile = isClient && isCompactDevice`, replaced all JSX uses
+- All 4 files: Expanded UA regex to catch `CriOS`, `FxiOS`, `OPiOS`, `EdgA`, `SamsungBrowser`
+
+**Status: ✅ Code fixed — will only be verifiable once Problem 1 is resolved**
+
+---
+
+## Files changed in this session
+| File | Change |
+|------|--------|
+| `vite.config.ts` | Restored `nitro({ preset: "vercel" })` plugin |
+| `package.json` | Moved `nitro` from `dependencies` → `devDependencies` |
+| `src/components/HeroFolder.tsx` | Added `useIsClient` guard, expanded UA regex |
+| `src/components/NavBar.tsx` | Expanded UA regex |
+| `src/components/WorkFolder.tsx` | Expanded UA regex |
+| `src/routes/__root.tsx` | Expanded UA regex |
 
 ---
 
 ## Debug chip (HeroFolder top-right corner)
-When you open the site on your phone, the chip shows:
-- `compact` — should be `true` on mobile
-- `width` — your phone's viewport width in px
-- `narrow<=767` — is viewport under 767px?
-- `ua-mobile` — did your browser UA match the regex?
-- `touchPoints` — how many touch points your browser reports
-- `coarse` — does your browser report a coarse pointer?
+After deploying, open on phone and check:
+- `compact` → should be `true`
+- `touchPoints` → should be > 0
+- `coarse` → should be `true`
+- `ua-mobile` → depends on browser
 
-**If ALL are false/0 on phone → Problem 1 (JS not loading at all)**
-**If touchPoints > 0 but compact is still false → Problem 2 code bug**
+If all still `false` after this deploy → JS still not loading, check Vercel build logs.
 
 ---
 
 ## Next steps
-1. Deploy to Vercel
-2. Open on phone, check debug chip
-3. Report back what values it shows
+1. Run `npm install` (to update lockfile with nitro moved to devDeps)
+2. Deploy to Vercel
+3. Check site loads (no 404)
+4. Open on phone, check debug chip
+5. Report back
