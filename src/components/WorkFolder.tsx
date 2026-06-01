@@ -181,52 +181,62 @@ function MobileWorkPreviewModal({
 
 /* ─── Big folder ─── */
 function BigFolder({ open, isMobile }: { open: boolean; isMobile?: boolean }) {
-  const w = isMobile ? 238 : 480;
-  const h = isMobile ? 212 : 390;
+  // Folder renders at full width of its container (which is clamped by the parent)
+  // Height is derived from the natural aspect ratio: 480×390 ≈ 1.23:1
+  const aspectRatio = isMobile ? (238 / 212) : (480 / 390);
+
   return (
     <div
-      className="relative select-none shrink-0"
-      style={{ width: w, height: h, perspective: 1400 }}
+      className="relative select-none w-full"
+      style={{
+        // paddingBottom maintains aspect ratio: height = width / aspectRatio
+        paddingBottom: `${(1 / aspectRatio) * 100}%`,
+        perspective: 1400,
+      }}
     >
-      {/* Shadow */}
-      <div
-        className="absolute -bottom-6 left-1/2 -translate-x-1/2 rounded-full"
-        style={{
-          width: 380, height: 32,
-          background: "oklch(0.55 0.12 240 / 0.22)",
-          filter: "blur(20px)",
-          opacity: open ? 0.3 : 0.65,
-          transition: "opacity 0.4s",
-        }}
-      />
-      {/* Back */}
-      <div
-        className="absolute inset-0 rounded-[28px]"
-        style={{ background: "linear-gradient(160deg, oklch(0.70 0.14 238), oklch(0.62 0.16 244))" }}
-      />
-      {/* Tab */}
-      <div
-        className="absolute -top-7 left-6 h-10 w-[38%] rounded-t-[16px]"
-        style={{ background: "linear-gradient(90deg, oklch(0.68 0.14 238), oklch(0.64 0.15 242))" }}
-      />
-      {/* Front flap */}
-      <div
-        className="absolute inset-0 rounded-[28px] origin-bottom"
-        style={{
-          background: "linear-gradient(160deg, oklch(0.82 0.10 230) 0%, oklch(0.72 0.13 242) 100%)",
-          boxShadow:
-            "inset 0 2.5px 0 oklch(1 0 0 / 0.30), inset 0 -1px 0 oklch(0.5 0.1 240 / 0.12), 0 20px 60px -14px oklch(0.3 0.1 240 / 0.5)",
-          transform: open ? "rotateX(46deg)" : "rotateX(0deg)",
-          transition: "transform 0.55s cubic-bezier(.2,.8,.2,1)",
-        }}
-      >
-        <div className="absolute inset-x-10 top-6 h-px rounded-full" style={{ background: "oklch(1 0 0 / 0.24)" }} />
-        <div className="absolute inset-x-16 top-9 h-px rounded-full" style={{ background: "oklch(1 0 0 / 0.12)" }} />
-        {!open && (
-          <p className="absolute bottom-6 right-8 text-[13px] tracking-[0.24em] uppercase text-white/35 font-medium">
-            selected work
-          </p>
-        )}
+      {/* Inner absolutely-positioned content fills the aspect-ratio box */}
+      <div className="absolute inset-0">
+        {/* Shadow */}
+        <div
+          className="absolute -bottom-6 left-1/2 -translate-x-1/2 rounded-full"
+          style={{
+            width: "80%",
+            height: 32,
+            background: "oklch(0.55 0.12 240 / 0.22)",
+            filter: "blur(20px)",
+            opacity: open ? 0.3 : 0.65,
+            transition: "opacity 0.4s",
+          }}
+        />
+        {/* Back */}
+        <div
+          className="absolute inset-0 rounded-[28px]"
+          style={{ background: "linear-gradient(160deg, oklch(0.70 0.14 238), oklch(0.62 0.16 244))" }}
+        />
+        {/* Tab */}
+        <div
+          className="absolute -top-7 left-6 h-10 w-[38%] rounded-t-[16px]"
+          style={{ background: "linear-gradient(90deg, oklch(0.68 0.14 238), oklch(0.64 0.15 242))" }}
+        />
+        {/* Front flap */}
+        <div
+          className="absolute inset-0 rounded-[28px] origin-bottom"
+          style={{
+            background: "linear-gradient(160deg, oklch(0.82 0.10 230) 0%, oklch(0.72 0.13 242) 100%)",
+            boxShadow:
+              "inset 0 2.5px 0 oklch(1 0 0 / 0.30), inset 0 -1px 0 oklch(0.5 0.1 240 / 0.12), 0 20px 60px -14px oklch(0.3 0.1 240 / 0.5)",
+            transform: open ? "rotateX(46deg)" : "rotateX(0deg)",
+            transition: "transform 0.55s cubic-bezier(.2,.8,.2,1)",
+          }}
+        >
+          <div className="absolute inset-x-10 top-6 h-px rounded-full" style={{ background: "oklch(1 0 0 / 0.24)" }} />
+          <div className="absolute inset-x-16 top-9 h-px rounded-full" style={{ background: "oklch(1 0 0 / 0.12)" }} />
+          {!open && (
+            <p className="absolute bottom-[15%] right-[6%] text-[clamp(8px,2vw,13px)] tracking-[0.24em] uppercase text-white/35 font-medium">
+              selected work
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -353,20 +363,33 @@ export function WorkFolderScene({ items }: { items: WorkItem[] }) {
         ))}
 
         {/* Folder — center, above cards in z */}
-        <button
-          type="button"
-          className="relative z-10 cursor-pointer"
-          style={{ background: "transparent", border: 0, padding: 0 }}
-          onClick={() => {
-            setOpen((current) => !current);
-            setHoveredIndex(null);
+        {/* Wrapper scales the folder down on narrow viewports via CSS */}
+        <div
+          className="relative z-10"
+          style={{
+            // On mobile the folder is 238px wide; on desktop 480px.
+            // We clamp the wrapper so it never overflows the screen.
+            width: isCompactDevice ? 238 : 480,
+            maxWidth: "calc(100vw - 32px)",
+            // Scale the entire folder proportionally when it hits maxWidth
+            // This is handled by overflow:hidden on the parent container
           }}
-          onMouseEnter={isCompactDevice ? undefined : () => { cancelClose(); setOpen(true); }}
-          onMouseLeave={isCompactDevice ? undefined : scheduleClose}
-          aria-label="Toggle selected work folder"
         >
-          <BigFolder open={open} isMobile={isCompactDevice} />
-        </button>
+          <button
+            type="button"
+            className="w-full cursor-pointer"
+            style={{ background: "transparent", border: 0, padding: 0 }}
+            onClick={() => {
+              setOpen((current) => !current);
+              setHoveredIndex(null);
+            }}
+            onMouseEnter={isCompactDevice ? undefined : () => { cancelClose(); setOpen(true); }}
+            onMouseLeave={isCompactDevice ? undefined : scheduleClose}
+            aria-label="Toggle selected work folder"
+          >
+            <BigFolder open={open} isMobile={isCompactDevice} />
+          </button>
+        </div>
       </div>
 
       <p className="mt-2 text-[10px] uppercase tracking-[0.2em] text-foreground/25">
