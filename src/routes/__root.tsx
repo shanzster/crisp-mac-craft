@@ -131,12 +131,32 @@ function RootComponent() {
       {showMobileModal && (
         <div
           className="fixed inset-0 z-[999] flex items-center justify-center p-4 sm:p-6"
-          style={{ background: "oklch(0.04 0.01 240 / 0.96)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)", animation: "lb-bg-in 0.2s ease both" }}
+          style={{
+            background: "oklch(0.04 0.01 240 / 0.96)",
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
+            animation: "fadeIn 0.2s ease both",
+          }}
         >
-          <div className="relative w-full" style={{ animation: "modal-in 0.35s cubic-bezier(.2,.8,.2,1) both", width: 'calc(100% - 32px)', maxWidth: 520 }} onClick={(e) => e.stopPropagation()}>
-            <div className="w-full rounded-[12px] overflow-hidden border border-white/10 bg-secondary p-4 sm:p-6" style={{ boxShadow: "0 32px 80px -16px oklch(0.04 0.01 240 / 0.8)", boxSizing: 'border-box' }}>
-              <h3 className="text-lg font-semibold tracking-tight text-foreground">This portfolio is optimized for desktop view</h3>
-              <p className="mt-2 text-sm text-muted-foreground">For the best experience, please view this site on a desktop or larger tablet.</p>
+          <div
+            className="relative w-full"
+            style={{
+              width: 'calc(100% - 32px)',
+              maxWidth: 520,
+              animation: "slideUp 0.35s cubic-bezier(.2,.8,.2,1) both",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              className="w-full rounded-[12px] overflow-hidden border border-white/10 bg-secondary p-4 sm:p-6"
+              style={{ boxShadow: "0 32px 80px -16px oklch(0.04 0.01 240 / 0.8)", boxSizing: 'border-box' }}
+            >
+              <h3 className="text-lg font-semibold tracking-tight text-foreground">
+                This portfolio is optimized for desktop view
+              </h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                For the best experience, please view this site on a desktop or larger tablet.
+              </p>
               <div className="mt-4 flex justify-end gap-3">
                 <a
                   href="https://instagram.com/shanzster.zip"
@@ -147,9 +167,7 @@ function RootComponent() {
                   View on Instagram
                 </a>
                 <button
-                  onClick={() => {
-                    setShowMobileModal(false);
-                  }}
+                  onClick={() => setShowMobileModal(false)}
                   className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
                 >
                   Continue anyway
@@ -159,6 +177,16 @@ function RootComponent() {
           </div>
         </div>
       )}
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
+        @keyframes slideUp {
+          from { opacity: 0; transform: translateY(24px) scale(0.97); }
+          to   { opacity: 1; transform: translateY(0)    scale(1);    }
+        }
+      `}</style>
     </QueryClientProvider>
   );
 }
