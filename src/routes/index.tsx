@@ -313,7 +313,7 @@ function Hero() {
             className="font-bold tracking-tightest text-foreground leading-[0.9] hero-drop hero-drop-2"
             style={{ fontSize: "clamp(32px, 7vw, 88px)" }}
           >
-            Bilat this is new version
+            Your One Man
           </h1>
           <h1
             className="font-bold tracking-tightest leading-[0.9] hero-drop hero-drop-3"
@@ -526,56 +526,56 @@ function ToolsShowcase() {
     <div className="rounded-[16px] border border-border bg-card overflow-hidden">
 
       {/* ── Top: headline + single icon row ── */}
-      <div className="relative px-10 pt-12 pb-10 border-b border-border">
+      <div className="relative px-4 sm:px-10 pt-8 sm:pt-12 pb-8 sm:pb-10 border-b border-border">
         {[
           { top: "14%", left: "3%" }, { top: "10%", left: "20%" },
           { top: "12%", right: "22%" }, { top: "14%", right: "4%" },
         ].map((pos, i) => (
-          <span key={i} className="absolute select-none pointer-events-none text-[11px]" style={{ ...pos as React.CSSProperties, color: "oklch(0.18 0.01 240 / 0.15)" }}>★</span>
+          <span key={i} className="hidden sm:block absolute select-none pointer-events-none text-[11px]" style={{ ...pos as React.CSSProperties, color: "oklch(0.18 0.01 240 / 0.15)" }}>★</span>
         ))}
 
-        <h2 className="text-center font-bold tracking-tightest leading-none" style={{ fontSize: "clamp(34px, 5.5vw, 72px)", color: "oklch(0.38 0.22 255)" }}>
+        <h2 className="text-center font-bold tracking-tightest leading-none" style={{ fontSize: "clamp(28px, 5.5vw, 72px)", color: "oklch(0.38 0.22 255)" }}>
           [ my toolkit ]
         </h2>
 
         {/* Single row of all icons */}
-        <div className="mt-10 flex items-center justify-center gap-5 flex-wrap">
+        <div className="mt-6 sm:mt-10 flex items-center justify-center gap-3 sm:gap-5 flex-wrap">
           {TOOLS.map((tool) => (
             <div key={tool.name} className="flex flex-col items-center gap-1.5 group">
               <div
-                className="rounded-[16px] overflow-hidden shadow-[0_4px_14px_-4px_oklch(0.2_0.02_240/0.18)] transition-transform duration-200 group-hover:-translate-y-1"
-                style={{ width: 52, height: 52 }}
+                className="rounded-[12px] sm:rounded-[16px] overflow-hidden shadow-[0_4px_14px_-4px_oklch(0.2_0.02_240/0.18)] transition-transform duration-200 group-hover:-translate-y-1"
+                style={{ width: 40, height: 40 }}
               >
                 {tool.icon}
               </div>
-              <span className="text-[9px] tracking-tight text-foreground/40">{tool.name}</span>
+              <span className="text-[8px] sm:text-[9px] tracking-tight text-foreground/40">{tool.name}</span>
             </div>
           ))}
         </div>
       </div>
 
-      {/* ── Bottom: 2-column description cards ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 divide-border">
+      {/* ── Bottom: description cards ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 divide-y divide-border">
         {TOOLS.map((tool, i) => (
           <div
             key={tool.name}
-            className="flex items-start gap-4 px-7 py-6 border-b border-border"
+            className="flex items-start gap-3 sm:gap-4 px-4 sm:px-7 py-4 sm:py-6 border-b border-border"
           >
             {/* Icon */}
             <div
-              className="rounded-[12px] overflow-hidden shrink-0 shadow-[0_3px_10px_-3px_oklch(0.2_0.02_240/0.18)]"
-              style={{ width: 44, height: 44 }}
+              className="rounded-[10px] sm:rounded-[12px] overflow-hidden shrink-0 shadow-[0_3px_10px_-3px_oklch(0.2_0.02_240/0.18)]"
+              style={{ width: 36, height: 36 }}
             >
               {tool.icon}
             </div>
 
             {/* Text */}
-            <div>
-              <div className="flex items-center gap-2">
-                <p className="text-[13px] font-semibold tracking-tight text-foreground">{tool.name}</p>
-                <span className="rounded-full bg-secondary px-2 py-0.5 text-[9px] tracking-tight text-foreground/40">{tool.category}</span>
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                <p className="text-[12px] sm:text-[13px] font-semibold tracking-tight text-foreground">{tool.name}</p>
+                <span className="rounded-full bg-secondary px-2 py-0.5 text-[8px] sm:text-[9px] tracking-tight text-foreground/40">{tool.category}</span>
               </div>
-              <p className="mt-1.5 text-[12px] leading-relaxed tracking-tight text-foreground/55">
+              <p className="mt-1 sm:mt-1.5 text-[11px] sm:text-[12px] leading-relaxed tracking-tight text-foreground/55">
                 {tool.how}
               </p>
             </div>
@@ -698,7 +698,7 @@ function Work() {
       <SectionHeader index="02" title="Selected work" />
 
       {/* Top bar */}
-      <div className="mt-6 flex items-center justify-between px-1 mb-8">
+      <div className="mt-6 flex flex-col sm:flex-row sm:items-center justify-between px-1 mb-6 gap-2">
         <div className="flex items-center gap-3">
           <span className="h-2 w-2 rounded-full" style={{ background: "var(--traffic-green)" }} />
           <span className="text-[11px] tracking-tight text-foreground/50">
@@ -710,11 +710,11 @@ function Work() {
         </span>
       </div>
 
-      {/* 3-column layout — no card wrapper, open desktop feel */}
-      <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr_200px] gap-8 items-start">
+      {/* 3-column layout — stacks on mobile */}
+      <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr_200px] gap-6 lg:gap-8 items-start">
 
-        {/* ── Left sidebar ── */}
-        <div className="flex flex-col gap-6">
+        {/* ── Left sidebar — hidden on mobile, shown on lg ── */}
+        <div className="hidden lg:flex flex-col gap-6">
 
           <div className="rounded-[14px] border border-border bg-card p-5">
             <p className="text-[9px] uppercase tracking-[0.22em] text-foreground/35 mb-3">currently</p>
@@ -759,9 +759,9 @@ function Work() {
           </div>
         </div>
 
-        {/* ── Center: folder — hide overflow on small screens to prevent horizontal pan ── */}
+        {/* ── Center: folder ── */}
         <div className="flex flex-col items-center overflow-hidden md:overflow-visible">
-          <p className="text-[10px] uppercase tracking-[0.22em] text-foreground/30 mb-6">
+          <p className="text-[10px] uppercase tracking-[0.22em] text-foreground/30 mb-4 hidden sm:block">
             hover to open · click to view
           </p>
           <div className="w-full overflow-hidden md:overflow-visible">
@@ -769,8 +769,8 @@ function Work() {
           </div>
         </div>
 
-        {/* ── Right sidebar ── */}
-        <div className="flex flex-col gap-6">
+        {/* ── Right sidebar — hidden on mobile, shown on lg ── */}
+        <div className="hidden lg:flex flex-col gap-6">
 
           <div className="rounded-[14px] border border-border bg-card p-5">
             <p className="text-[9px] uppercase tracking-[0.22em] text-foreground/35 mb-4">clients</p>
@@ -898,7 +898,7 @@ function Services() {
     <section id="services" className="mt-20">
       <SectionHeader index="03" title="Services" />
 
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {services.map((s) => (
           <div
             key={s.k}
@@ -1209,9 +1209,9 @@ function FAQ() {
         </div>
         <div className="divide-y divide-border">
           {faqs.map((f, i) => (
-            <div key={i} className="grid grid-cols-1 lg:grid-cols-2 gap-4 px-7 py-5">
-              <p className="text-[13px] font-semibold tracking-tight text-foreground">{f.q}</p>
-              <p className="text-[13px] leading-relaxed tracking-tight text-foreground/60">{f.a}</p>
+            <div key={i} className="grid grid-cols-1 lg:grid-cols-2 gap-2 lg:gap-4 px-4 sm:px-7 py-4 sm:py-5">
+              <p className="text-[12px] sm:text-[13px] font-semibold tracking-tight text-foreground">{f.q}</p>
+              <p className="text-[12px] sm:text-[13px] leading-relaxed tracking-tight text-foreground/60">{f.a}</p>
             </div>
           ))}
         </div>
@@ -1225,25 +1225,25 @@ function Contact() {
   return (
     <section id="contact" className="mt-20">
       <SectionHeader index="08" title="Contact" />
-      <div className="mt-6 grid gap-6 lg:grid-cols-12">
+      <div className="mt-6 grid gap-4 sm:gap-6 lg:grid-cols-12">
         <div className="lg:col-span-8">
           <MacWindow label="Mail —" title="New message">
-            <div className="p-8 sm:p-10">
-              <h2 className="text-[clamp(32px,4.5vw,60px)] leading-[0.95] tracking-tightest font-bold">
+            <div className="p-5 sm:p-8 lg:p-10">
+              <h2 className="text-[clamp(26px,4.5vw,60px)] leading-[0.95] tracking-tightest font-bold">
                 Let&apos;s work<br />
                 <span className="selected-text">together.</span>
               </h2>
-              <p className="mt-4 text-[13px] leading-relaxed tracking-tight text-foreground/55 max-w-md">
+              <p className="mt-4 text-[12px] sm:text-[13px] leading-relaxed tracking-tight text-foreground/55 max-w-md">
                 Whether you need a social media manager, a brand identity, or just want to talk strategy — I&apos;m open. Send me a message and I&apos;ll get back to you within 24 hours.
               </p>
-              <div className="mt-8 space-y-4 text-[13px] tracking-tight">
+              <div className="mt-6 sm:mt-8 space-y-4 text-[12px] sm:text-[13px] tracking-tight">
                 <Field label="To" value="your@email.com" />
                 <Field label="From" value="you@yourbusiness.com" />
                 <Field label="Subject" value="I'd like to work with you" />
               </div>
               <a
                 href="mailto:your@email.com"
-                className="mt-8 inline-flex rounded-full bg-foreground px-5 py-2.5 text-[13px] tracking-tight text-background transition hover:opacity-90"
+                className="mt-6 sm:mt-8 inline-flex rounded-full bg-foreground px-4 sm:px-5 py-2 sm:py-2.5 text-[12px] sm:text-[13px] tracking-tight text-background transition hover:opacity-90"
               >
                 Send message →
               </a>
