@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "@tanstack/react-router";
 import { type WorkItem } from "@/lib/work-data";
+import { useIsClient } from "@/hooks/useIsClient";
 
 // 3 left, 3 right — neat columns flanking the folder
 // x: distance from center, y: vertical offset from center
@@ -250,6 +251,7 @@ export function WorkFolderScene({ items }: { items: WorkItem[] }) {
   const [activeMobileItem, setActiveMobileItem] = useState<WorkItem | null>(null);
   const navigate = useNavigate();
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isClient = useIsClient();
 
   const cancelClose = () => {
     if (closeTimer.current) {
@@ -324,9 +326,12 @@ export function WorkFolderScene({ items }: { items: WorkItem[] }) {
   // Only show first 6 items (3 left, 3 right)
   const visible = items.slice(0, 6);
 
+  // Before client hydration, treat as desktop to match SSR output exactly
+  const isMobile = isClient && isCompactDevice;
+
   return (
     <div className="flex flex-col items-center w-full">
-      {activeMobileItem && isCompactDevice && (
+      {activeMobileItem && isMobile && (
         <MobileWorkPreviewModal
           item={activeMobileItem}
           onClose={() => setActiveMobileItem(null)}
@@ -336,12 +341,10 @@ export function WorkFolderScene({ items }: { items: WorkItem[] }) {
 
       <div
         className="relative flex items-center justify-center w-full"
-        style={{ height: isCompactDevice ? 300 : 720 }}
-        onMouseEnter={isCompactDevice ? undefined : () => { cancelClose(); setOpen(true); }}
-        onMouseLeave={isCompactDevice ? undefined : scheduleClose}
-        // On touch devices, tapping outside the folder closes it
-        onClick={isCompactDevice ? (e) => {
-          // If the click target is the container itself (not a card or button), close
+        style={{ height: isMobile ? 300 : 720 }}
+        onMouseEnter={isMobile ? undefined : () => { cancelClose(); setOpen(true); }}
+        onMouseLeave={isMobile ? undefined : scheduleClose}
+        onClick={isMobile ? (e) => {
           if (e.target === e.currentTarget) {
             setOpen(false);
             setHoveredIndex(null);
@@ -359,27 +362,22 @@ export function WorkFolderScene({ items }: { items: WorkItem[] }) {
             onHover={(idx) => { cancelClose(); setHoveredIndex(idx); }}
             onLeave={() => setHoveredIndex(null)}
             onSelect={(selectedItem) => {
-              if (isCompactDevice) {
+              if (isMobile) {
                 setActiveMobileItem(selectedItem);
               }
               setOpen(false);
               setHoveredIndex(null);
             }}
-            isMobile={isCompactDevice}
+            isMobile={isMobile}
           />
         ))}
 
         {/* Folder — center, above cards in z */}
-        {/* Wrapper scales the folder down on narrow viewports via CSS */}
         <div
           className="relative z-10"
           style={{
-            // On mobile the folder is 238px wide; on desktop 480px.
-            // We clamp the wrapper so it never overflows the screen.
-            width: isCompactDevice ? 238 : 480,
+            width: isMobile ? 238 : 480,
             maxWidth: "calc(100vw - 32px)",
-            // Scale the entire folder proportionally when it hits maxWidth
-            // This is handled by overflow:hidden on the parent container
           }}
         >
           <button
@@ -387,21 +385,20 @@ export function WorkFolderScene({ items }: { items: WorkItem[] }) {
             className="w-full cursor-pointer"
             style={{ background: "transparent", border: 0, padding: 0 }}
             onClick={() => {
-              // Always toggle on click — works for both touch and desktop
               setOpen((current) => !current);
               setHoveredIndex(null);
             }}
-            onMouseEnter={isCompactDevice ? undefined : () => { cancelClose(); setOpen(true); }}
-            onMouseLeave={isCompactDevice ? undefined : scheduleClose}
+            onMouseEnter={isMobile ? undefined : () => { cancelClose(); setOpen(true); }}
+            onMouseLeave={isMobile ? undefined : scheduleClose}
             aria-label="Toggle selected work folder"
           >
-            <BigFolder open={open} isMobile={isCompactDevice} />
+            <BigFolder open={open} isMobile={isMobile} />
           </button>
         </div>
       </div>
 
       <p className="mt-2 text-[10px] uppercase tracking-[0.2em] text-foreground/25">
-        {isCompactDevice ? "tap to open · tap a card to view" : "hover to open · click a card to view"}
+        {isMobile ? "tap to open · tap a card to view" : "hover to open · click a card to view"}
       </p>
     </div>
   );

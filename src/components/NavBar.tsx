@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useIsClient } from "@/hooks/useIsClient";
 
 
 const DOCK_ITEMS = [
@@ -99,6 +100,10 @@ export function NavBar() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [tooltip, setTooltip] = useState<string | null>(null);
   const [isCompactDevice, setIsCompactDevice] = useState(false);
+  const isClient = useIsClient();
+
+  // isMobile is only true after client hydration — prevents SSR mismatch
+  const isMobile = isClient && isCompactDevice;
 
   useEffect(() => {
     const update = () => {
@@ -118,7 +123,7 @@ export function NavBar() {
 
   // Magnification: items near hovered one scale up too
   const getScale = (i: number) => {
-    if (isCompactDevice) return 1;
+    if (isMobile) return 1;
     if (hoveredIndex === null) return 1;
     const dist = Math.abs(i - hoveredIndex);
     if (dist === 0) return 1.55;
@@ -137,7 +142,7 @@ export function NavBar() {
           className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 pointer-events-none"
           style={{
             transform: `translateX(-50%)`,
-            bottom: isCompactDevice ? "calc(env(safe-area-inset-bottom, 0px) + 68px)" : 92,
+            bottom: isMobile ? "calc(env(safe-area-inset-bottom, 0px) + 68px)" : 92,
           }}
         >
           <div
@@ -158,9 +163,9 @@ export function NavBar() {
       <div
         className="fixed left-1/2 z-50"
         style={{
-          bottom: isCompactDevice ? "calc(env(safe-area-inset-bottom, 0px) + 8px)" : 20,
+          bottom: isMobile ? "calc(env(safe-area-inset-bottom, 0px) + 8px)" : 20,
           transform: "translateX(-50%)",
-          width: isCompactDevice ? "100%" : "auto",
+          width: isMobile ? "100%" : "auto",
           pointerEvents: "none",
         }}
       >
@@ -168,8 +173,8 @@ export function NavBar() {
           className="mx-auto flex w-fit items-end rounded-[20px]"
           style={{
             pointerEvents: "auto",
-            gap: isCompactDevice ? 4 : 8,
-            padding: isCompactDevice ? "4px 6px" : "8px 16px",
+            gap: isMobile ? 4 : 8,
+            padding: isMobile ? "4px 6px" : "8px 16px",
             background: "oklch(0.97 0.005 240 / 0.72)",
             backdropFilter: "blur(28px) saturate(1.8)",
             WebkitBackdropFilter: "blur(28px) saturate(1.8)",
@@ -186,7 +191,7 @@ export function NavBar() {
                   className="self-center mx-1"
                   style={{
                     width: 1,
-                    height: isCompactDevice ? 18 : 32,
+                    height: isMobile ? 18 : 32,
                     background: "oklch(0.18 0.01 240 / 0.15)",
                   }}
                 />
@@ -206,7 +211,7 @@ export function NavBar() {
                   transition: "transform 0.2s cubic-bezier(.2,.8,.2,1)",
                   transform: `scale(${scale})`,
                   transformOrigin: "bottom center",
-                  margin: isCompactDevice ? "0 1px" : undefined,
+                  margin: isMobile ? "0 1px" : undefined,
                 }}
                 onMouseEnter={() => {
                   setHoveredIndex(realIndex);
@@ -218,7 +223,7 @@ export function NavBar() {
                 }}
               >
                 <div
-                  style={{ width: isCompactDevice ? 30 : 48, height: isCompactDevice ? 30 : 48 }}
+                  style={{ width: isMobile ? 30 : 48, height: isMobile ? 30 : 48 }}
                   className="rounded-[12px] overflow-hidden shadow-[0_2px_8px_-2px_oklch(0.2_0.02_240/0.25)]"
                 >
                   {navItem.icon}
@@ -232,7 +237,7 @@ export function NavBar() {
         <div
           className="mx-auto mt-1 rounded-full"
           style={{
-            width: isCompactDevice ? "52%" : "60%",
+            width: isMobile ? "52%" : "60%",
             height: 1,
             background: "linear-gradient(90deg, transparent, oklch(0.18 0.01 240 / 0.12), transparent)",
           }}
