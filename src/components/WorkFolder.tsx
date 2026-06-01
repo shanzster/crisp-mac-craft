@@ -305,18 +305,17 @@ export function WorkFolderScene({ items }: { items: WorkItem[] }) {
     };
 
     const handleVisibilityChange = () => {
-      if (document.visibilityState === "visible") {
+      // Only reset when tab becomes hidden (user navigated away), not on visible
+      if (document.visibilityState === "hidden") {
         resetScene();
       }
     };
 
-    window.addEventListener("focus", resetScene);
-    window.addEventListener("pageshow", resetScene);
+    // Don't listen to focus/pageshow — these fire during SSR hydration on Vercel
+    // and kill the open state before the user can interact
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
-      window.removeEventListener("focus", resetScene);
-      window.removeEventListener("pageshow", resetScene);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       cancelClose();
     };
@@ -340,6 +339,14 @@ export function WorkFolderScene({ items }: { items: WorkItem[] }) {
         style={{ height: isCompactDevice ? 300 : 720 }}
         onMouseEnter={isCompactDevice ? undefined : () => { cancelClose(); setOpen(true); }}
         onMouseLeave={isCompactDevice ? undefined : scheduleClose}
+        // On touch devices, tapping outside the folder closes it
+        onClick={isCompactDevice ? (e) => {
+          // If the click target is the container itself (not a card or button), close
+          if (e.target === e.currentTarget) {
+            setOpen(false);
+            setHoveredIndex(null);
+          }
+        } : undefined}
       >
         {/* Cards */}
         {visible.map((item, i) => (
@@ -380,6 +387,7 @@ export function WorkFolderScene({ items }: { items: WorkItem[] }) {
             className="w-full cursor-pointer"
             style={{ background: "transparent", border: 0, padding: 0 }}
             onClick={() => {
+              // Always toggle on click — works for both touch and desktop
               setOpen((current) => !current);
               setHoveredIndex(null);
             }}
