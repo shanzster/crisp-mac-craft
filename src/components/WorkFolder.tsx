@@ -26,6 +26,8 @@ function WorkPaper({
   onHover,
   onLeave,
   onSelect,
+  onCancelClose,
+  onScheduleClose,
   isMobile,
 }: {
   item: WorkItem;
@@ -35,6 +37,8 @@ function WorkPaper({
   onHover: (i: number) => void;
   onLeave: () => void;
   onSelect: (item: WorkItem) => void;
+  onCancelClose: () => void;
+  onScheduleClose: () => void;
   isMobile: boolean;
 }) {
   const navigate = useNavigate();
@@ -67,8 +71,8 @@ function WorkPaper({
         zIndex: isHovered ? 40 : 20 + index,
         pointerEvents: open ? "auto" : "none",
       }}
-      onMouseEnter={() => open && onHover(index)}
-      onMouseLeave={() => open && onLeave()}
+      onMouseEnter={() => { if (!open || isMobile) return; onCancelClose(); onHover(index); }}
+      onMouseLeave={() => { if (!open || isMobile) return; onLeave(); onScheduleClose(); }}
       onClick={() => {
         if (!open) return;
         onSelect(item);
@@ -342,14 +346,6 @@ export function WorkFolderScene({ items }: { items: WorkItem[] }) {
       <div
         className="relative flex items-center justify-center w-full"
         style={{ height: isMobile ? 300 : 720 }}
-        onMouseEnter={isMobile ? undefined : () => { cancelClose(); setOpen(true); }}
-        onMouseLeave={isMobile ? undefined : scheduleClose}
-        onClick={isMobile ? (e) => {
-          if (e.target === e.currentTarget) {
-            setOpen(false);
-            setHoveredIndex(null);
-          }
-        } : undefined}
       >
         {/* Cards */}
         {visible.map((item, i) => (
@@ -361,6 +357,8 @@ export function WorkFolderScene({ items }: { items: WorkItem[] }) {
             hoveredIndex={hoveredIndex}
             onHover={(idx) => { cancelClose(); setHoveredIndex(idx); }}
             onLeave={() => setHoveredIndex(null)}
+            onCancelClose={cancelClose}
+            onScheduleClose={scheduleClose}
             onSelect={(selectedItem) => {
               if (isMobile) {
                 setActiveMobileItem(selectedItem);
@@ -379,17 +377,17 @@ export function WorkFolderScene({ items }: { items: WorkItem[] }) {
             width: isMobile ? 238 : 480,
             maxWidth: "calc(100vw - 32px)",
           }}
+          onMouseEnter={isMobile ? undefined : () => { cancelClose(); setOpen(true); }}
+          onMouseLeave={isMobile ? undefined : scheduleClose}
         >
           <button
             type="button"
             className="w-full cursor-pointer"
             style={{ background: "transparent", border: 0, padding: 0 }}
             onClick={() => {
-              setOpen((current) => !current);
+              setOpen((prev) => !prev);
               setHoveredIndex(null);
             }}
-            onMouseEnter={isMobile ? undefined : () => { cancelClose(); setOpen(true); }}
-            onMouseLeave={isMobile ? undefined : scheduleClose}
             aria-label="Toggle selected work folder"
           >
             <BigFolder open={open} isMobile={isMobile} />

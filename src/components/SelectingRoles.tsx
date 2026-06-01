@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const ROLES = [
   "content strategist",
@@ -8,36 +8,54 @@ const ROLES = [
   "video editor",
 ];
 
-/**
- * Cycles through roles with a persistent macOS-style text selection —
- * solid blue highlight, left handle (dot on top) and right handle (dot on bottom).
- */
 export function SelectingRoles() {
-  const [i, setI] = useState(0);
-  const [visible, setVisible] = useState(true);
+  const [index, setIndex] = useState(0);
+  const [phase, setPhase] = useState<"visible" | "hiding" | "hidden">("visible");
+  const [mounted, setMounted] = useState(false);
+
+  // Only start the interval after client mount — prevents SSR mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
+    if (!mounted) return;
+
     const id = setInterval(() => {
-      // Brief fade out, swap word, fade back in
-      setVisible(false);
-      setTimeout(() => {
-        setI((v) => (v + 1) % ROLES.length);
-        setVisible(true);
-      }, 180);
-    }, 2600);
+      // 1. Start fade out
+      setPhase("hiding");
+
+      // 2. After fade out completes, swap word
+      const swap = setTimeout(() => {
+        setIndex((v) => (v + 1) % ROLES.length);
+        setPhase("hidden"); // briefly hidden while word swaps
+      }, 160);
+
+      // 3. Fade back in
+      const show = setTimeout(() => {
+        setPhase("visible");
+      }, 220);
+
+      return () => {
+        clearTimeout(swap);
+        clearTimeout(show);
+      };
+    }, 2800);
+
     return () => clearInterval(id);
-  }, []);
+  }, [mounted]);
 
   return (
     <span
-      key={i}
       className="auto-select"
       style={{
-        opacity: visible ? 1 : 0,
-        transition: "opacity 0.18s ease",
+        opacity: phase === "visible" ? 1 : 0,
+        transition: phase === "hiding" ? "opacity 0.16s ease" : "opacity 0.2s ease",
+        display: "inline-block",
+        minWidth: "12ch", // prevent layout shift as words change
       }}
     >
-      {ROLES[i]}
+      {ROLES[index]}
     </span>
   );
 }
