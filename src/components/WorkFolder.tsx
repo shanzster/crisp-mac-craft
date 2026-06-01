@@ -277,7 +277,7 @@ export function WorkFolderScene({ items }: { items: WorkItem[] }) {
     const touchQuery = window.matchMedia("(pointer: coarse)");
     const updateIsMobile = () => {
       const hasTouch = navigator.maxTouchPoints > 0;
-      const isKnownMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+      const isKnownMobile = /Android|iPhone|iPad|iPod|Mobile|CriOS|FxiOS|OPiOS|EdgA|SamsungBrowser/i.test(navigator.userAgent);
       setIsCompactDevice(mediaQuery.matches || touchQuery.matches || hasTouch || isKnownMobile);
     };
 

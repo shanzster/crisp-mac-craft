@@ -127,7 +127,7 @@ function RootComponent() {
     const isTabletWidth = window.matchMedia("(max-width: 1024px)").matches;
     const hasTouch = navigator.maxTouchPoints > 0;
     const hasCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
-    const isKnownMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+    const isKnownMobile = /Android|iPhone|iPad|iPod|Mobile|CriOS|FxiOS|OPiOS|EdgA|SamsungBrowser/i.test(navigator.userAgent);
     const isMobile = isNarrowViewport || isKnownMobile || (isTabletWidth && (hasTouch || hasCoarsePointer));
     if (isMobile) {
       setShowMobileModal(true);

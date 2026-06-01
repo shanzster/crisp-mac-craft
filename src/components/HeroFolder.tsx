@@ -5,11 +5,16 @@ import capcutLogo from "@/image_reference/logos/capcut.png";
 import illustratorLogo from "@/image_reference/logos/AI.png";
 import metaLogo from "@/image_reference/logos/meta.png";
 import canvaLogo from "@/image_reference/logos/canva.png";
+import { useIsClient } from "@/hooks/useIsClient";
 
 function getIsCompactDevice() {
   const isNarrowViewport = window.matchMedia("(max-width: 767px)").matches;
-  const isKnownMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-  return isNarrowViewport || isKnownMobile;
+  const isTabletWidth = window.matchMedia("(max-width: 1024px)").matches;
+  const hasTouch = navigator.maxTouchPoints > 0;
+  const hasCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
+  const isKnownMobile = /Android|iPhone|iPad|iPod|Mobile|CriOS|FxiOS|OPiOS|EdgA|SamsungBrowser/i.test(navigator.userAgent);
+  const isTouchTabletOrPhone = isTabletWidth && (hasTouch || hasCoarsePointer);
+  return isNarrowViewport || isKnownMobile || isTouchTabletOrPhone;
 }
 
 /* ─── Service data ─── */
@@ -528,13 +533,17 @@ export function HeroFolder() {
     coarsePointer: false,
   });
   const [mobileModalOpen, setMobileModalOpen] = useState(false);
+  const isClient = useIsClient();
+
+  // Guard: only true after client hydration — prevents SSR mismatch
+  const isMobile = isClient && isCompactDevice;
 
   useEffect(() => {
     const m = () => {
       const isNarrowViewport = window.matchMedia("(max-width: 767px)").matches;
       const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
       const maxTouchPoints = navigator.maxTouchPoints || 0;
-      const isKnownMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+      const isKnownMobile = /Android|iPhone|iPad|iPod|Mobile|CriOS|FxiOS|OPiOS|EdgA|SamsungBrowser/i.test(navigator.userAgent);
 
       setIsCompactDevice(getIsCompactDevice());
       setDebugInfo({
@@ -611,7 +620,7 @@ export function HeroFolder() {
           className="absolute top-2 right-2 z-[60] rounded-[8px] border border-border bg-card/90 px-2 py-1 text-[10px] tracking-tight text-foreground/75"
           style={{ pointerEvents: "none", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }}
         >
-          <div>compact: {String(isCompactDevice)}</div>
+          <div>compact: {String(isMobile)}</div>
           <div>width: {debugInfo.width}</div>
           <div>narrow&lt;=767: {String(debugInfo.isNarrowViewport)}</div>
           <div>ua-mobile: {String(debugInfo.isKnownMobile)}</div>
@@ -628,15 +637,15 @@ export function HeroFolder() {
         <div
           className="w-full flex items-center justify-center"
           style={{ width: '90vw', maxWidth: 700, margin: '0 auto' }}
-          onMouseEnter={() => !isCompactDevice && setOpen(true)}
+          onMouseEnter={() => !isMobile && setOpen(true)}
           onMouseLeave={() => {
-            if (!isCompactDevice) {
+            if (!isMobile) {
               setOpen(false);
               setHoveredIndex(null);
             }
           }}
           onClick={() => {
-            if (isCompactDevice) {
+            if (isMobile) {
               setMobileModalOpen(true);
             } else {
               setOpen((o) => !o);
@@ -661,7 +670,7 @@ export function HeroFolder() {
 
           {/* Big folder (visible on all sizes) */}
           <div className="flex justify-center pb-6 mt-6">
-            <BigFolder open={open} isMobile={isCompactDevice} />
+            <BigFolder open={open} isMobile={isMobile} />
           </div>
         </div>
 
