@@ -117,9 +117,18 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   const [showMobileModal, setShowMobileModal] = useState(false);
+  const [runtimeHost, setRuntimeHost] = useState("");
+  const runtimeMode = import.meta.env.DEV ? "DEV" : "PREVIEW/PROD";
 
   useEffect(() => {
-    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+    setRuntimeHost(window.location.host);
+
+    const isNarrowViewport = window.matchMedia("(max-width: 767px)").matches;
+    const isTabletWidth = window.matchMedia("(max-width: 1024px)").matches;
+    const hasTouch = navigator.maxTouchPoints > 0;
+    const hasCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
+    const isKnownMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+    const isMobile = isNarrowViewport || isKnownMobile || (isTabletWidth && (hasTouch || hasCoarsePointer));
     if (isMobile) {
       setShowMobileModal(true);
     }
@@ -127,6 +136,14 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <div
+        className="fixed left-2 top-2 z-[1000] rounded-[8px] border border-border bg-card/90 px-2 py-1 text-[10px] tracking-tight text-foreground/80"
+        style={{ pointerEvents: "none", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }}
+      >
+        runtime: {runtimeMode}
+        {runtimeHost ? ` | host: ${runtimeHost}` : ""}
+      </div>
+
       <Outlet />
       {showMobileModal && (
         <div

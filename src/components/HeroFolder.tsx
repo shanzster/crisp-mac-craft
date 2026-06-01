@@ -6,6 +6,12 @@ import illustratorLogo from "@/image_reference/logos/AI.png";
 import metaLogo from "@/image_reference/logos/meta.png";
 import canvaLogo from "@/image_reference/logos/canva.png";
 
+function getIsCompactDevice() {
+  const isNarrowViewport = window.matchMedia("(max-width: 767px)").matches;
+  const isKnownMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+  return isNarrowViewport || isKnownMobile;
+}
+
 /* ─── Service data ─── */
 export type Service = {
   label: string;
@@ -514,15 +520,30 @@ export function HeroFolder() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [activeService, setActiveService] = useState<Service | null>(null);
   const [isCompactDevice, setIsCompactDevice] = useState<boolean>(false);
+  const [debugInfo, setDebugInfo] = useState({
+    width: 0,
+    isNarrowViewport: false,
+    isKnownMobile: false,
+    maxTouchPoints: 0,
+    coarsePointer: false,
+  });
   const [mobileModalOpen, setMobileModalOpen] = useState(false);
 
   useEffect(() => {
     const m = () => {
-      const widthQuery = window.matchMedia('(max-width: 767px)');
-      const touchQuery = window.matchMedia('(pointer: coarse)');
-      const hasTouch = navigator.maxTouchPoints > 0;
+      const isNarrowViewport = window.matchMedia("(max-width: 767px)").matches;
+      const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+      const maxTouchPoints = navigator.maxTouchPoints || 0;
       const isKnownMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-      setIsCompactDevice(widthQuery.matches || touchQuery.matches || hasTouch || isKnownMobile);
+
+      setIsCompactDevice(getIsCompactDevice());
+      setDebugInfo({
+        width: window.innerWidth,
+        isNarrowViewport,
+        isKnownMobile,
+        maxTouchPoints,
+        coarsePointer,
+      });
     };
     m();
     window.addEventListener('resize', m);
@@ -585,6 +606,19 @@ export function HeroFolder() {
 
       {/* Fill parent height entirely */}
       <div className="relative w-full h-full">
+        {/* DEBUG CHIP: remove after device-branch issue is resolved */}
+        <div
+          className="absolute top-2 right-2 z-[60] rounded-[8px] border border-border bg-card/90 px-2 py-1 text-[10px] tracking-tight text-foreground/75"
+          style={{ pointerEvents: "none", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }}
+        >
+          <div>compact: {String(isCompactDevice)}</div>
+          <div>width: {debugInfo.width}</div>
+          <div>narrow&lt;=767: {String(debugInfo.isNarrowViewport)}</div>
+          <div>ua-mobile: {String(debugInfo.isKnownMobile)}</div>
+          <div>touchPoints: {debugInfo.maxTouchPoints}</div>
+          <div>coarse: {String(debugInfo.coarsePointer)}</div>
+        </div>
+
         {/* ── Static desktop elements (hidden on small screens) ── */}
         <div className="hidden md:block">{DESKTOP_ELEMENTS.map((el) => (
           <DesktopItem key={el.id} el={el} />

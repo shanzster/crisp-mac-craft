@@ -1,5 +1,4 @@
-@import "tailwindcss" source(none);
-@source "../src";
+@import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
@@ -99,7 +98,7 @@
   }
 }
 
-@layer utilities {
+/* Custom CSS classes & keyframe animations */
   .tracking-tightest {
     letter-spacing: -0.04em;
   }
@@ -125,6 +124,34 @@
     animation: select-sweep 2.6s ease-in-out infinite;
     padding: 0 0.08em;
     color: var(--color-foreground);
+  }
+
+  .role-rotator {
+    height: 1.2em;
+    overflow: hidden;
+    vertical-align: bottom;
+  }
+
+  .role-rotator-track {
+    display: block;
+    animation: role-rotate 14s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .role-rotator-word {
+    display: block;
+    height: 1.2em;
+    line-height: 1.2em;
+    white-space: nowrap;
+  }
+
+  @keyframes role-rotate {
+    0%, 16% { transform: translateY(0); }
+    20%, 36% { transform: translateY(-1.2em); }
+    40%, 56% { transform: translateY(-2.4em); }
+    60%, 76% { transform: translateY(-3.6em); }
+    80%, 96% { transform: translateY(-4.8em); }
+    100% { transform: translateY(0); }
   }
 
   /* Cursor — vertical line with circle on top, rides the right edge of the sweep */
@@ -297,4 +324,3 @@
   .hero-drop-5 { animation-delay: 0.70s; }
   .hero-drop-6 { animation-delay: 0.86s; }
   .hero-drop-7 { animation-delay: 1.02s; }
-}

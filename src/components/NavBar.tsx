@@ -1,6 +1,16 @@
 import { useEffect, useState } from "react";
 import { useIsClient } from "@/hooks/useIsClient";
 
+function getIsCompactDevice() {
+  const isNarrowViewport = window.matchMedia("(max-width: 767px)").matches;
+  const isTabletWidth = window.matchMedia("(max-width: 1024px)").matches;
+  const hasTouch = navigator.maxTouchPoints > 0;
+  const hasCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
+  const isKnownMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+  const isTouchTabletOrPhone = isTabletWidth && (hasTouch || hasCoarsePointer);
+  return isNarrowViewport || isKnownMobile || isTouchTabletOrPhone;
+}
+
 
 const DOCK_ITEMS = [
   {
@@ -107,18 +117,16 @@ export function NavBar() {
 
   useEffect(() => {
     const update = () => {
-      const widthQuery = window.matchMedia("(max-width: 767px)");
-      const touchQuery = window.matchMedia("(pointer: coarse)");
-      const hasTouch = navigator.maxTouchPoints > 0;
-      const isKnownMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-
-      setIsCompactDevice(widthQuery.matches || touchQuery.matches || hasTouch || isKnownMobile);
+      setIsCompactDevice(getIsCompactDevice());
     };
 
     update();
     window.addEventListener("resize", update);
     window.addEventListener("orientationchange", update);
-    return () => window.removeEventListener("resize", update);
+    return () => {
+      window.removeEventListener("resize", update);
+      window.removeEventListener("orientationchange", update);
+    };
   }, []);
 
   // Magnification: items near hovered one scale up too
@@ -170,17 +178,19 @@ export function NavBar() {
         }}
       >
         <div
-          className="mx-auto flex w-fit items-end rounded-[20px]"
+          className="mx-auto flex w-fit max-w-[calc(100vw-12px)] items-end rounded-[20px]"
           style={{
             pointerEvents: "auto",
-            gap: isMobile ? 4 : 8,
-            padding: isMobile ? "4px 6px" : "8px 16px",
+            gap: isMobile ? 2 : 8,
+            padding: isMobile ? "4px 5px" : "8px 16px",
             background: "oklch(0.97 0.005 240 / 0.72)",
             backdropFilter: "blur(28px) saturate(1.8)",
             WebkitBackdropFilter: "blur(28px) saturate(1.8)",
             border: "1px solid oklch(0.88 0.005 240 / 0.8)",
             boxShadow:
               "0 8px 32px -8px oklch(0.2 0.02 240 / 0.22), 0 0 0 0.5px oklch(0.5 0.01 240 / 0.12), inset 0 1px 0 oklch(1 0 0 / 0.6)",
+            overflowX: isMobile ? "auto" : "visible",
+            overflowY: "visible",
           }}
         >
           {allItems.map((item, i) => {
@@ -223,7 +233,7 @@ export function NavBar() {
                 }}
               >
                 <div
-                  style={{ width: isMobile ? 30 : 48, height: isMobile ? 30 : 48 }}
+                  style={{ width: isMobile ? 26 : 48, height: isMobile ? 26 : 48 }}
                   className="rounded-[12px] overflow-hidden shadow-[0_2px_8px_-2px_oklch(0.2_0.02_240/0.25)]"
                 >
                   {navItem.icon}
