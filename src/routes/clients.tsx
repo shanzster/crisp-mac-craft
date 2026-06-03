@@ -61,7 +61,7 @@ const CLIENTS: Client[] = [
     description: "A clothing apparel brand. I built their full brand identity and managed their social media — content creation, graphic design, mockups, and print materials.",
     services: ["Social Media Management", "Graphic Design", "Brand Identity", "Print Design"],
     link: "https://facebook.com/psghits",
-    logo: "/PSGHits/Logo.png",
+    logo: "/PSGHits/Logo.png?v=2",
     color: "oklch(0.45 0.20 27)",
     status: "Active",
   },

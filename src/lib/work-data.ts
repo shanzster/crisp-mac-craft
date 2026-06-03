@@ -337,8 +337,8 @@ export const WORK_ITEMS: WorkItem[] = [
     platform: "Facebook · Instagram",
     duration: "Ongoing",
     tools: ["Canva", "Photoshop", "CapCut"],
-    logo: "/PSGHits/Logo.png",
-    beforeImg: "/PSGHits/Before.jpg",
+    logo: "/PSGHits/Logo.png?v=2",
+    beforeImg: "/PSGHits/Before.jpg?v=2",
     overview: "PSG Hits is a clothing apparel brand. I managed their social media presence, built their brand identity from scratch, and created all visual assets — from social posts to physical merch mockups and print materials.",
     challenge: "The page had no visual consistency and no content system. Posts were random and didn't reflect the brand's energy or identity.",
     approach: "Built a content system around the brand's music identity — consistent visuals, engaging captions, and a posting rhythm that matched the audience.",
@@ -356,11 +356,11 @@ export const WORK_ITEMS: WorkItem[] = [
       "Caption writing",
     ],
     result: "Consistent brand presence and growing engagement. The page started looking and feeling like a real music brand.",
-    calendarImg: "/PSGHits/ContentCalendar.png",
-    analyticsImg: "/PSGHits/Analytics.png",
+    calendarImg: "/PSGHits/ContentCalendar.png?v=2",
+    analyticsImg: "/PSGHits/Analytics.png?v=2",
     graphics: [
       {
-        src: "/PSGHits/OverallBrandBoard.png",
+        src: "/PSGHits/OverallBrandBoard.png?v=2",
         title: "Overall Brand Board",
         description: "Full brand overview — colors, typography, logo usage, and visual direction for PSG Hits.",
         tools: ["Canva", "Photoshop"],
@@ -371,7 +371,7 @@ export const WORK_ITEMS: WorkItem[] = [
         ],
       },
       {
-        src: "/PSGHits/Brand-Kit-Vertical.png",
+        src: "/PSGHits/Brand-Kit-Vertical.png?v=2",
         title: "Brand Kit",
         description: "Detailed vertical brand kit documenting all brand elements — logo variations, color codes, fonts, and usage guidelines.",
         tools: ["Canva"],
@@ -384,7 +384,7 @@ export const WORK_ITEMS: WorkItem[] = [
         ],
       },
       {
-        src: "/PSGHits/Main-Banner.png",
+        src: "/PSGHits/Main-Banner.png?v=2",
         title: "Main Banner",
         description: "Hero banner for the PSG Hits Facebook page — sets the tone and brand identity at first glance.",
         tools: ["Canva", "Photoshop"],
@@ -394,7 +394,7 @@ export const WORK_ITEMS: WorkItem[] = [
         ],
       },
       {
-        src: "/PSGHits/Poster-Banner.png",
+        src: "/PSGHits/Poster-Banner.png?v=2",
         title: "Poster Banner",
         description: "Promotional poster banner for events and announcements.",
         tools: ["Canva", "Photoshop"],
@@ -404,7 +404,7 @@ export const WORK_ITEMS: WorkItem[] = [
         ],
       },
       {
-        src: "/PSGHits/Poster-Banner2.png",
+        src: "/PSGHits/Poster-Banner2.png?v=2",
         title: "Poster Banner 2",
         description: "Second variation of the promotional poster banner — alternate layout for different content types.",
         tools: ["Canva", "Photoshop"],
@@ -414,7 +414,7 @@ export const WORK_ITEMS: WorkItem[] = [
         ],
       },
       {
-        src: "/PSGHits/PSGHITS_SALE_BANNER.png",
+        src: "/PSGHits/PSGHITS_SALE_BANNER.png?v=2",
         title: "Sale Banner",
         description: "Sale announcement banner — direct, high-contrast design built to stop the scroll.",
         tools: ["Canva"],
@@ -424,7 +424,7 @@ export const WORK_ITEMS: WorkItem[] = [
         ],
       },
       {
-        src: "/PSGHits/OnboardingPost.png",
+        src: "/PSGHits/OnboardingPost.png?v=2",
         title: "Onboarding Post",
         description: "Welcome/onboarding post introducing the brand to new followers.",
         tools: ["Canva"],
@@ -434,7 +434,7 @@ export const WORK_ITEMS: WorkItem[] = [
         ],
       },
       {
-        src: "/PSGHits/ClothingTag_Mockup.png",
+        src: "/PSGHits/ClothingTag_Mockup.png?v=2",
         title: "Clothing Tag Mockup",
         description: "Branded clothing tag mockup for merch and product photography.",
         tools: ["Photoshop"],
@@ -444,7 +444,7 @@ export const WORK_ITEMS: WorkItem[] = [
         ],
       },
       {
-        src: "/PSGHits/ClothTag_Mockup.png",
+        src: "/PSGHits/ClothTag_Mockup.png?v=2",
         title: "Cloth Tag Mockup",
         description: "Alternative cloth tag mockup — woven label style.",
         tools: ["Photoshop"],
@@ -453,7 +453,7 @@ export const WORK_ITEMS: WorkItem[] = [
         ],
       },
       {
-        src: "/PSGHits/HangerMockup.png",
+        src: "/PSGHits/HangerMockup.png?v=2",
         title: "Hanger Mockup",
         description: "Clothing hanger mockup for merchandise presentation on social media.",
         tools: ["Photoshop"],
@@ -463,7 +463,7 @@ export const WORK_ITEMS: WorkItem[] = [
         ],
       },
       {
-        src: "/PSGHits/SaleTag_MockUp.png",
+        src: "/PSGHits/SaleTag_MockUp.png?v=2",
         title: "Sale Tag Mockup",
         description: "Physical sale tag mockup for merch promotions.",
         tools: ["Photoshop"],
@@ -473,7 +473,7 @@ export const WORK_ITEMS: WorkItem[] = [
         ],
       },
       {
-        src: "/PSGHits/MirrorSticker.png",
+        src: "/PSGHits/MirrorSticker.png?v=2",
         title: "Mirror Sticker",
         description: "Branded mirror sticker design — used for physical branding and social content.",
         tools: ["Canva", "Photoshop"],
@@ -483,7 +483,7 @@ export const WORK_ITEMS: WorkItem[] = [
         ],
       },
       {
-        src: "/PSGHits/PosterMockup.png",
+        src: "/PSGHits/PosterMockup.png?v=2",
         title: "Poster Mockup",
         description: "Real-world poster mockup showing the brand's print presence.",
         tools: ["Photoshop"],
@@ -493,7 +493,7 @@ export const WORK_ITEMS: WorkItem[] = [
         ],
       },
       {
-        src: "/PSGHits/3D-model.jpg",
+        src: "/PSGHits/3D-model.jpg?v=2",
         title: "3D Brand Model",
         description: "3D rendered brand visualization — adds depth and premium feel to brand presentation.",
         tools: ["Photoshop"],
