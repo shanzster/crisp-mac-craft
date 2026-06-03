@@ -82,19 +82,27 @@ const WORK_FOLDERS: WorkFolderData[] = [
       },
       {
         id: "s4",
-        title: "CSA Print and Design",
-        tag: "Facebook · Print",
-        description: "Managed content for a print and design shop. Showcased products, ran promotions, and built a consistent brand presence on Facebook.",
-        result: "Regular client inquiries",
-        color: "oklch(0.68 0.10 290)",
+        title: "PSG Hits",
+        tag: "Facebook · Music",
+        description: "Managed social media for a local music and entertainment brand — built visual identity, content system, and grew their audience from the ground up.",
+        result: "↑ Audience growth",
+        color: "oklch(0.45 0.20 27)",
       },
       {
         id: "s5",
-        title: "Content Strategy",
-        tag: "All clients",
-        description: "For every page I manage, I build a content calendar, define the brand voice, and plan posts around key dates, trends, and audience behavior.",
-        result: "Strategy-first approach",
-        color: "oklch(0.60 0.16 255)",
+        title: "Fast Snaking Services",
+        tag: "Facebook · Local Service",
+        description: "Built and managed Facebook presence for a local plumbing service — professional visuals and trust-building content to generate leads.",
+        result: "↑ Direct inquiries",
+        color: "oklch(0.55 0.18 145)",
+      },
+      {
+        id: "s6",
+        title: "The Snappy Nomad",
+        tag: "Instagram · Travel",
+        description: "A travel and lifestyle brand currently in pre-launch — building the content strategy, brand identity, and social media presence ahead of launch.",
+        result: "Coming soon",
+        color: "oklch(0.62 0.16 255)",
       },
     ],
   },
@@ -352,6 +360,13 @@ function Hero() {
             className="rounded-full border border-border bg-card px-4 py-1.5 sm:px-5 sm:py-2 text-[11px] sm:text-[12px] tracking-tight text-foreground transition hover:bg-secondary"
           >
             Hire me
+          </a>
+          <a
+            href="/Shanzster_CV.pdf"
+            download
+            className="rounded-full border border-border bg-card px-4 py-1.5 sm:px-5 sm:py-2 text-[11px] sm:text-[12px] tracking-tight text-foreground transition hover:bg-secondary"
+          >
+            Download CV
           </a>
         </div>
 
@@ -637,9 +652,11 @@ function About() {
             <div className="grid grid-cols-2 gap-2">
               {[
                 { name: "Steal & Style",          sub: "Fashion brand · Instagram"       },
-                { name: "Masinloc Tourism Office", sub: "Gov't page · Facebook"           },
-                { name: "Junz Restaurant",         sub: "Local business · Facebook"       },
-                { name: "CSA Print and Design",    sub: "Print shop · Facebook"           },
+                { name: "PSG Hits",               sub: "Music & entertainment · FB/IG"   },
+                { name: "Fast Snaking Services",  sub: "Local service · Facebook"        },
+                { name: "Masinloc Tourism Office", sub: "Gov't page · Facebook"          },
+                { name: "Junz Restaurant",         sub: "Local business · Facebook"      },
+                { name: "The Snappy Nomad",        sub: "Travel & lifestyle · Coming soon" },
               ].map(({ name, sub }) => (
                 <div key={name} className="rounded-[8px] border border-border bg-secondary/40 px-3 py-2.5">
                   <p className="text-[12px] font-medium tracking-tight text-foreground/80">{name}</p>
@@ -777,9 +794,11 @@ function Work() {
             <div className="space-y-3">
               {[
                 { name: "Steal & Style",     tag: "Fashion · IG" },
+                { name: "PSG Hits",          tag: "Music · FB/IG" },
+                { name: "Fast Snaking",      tag: "Service · FB"  },
                 { name: "Masinloc Tourism",  tag: "Gov't · FB"   },
                 { name: "Junz Restaurant",   tag: "F&B · FB"     },
-                { name: "CSA Print",         tag: "Print · FB"   },
+                { name: "The Snappy Nomad",  tag: "Travel · Soon" },
               ].map(({ name, tag }) => (
                 <div key={name} className="flex items-start gap-2.5">
                   <div className="h-7 w-7 rounded-[6px] shrink-0 border border-border bg-secondary flex items-center justify-center">
@@ -798,10 +817,12 @@ function Work() {
             <p className="text-[9px] uppercase tracking-[0.22em] text-foreground/35 mb-4">recent</p>
             <div className="space-y-3">
               {[
-                { label: "Steal & Style rebrand",     time: "2024" },
-                { label: "Masinloc tourism campaign",  time: "2024" },
-                { label: "Junz promo content",         time: "2024" },
-                { label: "CSA print materials",        time: "2023" },
+                { label: "Steal & Style rebrand",      time: "2024" },
+                { label: "PSG Hits launch",             time: "2024" },
+                { label: "Masinloc tourism campaign",   time: "2024" },
+                { label: "Junz promo content",          time: "2024" },
+                { label: "Fast Snaking Services setup", time: "2025" },
+                { label: "The Snappy Nomad — pre-launch", time: "2025" },
               ].map(({ label, time }) => (
                 <div key={label} className="flex items-start justify-between gap-2">
                   <p className="text-[11px] tracking-tight text-foreground/60 leading-snug">{label}</p>

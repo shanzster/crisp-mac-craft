@@ -37,7 +37,7 @@ function ImgBox({
       style={{ background: color, ...style }}
     >
       {src ? (
-        <img src={src} alt={alt ?? ""} className="w-full h-full object-cover" />
+        <img src={src} alt={alt ?? ""} className="w-full h-full object-contain" />
       ) : (
         <div className="text-center p-4">
           <p className="text-white/15 text-[28px]">✦</p>
@@ -54,7 +54,7 @@ function GraphicModal({
   color,
   onClose,
 }: {
-  graphic: { src?: string; title: string; description: string; process?: string[]; tools?: string[] };
+  graphic: { src?: string; title: string; description: string; process?: string[]; tools?: string[]; portrait?: boolean };
   color: string;
   onClose: () => void;
 }) {
@@ -100,25 +100,33 @@ function GraphicModal({
           onWheel={(e) => e.stopPropagation()}
         >
 
-          {/* Hero image — full width, tall */}
+          {/* Hero image — full width, tall; portrait images scroll naturally */}
           <div
             className="w-full flex items-center justify-center relative"
-            style={{ height: 480, background: color }}
+            style={{ 
+              height: graphic.portrait ? "auto" : 480, 
+              minHeight: graphic.portrait ? 0 : undefined,
+              background: color 
+            }}
           >
             {graphic.src
-              ? <img src={graphic.src} alt={graphic.title} className="w-full h-full object-cover" />
+              ? <img 
+                  src={graphic.src} 
+                  alt={graphic.title} 
+                  className={graphic.portrait ? "w-full h-auto block" : "w-full h-full object-contain"}
+                />
               : (
-                <div className="text-center">
+                <div className="text-center" style={{ height: 480, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
                   <p className="text-white/10 text-[64px]">✦</p>
                   <p className="mt-2 text-[10px] uppercase tracking-[0.2em] text-white/20">add screenshot</p>
                 </div>
               )
             }
-            {/* Gradient scrim at bottom */}
-            <div
+            {/* Gradient scrim at bottom — only for non-portrait */}
+            {!graphic.portrait && <div
               className="absolute inset-x-0 bottom-0"
               style={{ height: "40%", background: "linear-gradient(to top, oklch(1 0 0 / 0.95), transparent)" }}
-            />
+            />}
             {/* Title overlay */}
             <div className="absolute bottom-0 inset-x-0 px-10 pb-8">
               <p className="text-[10px] uppercase tracking-[0.22em] text-foreground/40 mb-1">Graphic</p>
@@ -188,6 +196,18 @@ function GraphicsFolder({ item }: { item: WorkItem }) {
   const [tooltip, setTooltip] = useState<number | null>(null);
   const [modal, setModal] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(
+      window.matchMedia("(max-width: 767px)").matches ||
+      window.matchMedia("(pointer: coarse)").matches ||
+      navigator.maxTouchPoints > 0
+    );
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   // Auto-open when scrolled into view
   useEffect(() => {
@@ -208,8 +228,9 @@ function GraphicsFolder({ item }: { item: WorkItem }) {
   }, []);
 
   const graphics = item.graphics ?? [];
-  const slots = Array.from({ length: 6 }, (_, i) => graphics[i] ?? null);
-  const activeGraphic = modal !== null ? slots[modal] : null;
+  const desktopSlots = Array.from({ length: Math.min(6, graphics.length) }, (_, i) => graphics[i] ?? null);
+  const extraGraphics = graphics.slice(6); // anything beyond 6 shown below on desktop
+  const activeGraphic = modal !== null ? (graphics[modal] ?? null) : null;
 
   return (
     <>
@@ -221,6 +242,33 @@ function GraphicsFolder({ item }: { item: WorkItem }) {
         />
       )}
 
+      {/* ── MOBILE: simple grid showing ALL graphics ── */}
+      {isMobile ? (
+        <div className="grid grid-cols-2 gap-3">
+          {graphics.map((graphic, i) => (
+            <div
+              key={i}
+              className="relative cursor-pointer"
+              onClick={() => setModal(i)}
+            >
+              <ImgBox
+                src={graphic?.src}
+                color={item.color}
+                label={graphic?.title ?? `graphic ${i + 1}`}
+                style={{ height: 140, borderRadius: 12 }}
+                className="w-full shadow-[0_4px_14px_-4px_oklch(0.2_0.02_240/0.2)]"
+              />
+              {graphic?.title && (
+                <p className="mt-1.5 text-[11px] tracking-tight text-foreground/55 text-center leading-snug px-1">
+                  {graphic.title}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      ) : (
+      /* ── DESKTOP: animated folder + extras ── */
+      <>
       <div
         ref={containerRef}
         className="relative w-full overflow-hidden rounded-[16px] border border-border bg-card"
@@ -238,7 +286,7 @@ function GraphicsFolder({ item }: { item: WorkItem }) {
 
         {/* ── Graphics — slide in from right on hover ── */}
         <div className="absolute inset-0 flex items-center justify-start pl-8 gap-4 z-10">
-          {slots.map((graphic, i) => (
+          {desktopSlots.map((graphic, i) => (
             <div
               key={i}
               className="relative"
@@ -292,9 +340,9 @@ function GraphicsFolder({ item }: { item: WorkItem }) {
           ))}
         </div>
 
-        {/* ── Folder — half-visible on RIGHT, heavily slanted ── */}
+        {/* ── Folder — half-visible on RIGHT, heavily slanted — desktop only ── */}
         <div
-          className="absolute select-none"
+          className="absolute select-none hidden sm:block"
           style={{ width: 340, height: 280, right: -120, top: "50%", marginTop: -140, transform: "rotate(22deg)", transformOrigin: "center center", perspective: 1000, zIndex: 15 }}
         >
           <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 rounded-full" style={{ width: 280, height: 24, background: "oklch(0.55 0.12 240 / 0.25)", filter: "blur(16px)" }} />
@@ -312,6 +360,185 @@ function GraphicsFolder({ item }: { item: WorkItem }) {
             <div className="absolute inset-x-8 top-5 h-px rounded-full" style={{ background: "oklch(1 0 0 / 0.22)" }} />
             <div className="absolute inset-x-12 top-8 h-px rounded-full" style={{ background: "oklch(1 0 0 / 0.10)" }} />
             {!open && <p className="absolute bottom-5 right-6 text-[11px] tracking-[0.2em] uppercase text-white/35">graphics</p>}
+          </div>
+        </div>
+      </div>
+      {/* Extra graphics beyond 6 — shown as grid below the folder on desktop */}
+      {extraGraphics.length > 0 && (
+        <div className="mt-4 grid grid-cols-3 sm:grid-cols-4 gap-3">
+          {extraGraphics.map((graphic, i) => (
+            <div
+              key={i}
+              className="relative cursor-pointer"
+              onClick={() => setModal(6 + i)}
+            >
+              <ImgBox
+                src={graphic?.src}
+                color={item.color}
+                label={graphic?.title ?? `graphic ${6 + i + 1}`}
+                style={{ height: 130, borderRadius: 10 }}
+                className="w-full shadow-[0_4px_14px_-4px_oklch(0.2_0.02_240/0.2)]"
+              />
+              {graphic?.title && (
+                <p className="mt-1.5 text-[10px] tracking-tight text-foreground/50 text-center leading-snug px-1">
+                  {graphic.title}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+      </>
+      )}
+    </>
+  );
+}
+
+/* ─── Carousel section ─── */
+function CarouselSection({ item }: { item: WorkItem }) {
+  const slides = item.carouselSlides ?? [];
+  const [current, setCurrent] = useState(0);
+  const [lightbox, setLightbox] = useState<number | null>(null);
+
+  const prev = () => setCurrent((c) => (c - 1 + slides.length) % slides.length);
+  const next = () => setCurrent((c) => (c + 1) % slides.length);
+
+  return (
+    <>
+      {/* Lightbox */}
+      {lightbox !== null && (
+        <div
+          className="fixed inset-0 z-[200] flex items-center justify-center"
+          style={{ background: "oklch(0.08 0.01 240 / 0.92)", backdropFilter: "blur(12px)" }}
+          onClick={() => setLightbox(null)}
+        >
+          <img
+            src={slides[lightbox]}
+            alt={`Slide ${lightbox + 1}`}
+            className="max-w-[90vw] max-h-[90vh] object-contain rounded-[12px]"
+            onClick={(e) => e.stopPropagation()}
+          />
+          <button
+            onClick={() => setLightbox(null)}
+            className="absolute top-5 right-6 text-[12px] tracking-tight text-white/50 hover:text-white transition"
+          >✕ close</button>
+        </div>
+      )}
+
+      <div className="mb-10">
+        <p className="text-[10px] uppercase tracking-[0.22em] text-foreground/35 mb-4">Carousel Post</p>
+        <div className="rounded-[14px] border border-border bg-card overflow-hidden mac-shadow">
+          {/* macOS title bar */}
+          <div className="flex h-9 items-center justify-between border-b border-border bg-secondary/60 px-4">
+            <div className="flex items-center gap-1.5">
+              <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-red)" }} />
+              <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-yellow)" }} />
+              <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-green)" }} />
+            </div>
+            <span className="text-[11px] tracking-tight text-foreground/50">carousel_post.instagram</span>
+            <span className="text-[10px] tracking-tight text-foreground/30">{current + 1} / {slides.length}</span>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
+            {/* Left — context */}
+            <div className="px-7 py-7 border-b lg:border-b-0 lg:border-r border-border flex flex-col justify-between">
+              <div>
+                <h3 className="text-[18px] font-bold tracking-tightest text-foreground mb-3">
+                  How I build carousels.
+                </h3>
+                <p className="text-[13px] leading-relaxed tracking-tight text-foreground/55 mb-5">
+                  Carousels are one of the highest-engagement post formats on Facebook and Instagram. Each slide needs to earn the swipe — a hook on slide 1, value in the middle, and a clear CTA at the end.
+                </p>
+                <div className="space-y-2.5">
+                  {[
+                    { n: "01", t: "Hook slide", d: "Slide 1 stops the scroll — bold headline, strong visual" },
+                    { n: "02", t: "Value slides", d: "Middle slides deliver the content — tips, steps, or info" },
+                    { n: "03", t: "CTA slide", d: "Final slide drives action — follow, save, or contact" },
+                    { n: "04", t: "Brand consistency", d: "Every slide uses the same colors, fonts, and layout system" },
+                  ].map(({ n, t, d }) => (
+                    <div key={n} className="flex items-start gap-3">
+                      <span className="text-[10px] font-bold tracking-[0.12em] text-foreground/25 mt-0.5 shrink-0">{n}</span>
+                      <div>
+                        <p className="text-[12px] font-semibold tracking-tight text-foreground/80">{t}</p>
+                        <p className="text-[11px] tracking-tight text-foreground/45">{d}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              {/* Dot indicators */}
+              <div className="flex items-center gap-2 mt-6">
+                {slides.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setCurrent(i)}
+                    className="rounded-full transition-all"
+                    style={{
+                      width: i === current ? 20 : 6,
+                      height: 6,
+                      background: i === current ? item.color : "oklch(0.6 0.01 240 / 0.3)",
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Right — carousel viewer */}
+            <div className="p-5 flex flex-col gap-3">
+              {/* Main slide */}
+              <div
+                className="relative overflow-hidden rounded-[10px] cursor-zoom-in"
+                style={{ background: `${item.color}22` }}
+                onClick={() => setLightbox(current)}
+              >
+                <img
+                  src={slides[current]}
+                  alt={`Slide ${current + 1}`}
+                  className="w-full object-contain"
+                  style={{ maxHeight: 380 }}
+                />
+                <div className="absolute inset-0 flex items-center justify-between px-3 pointer-events-none">
+                  <div />
+                  <p className="text-[9px] uppercase tracking-[0.14em] text-white/50 bg-black/20 rounded-full px-2 py-0.5 backdrop-blur-sm">
+                    click to enlarge
+                  </p>
+                </div>
+              </div>
+
+              {/* Prev / Next */}
+              <div className="flex items-center justify-between gap-3">
+                <button
+                  onClick={prev}
+                  className="flex-1 rounded-[8px] border border-border bg-secondary/50 py-2 text-[12px] tracking-tight text-foreground/60 hover:bg-secondary transition"
+                >
+                  ← Prev
+                </button>
+                <button
+                  onClick={next}
+                  className="flex-1 rounded-[8px] border border-border bg-secondary/50 py-2 text-[12px] tracking-tight text-foreground/60 hover:bg-secondary transition"
+                >
+                  Next →
+                </button>
+              </div>
+
+              {/* Thumbnail strip */}
+              <div className="flex gap-2 overflow-x-auto pb-1">
+                {slides.map((src, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setCurrent(i)}
+                    className="shrink-0 rounded-[6px] overflow-hidden border-2 transition"
+                    style={{
+                      width: 52, height: 52,
+                      borderColor: i === current ? item.color : "transparent",
+                      opacity: i === current ? 1 : 0.5,
+                    }}
+                  >
+                    <img src={src} alt={`Thumb ${i + 1}`} className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -377,6 +604,7 @@ function WorkDetail() {
         <div className="mb-10">
           <p className="text-[10px] uppercase tracking-[0.22em] text-foreground/35 mb-4">Before & After</p>
           <div className="grid grid-cols-2 gap-3">
+            {/* Before — image */}
             <div className="rounded-[14px] border border-border overflow-hidden mac-shadow">
               <div className="flex h-8 items-center gap-1.5 border-b border-border bg-secondary/60 px-3">
                 <span className="h-[9px] w-[9px] rounded-full" style={{ background: "var(--traffic-red)" }} />
@@ -391,19 +619,29 @@ function WorkDetail() {
                 style={{ height: 280 }}
               />
             </div>
-            <div className="rounded-[14px] border border-border overflow-hidden mac-shadow">
+            {/* After — results text */}
+            <div className="rounded-[14px] border border-border overflow-hidden mac-shadow flex flex-col">
               <div className="flex h-8 items-center gap-1.5 border-b border-border bg-secondary/60 px-3">
                 <span className="h-[9px] w-[9px] rounded-full" style={{ background: "var(--traffic-red)" }} />
                 <span className="h-[9px] w-[9px] rounded-full" style={{ background: "var(--traffic-yellow)" }} />
                 <span className="h-[9px] w-[9px] rounded-full" style={{ background: "var(--traffic-green)" }} />
-                <span className="ml-2 text-[10px] tracking-tight text-foreground/40">after.jpeg</span>
+                <span className="ml-2 text-[10px] tracking-tight text-foreground/40">after.md</span>
               </div>
-              <ImgBox
-                src={item.afterImg}
-                color={item.color}
-                label="after"
-                style={{ height: 280 }}
-              />
+              <div
+                className="flex flex-1 flex-col justify-center gap-5 px-5 py-6"
+                style={{ minHeight: 280, background: `${item.color}18` }}
+              >
+                {[
+                  { icon: "◈", text: "Built a comprehensive brand personality — voice, tone, visual identity, and content system from scratch." },
+                  { icon: "↑", text: "Generated consistent revenue growth through strategic content and community engagement." },
+                  { icon: "✦", text: "Sourced and secured a B2B collaboration — found the client, pitched the idea, and handled all the paperwork." },
+                ].map(({ icon, text }) => (
+                  <div key={icon} className="flex items-start gap-3">
+                    <span className="mt-0.5 shrink-0 text-[14px]" style={{ color: `oklch(from ${item.color} calc(l + 0.3) c h)` }}>{icon}</span>
+                    <p className="text-[12px] sm:text-[13px] leading-relaxed tracking-tight text-foreground/70">{text}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -414,7 +652,108 @@ function WorkDetail() {
           <GraphicsFolder item={item} />
         </div>
 
-        {/* ── 3b. Content Calendar ── */}
+      {/* ── 3b. Carousel Post (if applicable) ── */}
+        {item.carouselSlides && item.carouselSlides.length > 0 && (
+          <CarouselSection item={item} />
+        )}
+
+        {/* ── 3c. Live Website (if applicable) ── */}
+        {item.websiteUrl && (
+          <div className="mb-10">
+            <p className="text-[10px] uppercase tracking-[0.22em] text-foreground/35 mb-4">Live Website</p>
+            <div className="rounded-[14px] border border-border bg-card overflow-hidden mac-shadow">
+              <div className="flex h-9 items-center justify-between border-b border-border bg-secondary/60 px-4">
+                <div className="flex items-center gap-1.5">
+                  <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-red)" }} />
+                  <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-yellow)" }} />
+                  <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-green)" }} />
+                </div>
+                <span className="text-[11px] tracking-tight text-foreground/50">{item.websiteUrl.replace("https://", "")}</span>
+                <a
+                  href={item.websiteUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[10px] tracking-tight text-foreground/35 hover:text-foreground transition"
+                >
+                  open ↗
+                </a>
+              </div>
+              <iframe
+                src={item.websiteUrl}
+                className="w-full border-0"
+                style={{ height: 520 }}
+                title="Live Website"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        )}
+
+        {/* ── 3d. PDF Documents (if applicable) ── */}
+        {item.pdfDocs && item.pdfDocs.length > 0 && (
+          <div className="mb-10">
+            <p className="text-[10px] uppercase tracking-[0.22em] text-foreground/35 mb-4">Documents & Reports</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {item.pdfDocs.map((doc) => (
+                <div key={doc.url} className="rounded-[14px] border border-border bg-card overflow-hidden mac-shadow flex flex-col">
+                  <div className="flex h-9 items-center justify-between border-b border-border bg-secondary/60 px-4 shrink-0">
+                    <div className="flex items-center gap-1.5">
+                      <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-red)" }} />
+                      <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-yellow)" }} />
+                      <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-green)" }} />
+                    </div>
+                    <span className="text-[11px] tracking-tight text-foreground/50 truncate mx-3">{doc.title}</span>
+                    <a
+                      href={doc.url}
+                      download
+                      className="text-[10px] tracking-tight text-foreground/35 hover:text-foreground transition shrink-0"
+                    >
+                      ↓
+                    </a>
+                  </div>
+                  <iframe
+                    src={doc.url}
+                    className="w-full border-0 flex-1"
+                    style={{ height: 340 }}
+                    title={doc.title}
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+      {/* ── 3f. Printing Guidelines Flipbook (if applicable) ── */}
+        {item.flipbookUrl && (
+          <div className="mb-10">
+            <p className="text-[10px] uppercase tracking-[0.22em] text-foreground/35 mb-4">Printing Guidelines</p>
+            <div className="rounded-[14px] border border-border bg-card overflow-hidden mac-shadow">
+              <div className="flex h-9 items-center justify-between border-b border-border bg-secondary/60 px-4">
+                <div className="flex items-center gap-1.5">
+                  <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-red)" }} />
+                  <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-yellow)" }} />
+                  <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-green)" }} />
+                </div>
+                <span className="text-[11px] tracking-tight text-foreground/50">PSGHits_PrintingGuidelines.pdf</span>
+                <div className="w-10" />
+              </div>
+              <div style={{ height: 480 }}>
+                <iframe
+                  src={item.flipbookUrl}
+                  frameBorder="0"
+                  allowTransparency={true}
+                  allowFullScreen={true}
+                  allow="clipboard-write"
+                  className="w-full h-full"
+                  title="Printing Guidelines"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── 3c. Content Calendar ── */}
         <div className="mb-10">
           <p className="text-[10px] uppercase tracking-[0.22em] text-foreground/35 mb-4">Content Calendar</p>
           <div className="rounded-[14px] border border-border bg-card overflow-hidden mac-shadow">
@@ -497,8 +836,9 @@ function WorkDetail() {
                   ))}
                 </div>
               )}
-              {/* Analytics screenshot placeholder */}
+              {/* Analytics screenshot */}
               <ImgBox
+                src={item.analyticsImg}
                 color={`${item.color}22`}
                 label="analytics screenshot"
                 style={{ height: 180, borderRadius: 10 }}

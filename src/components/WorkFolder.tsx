@@ -92,12 +92,15 @@ function WorkPaper({
             : "0 8px 28px -6px oklch(0.2 0.02 240 / 0.22)",
         }}
       >
-        {/* Visual — swap for real image */}
+        {/* Visual */}
         <div
           className="w-full relative flex items-center justify-center"
           style={{ height: isMobile ? 96 : 165, background: item.color }}
         >
-          <span className="text-white/10 text-[40px]">✦</span>
+          {item.logo
+            ? <img src={item.logo} alt={item.client} className="w-full h-full object-cover" />
+            : <span className="text-white/10 text-[40px]">✦</span>
+          }
           {isHovered && (
             <div className="absolute top-2.5 right-2.5 rounded-full bg-black/25 px-2 py-0.5">
               <p className="text-[9px] tracking-tight text-white/80 font-medium">open →</p>
@@ -154,6 +157,9 @@ function MobileWorkPreviewModal({
         <div className="p-3">
           <div className="overflow-hidden rounded-[14px] border border-border/40" style={{ background: item.color }}>
             <div className="flex aspect-[4/5] flex-col justify-end p-4">
+              {item.logo && (
+                <img src={item.logo} alt={item.client} className="absolute inset-0 w-full h-full object-cover opacity-40" />
+              )}
               <p className="text-[9px] uppercase tracking-[0.18em] text-white/55">Selected work</p>
               <h3 className="mt-1 text-[18px] font-bold leading-tight tracking-tightest text-white">
                 {item.title}
