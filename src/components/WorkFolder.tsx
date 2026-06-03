@@ -228,10 +228,10 @@ function MobileWorkPreviewModal({
         </div>
 
         <div className="p-3">
-          <div className="overflow-hidden rounded-[14px] border border-border/40" style={{ background: item.color }}>
-            <div className="flex aspect-[4/5] flex-col justify-end p-4">
+          <div className="overflow-hidden rounded-[14px] border border-border/40 relative" style={{ background: item.color }}>
+            <div className="flex aspect-[4/5] flex-col justify-end p-4 relative z-10">
               {item.logo && (
-                <img src={item.logo} alt={item.client} className="absolute inset-0 w-full h-full object-cover opacity-40" />
+                <img src={item.logo} alt={item.client} className="absolute inset-0 w-full h-full object-cover opacity-40 -z-10" />
               )}
               <p className="text-[9px] uppercase tracking-[0.18em] text-white/55">Selected work</p>
               <h3 className="mt-1 text-[18px] font-bold leading-tight tracking-tightest text-white">

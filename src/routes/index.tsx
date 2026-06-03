@@ -724,7 +724,7 @@ function Work() {
           </span>
         </div>
         <span className="text-[11px] tracking-[0.18em] uppercase text-foreground/30">
-          Shanzster · 2024–2025
+          Shanzster · 2026
         </span>
       </div>
 
@@ -818,12 +818,12 @@ function Work() {
             <p className="text-[9px] uppercase tracking-[0.22em] text-foreground/35 mb-4">recent</p>
             <div className="space-y-3">
               {[
-                { label: "Steal & Style rebrand",      time: "2024" },
-                { label: "PSG Hits launch",             time: "2024" },
-                { label: "Masinloc tourism campaign",   time: "2024" },
-                { label: "Junz promo content",          time: "2024" },
-                { label: "Fast Snaking Services setup", time: "2025" },
-                { label: "The Snappy Nomad — pre-launch", time: "2025" },
+                { label: "Steal & Style rebrand",      time: "2026" },
+                { label: "PSG Hits launch",             time: "2026" },
+                { label: "Masinloc tourism campaign",   time: "2026" },
+                { label: "Junz promo content",          time: "2026" },
+                { label: "Fast Snaking Services setup", time: "2026" },
+                { label: "The Snappy Nomad — pre-launch", time: "2026" },
               ].map(({ label, time }) => (
                 <div key={label} className="flex items-start justify-between gap-2">
                   <p className="text-[11px] tracking-tight text-foreground/60 leading-snug">{label}</p>

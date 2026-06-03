@@ -525,13 +525,6 @@ export function HeroFolder() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [activeService, setActiveService] = useState<Service | null>(null);
   const [isCompactDevice, setIsCompactDevice] = useState<boolean>(false);
-  const [debugInfo, setDebugInfo] = useState({
-    width: 0,
-    isNarrowViewport: false,
-    isKnownMobile: false,
-    maxTouchPoints: 0,
-    coarsePointer: false,
-  });
   const [mobileModalOpen, setMobileModalOpen] = useState(false);
   const isClient = useIsClient();
 
@@ -540,19 +533,7 @@ export function HeroFolder() {
 
   useEffect(() => {
     const m = () => {
-      const isNarrowViewport = window.matchMedia("(max-width: 767px)").matches;
-      const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
-      const maxTouchPoints = navigator.maxTouchPoints || 0;
-      const isKnownMobile = /Android|iPhone|iPad|iPod|Mobile|CriOS|FxiOS|OPiOS|EdgA|SamsungBrowser/i.test(navigator.userAgent);
-
       setIsCompactDevice(getIsCompactDevice());
-      setDebugInfo({
-        width: window.innerWidth,
-        isNarrowViewport,
-        isKnownMobile,
-        maxTouchPoints,
-        coarsePointer,
-      });
     };
     m();
     window.addEventListener('resize', m);
@@ -615,18 +596,6 @@ export function HeroFolder() {
 
       {/* Fill parent height entirely */}
       <div className="relative w-full h-full">
-        {/* DEBUG CHIP: remove after device-branch issue is resolved */}
-        <div
-          className="absolute top-2 right-2 z-[60] rounded-[8px] border border-border bg-card/90 px-2 py-1 text-[10px] tracking-tight text-foreground/75"
-          style={{ pointerEvents: "none", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }}
-        >
-          <div>compact: {String(isMobile)}</div>
-          <div>width: {debugInfo.width}</div>
-          <div>narrow&lt;=767: {String(debugInfo.isNarrowViewport)}</div>
-          <div>ua-mobile: {String(debugInfo.isKnownMobile)}</div>
-          <div>touchPoints: {debugInfo.maxTouchPoints}</div>
-          <div>coarse: {String(debugInfo.coarsePointer)}</div>
-        </div>
 
         {/* ── Static desktop elements (hidden on small screens) ── */}
         <div className="hidden md:block">{DESKTOP_ELEMENTS.map((el) => (
