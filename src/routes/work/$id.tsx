@@ -604,7 +604,7 @@ function WorkDetail() {
         <div className="mb-10">
           <p className="text-[10px] uppercase tracking-[0.22em] text-foreground/35 mb-4">Before & After</p>
           <div className="grid grid-cols-2 gap-3">
-            {/* Before — image */}
+            {/* Before — image if exists, else story text */}
             <div className="rounded-[14px] border border-border overflow-hidden mac-shadow">
               <div className="flex h-8 items-center gap-1.5 border-b border-border bg-secondary/60 px-3">
                 <span className="h-[9px] w-[9px] rounded-full" style={{ background: "var(--traffic-red)" }} />
@@ -612,12 +612,31 @@ function WorkDetail() {
                 <span className="h-[9px] w-[9px] rounded-full" style={{ background: "var(--traffic-green)" }} />
                 <span className="ml-2 text-[10px] tracking-tight text-foreground/40">before.jpeg</span>
               </div>
-              <ImgBox
-                src={item.beforeImg}
-                color={`${item.color}88`}
-                label="before"
-                style={{ height: 280 }}
-              />
+              {item.beforeImg ? (
+                <ImgBox
+                  src={item.beforeImg}
+                  color={`${item.color}88`}
+                  label="before"
+                  style={{ height: 280 }}
+                />
+              ) : (
+                <div
+                  className="flex flex-col justify-center gap-4 px-6 py-7"
+                  style={{ minHeight: 280, background: `${item.color}14` }}
+                >
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-foreground/30">The starting point</p>
+                  {(item.beforePoints ?? [
+                    { icon: "💬", text: `A client DM'd me wanting to start a business from the ground up.` },
+                    { icon: "📭", text: "No brand. No logo. No social media. No budget. Just an idea and a phone." },
+                    { icon: "🔧", text: "My job: build everything from scratch and make it look like it's been around." },
+                  ]).map(({ icon, text }: { icon: string; text: string }) => (
+                    <div key={text} className="flex items-start gap-3">
+                      <span className="text-[16px] shrink-0">{icon}</span>
+                      <p className="text-[12px] sm:text-[13px] leading-relaxed tracking-tight text-foreground/65">{text}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
             {/* After — results text */}
             <div className="rounded-[14px] border border-border overflow-hidden mac-shadow flex flex-col">
@@ -631,12 +650,12 @@ function WorkDetail() {
                 className="flex flex-1 flex-col justify-center gap-5 px-5 py-6"
                 style={{ minHeight: 280, background: `${item.color}18` }}
               >
-                {[
+                {(item.afterPoints ?? [
                   { icon: "◈", text: "Built a comprehensive brand personality — voice, tone, visual identity, and content system from scratch." },
                   { icon: "↑", text: "Generated consistent revenue growth through strategic content and community engagement." },
                   { icon: "✦", text: "Sourced and secured a B2B collaboration — found the client, pitched the idea, and handled all the paperwork." },
-                ].map(({ icon, text }) => (
-                  <div key={icon} className="flex items-start gap-3">
+                ]).map(({ icon, text }: { icon: string; text: string }) => (
+                  <div key={text} className="flex items-start gap-3">
                     <span className="mt-0.5 shrink-0 text-[14px]" style={{ color: `oklch(from ${item.color} calc(l + 0.3) c h)` }}>{icon}</span>
                     <p className="text-[12px] sm:text-[13px] leading-relaxed tracking-tight text-foreground/70">{text}</p>
                   </div>

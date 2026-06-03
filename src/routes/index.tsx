@@ -362,8 +362,9 @@ function Hero() {
             Hire me
           </a>
           <a
-            href="/Shanzster_CV.pdf"
-            download
+            href="/ALARCON_SA_CV_MVA.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
             className="rounded-full border border-border bg-card px-4 py-1.5 sm:px-5 sm:py-2 text-[11px] sm:text-[12px] tracking-tight text-foreground transition hover:bg-secondary"
           >
             Download CV
@@ -1073,35 +1074,43 @@ function Process() {
 function Testimonials() {
   const testimonials = [
     {
-      quote: "Add a real quote from a client here — even a DM or message works.",
-      name: "Client Name",
-      brand: "Brand Name",
+      quote: "The Joiners Program he pitched for Masinloc was one of the greatest things we've done! It brought a lot of revenue and tourism to the nature wonders of Masinloc. Highly recommend working with him.",
+      name: "Marlon Elago",
+      brand: "Masinloc Tourism Office",
+      platform: "Facebook",
+      initials: "ME",
+      color: "oklch(0.58 0.14 200)",
+    },
+    {
+      quote: "The rebrand he did for Steal & Style was exactly what we needed. Overnight it felt like a completely different page — the engagement, the DMs, the attention it generated was unreal. People actually started noticing us.",
+      name: "Stacy Wong",
+      brand: "Steal & Style",
       platform: "Instagram",
-      initials: "CN",
-      color: "oklch(0.72 0.14 240)",
+      initials: "SW",
+      color: "oklch(0.16 0.02 240)",
     },
     {
-      quote: "Add another real quote here. Something specific about the results or the experience.",
-      name: "Client Name",
-      brand: "Brand Name",
-      platform: "Facebook",
-      initials: "CN",
-      color: "oklch(0.60 0.16 170)",
+      quote: "He made me fall in love with my brand again with the whole rebrand. I'm now proud of sharing my page with my friends — it finally looks like something I built with intention.",
+      name: "Mahattir",
+      brand: "PSG Hits",
+      platform: "Facebook · Instagram",
+      initials: "MH",
+      color: "oklch(0.45 0.20 27)",
     },
     {
-      quote: "A third testimonial. Even 'the page finally looks professional' is a real result worth sharing.",
-      name: "Client Name",
-      brand: "Brand Name",
+      quote: "Hiring Sean amongst the other candidates was amazing. He did great on the test week — managed to build my brand and my audience in just one week. Always provided updates and never missed a day of posting. Referred him to some of my friends too.",
+      name: "Chesky",
+      brand: "Fast Snaking Services",
       platform: "Facebook",
-      initials: "CN",
-      color: "oklch(0.68 0.14 55)",
+      initials: "CH",
+      color: "oklch(0.55 0.14 25)",
     },
   ];
 
   return (
     <section className="mt-20">
       <SectionHeader index="05" title="What Clients Say" />
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {testimonials.map((t, i) => (
           <div key={i} className="rounded-[14px] border border-border bg-card p-6 flex flex-col gap-4 mac-shadow">
             {/* iMessage-style bubble */}
@@ -1129,9 +1138,6 @@ function Testimonials() {
           </div>
         ))}
       </div>
-      <p className="mt-4 text-center text-[11px] tracking-tight text-foreground/30">
-        ↑ Replace with real client quotes — DMs, messages, or emails count
-      </p>
     </section>
   );
 }
@@ -1258,12 +1264,12 @@ function Contact() {
                 Whether you need a social media manager, a brand identity, or just want to talk strategy — I&apos;m open. Send me a message and I&apos;ll get back to you within 24 hours.
               </p>
               <div className="mt-6 sm:mt-8 space-y-4 text-[12px] sm:text-[13px] tracking-tight">
-                <Field label="To" value="your@email.com" />
+                <Field label="To" value="seanthetechyyy@gmail.com" />
                 <Field label="From" value="you@yourbusiness.com" />
                 <Field label="Subject" value="I'd like to work with you" />
               </div>
               <a
-                href="mailto:your@email.com"
+                href="mailto:seanthetechyyy@gmail.com"
                 className="mt-6 sm:mt-8 inline-flex rounded-full bg-foreground px-4 sm:px-5 py-2 sm:py-2.5 text-[12px] sm:text-[13px] tracking-tight text-background transition hover:opacity-90"
               >
                 Send message →
@@ -1284,9 +1290,11 @@ function Contact() {
           <MacWindow title="socials.url">
             <ul className="p-5 text-[13px] tracking-tight space-y-2.5">
               {[
-                { label: "Instagram", href: "https://instagram.com", handle: "@yourhandle" },
-                { label: "Facebook", href: "https://facebook.com", handle: "Your Page" },
-                { label: "Email", href: "mailto:your@email.com", handle: "your@email.com" },
+                { label: "Instagram",     href: "https://instagram.com/shanzster.zip",                          handle: "@shanzster.zip"    },
+                { label: "Facebook",      href: "https://www.facebook.com/krowkiddd/",                          handle: "krowkiddd"         },
+                { label: "LinkedIn",      href: "https://www.linkedin.com/in/shanzster/",                       handle: "in/shanzster"      },
+                { label: "OnlineJobs PH", href: "https://www.onlinejobs.ph/jobseekers/info/4270009",            handle: "View profile"      },
+                { label: "Email",         href: "mailto:seanthetechyyy@gmail.com",                              handle: "seanthetechyyy@gmail.com" },
               ].map(({ label, href, handle }) => (
                 <li key={label} className="flex items-center justify-between">
                   <span className="text-foreground/60">{label}</span>

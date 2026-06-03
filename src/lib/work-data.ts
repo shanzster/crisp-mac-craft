@@ -39,6 +39,7 @@
   websiteUrl?: string;        // live website to embed/link
   pdfDocs?: { title: string; url: string }[];  // PDFs shown in-browser 2x2 grid
   afterPoints?: { icon: string; text: string }[];  // custom before/after bullet points
+  beforePoints?: { icon: string; text: string }[];  // custom before bullet points
 };
 
 export const WORK_ITEMS: WorkItem[] = [
@@ -198,31 +199,33 @@ export const WORK_ITEMS: WorkItem[] = [
     id: "masinloc-tourism",
     title: "Masinloc Tourism Office",
     client: "Masinloc Tourism Office",
-    tag: "Facebook Â· Government",
+    tag: "Facebook · Government",
     category: "Social Media Management",
     color: "oklch(0.58 0.14 200)",
     platform: "Facebook",
     duration: "Ongoing",
     tools: ["Canva", "Photoshop", "CapCut"],
-
-    overview:
-      "The Masinloc Tourism Office is the official government body promoting tourism in Masinloc, Zambales. The municipality has beautiful beaches, heritage sites, and local events â€” but the social media presence wasn't doing them justice.",
-
-    challenge:
-      "The page was inconsistent and underutilized. Posts were infrequent, visuals were low quality, and the content didn't inspire people to actually visit. A government tourism page needs to feel both official and inviting â€” a hard balance to strike.",
-
-    approach:
-      "I focused on making the content feel aspirational â€” the kind of posts that make someone say 'I want to go there.' That meant better visuals, storytelling-driven captions, and a consistent posting rhythm that kept Masinloc top of mind.",
-
-    workflow: [
-      "Content audit â€” reviewed existing posts and identified gaps",
-      "Destination mapping â€” catalogued key spots, events, and stories worth featuring",
-      "Visual direction â€” established a clean, bright aesthetic that matched the destination",
-      "Content calendar â€” planned posts around local events, seasons, and tourism peaks",
-      "Coordination â€” worked with the tourism office on event coverage and announcements",
-      "Execution â€” wrote copy, designed graphics, published and managed the page",
+    logo: "/MasinlocTourism/logo.jpg",
+    overview: "The Masinloc Tourism Office is the official government body promoting tourism in Masinloc, Zambales. The municipality has beautiful beaches, heritage sites, and local events — but the social media presence wasn't doing them justice.",
+    challenge: "The page was inconsistent and underutilized. Posts were infrequent, visuals were low quality, and the content didn't inspire people to actually visit. A government tourism page needs to feel both official and inviting — a hard balance to strike.",
+    approach: "I focused on making the content feel aspirational — the kind of posts that make someone say 'I want to go there.' Better visuals, storytelling captions, and a consistent rhythm that kept Masinloc top of mind.",
+    beforePoints: [
+      { icon: "💬", text: "I was the one who reached out first — DM'd the tourism office because I saw the potential they weren't tapping into." },
+      { icon: "📋", text: "No content strategy. No visual system. Posts were scattered and the page wasn't inspiring anyone to visit." },
+      { icon: "🔧", text: "My pitch: let me organize, plan, and build a presence that actually reflects how beautiful Masinloc is." },
     ],
-
+    afterPoints: [
+      { icon: "◈", text: "Organized and planned a full content system — destination features, event coverage, and a consistent visual identity." },
+      { icon: "↑", text: "Generated significant revenue and tourism growth, bringing real visitors to Masinloc's nature rivers and heritage sites." },
+      { icon: "✦", text: "The page became an actual tourism resource — aspirational, official, and worth sharing." },
+    ],
+    workflow: [
+      "Content audit — reviewed existing posts and identified gaps",
+      "Destination mapping — catalogued key spots, events, and stories worth featuring",
+      "Visual direction — established a clean, bright aesthetic that matched the destination",
+      "Coordination — worked with the tourism office on event coverage and announcements",
+      "Execution — wrote copy, designed graphics, published and managed the page",
+    ],
     what: [
       "Regular tourism content (destinations, events, culture)",
       "Visual direction for photography",
@@ -231,9 +234,53 @@ export const WORK_ITEMS: WorkItem[] = [
       "Consistent posting schedule",
       "Promotional graphics for local events",
     ],
-
-    result:
-      "Increased reach on tourism posts and a stronger, more professional local presence. The page started functioning as an actual tourism resource rather than an afterthought.",
+    result: "Increased reach on tourism posts and a stronger, more professional local presence. The page started functioning as an actual tourism resource rather than an afterthought.",
+    graphics: [
+      {
+        src: "/MasinlocTourism/BrandKit.jpg",
+        title: "Brand Kit",
+        description: "Visual brand kit for Masinloc Tourism — colors, typography, and design language for all official content.",
+        tools: ["Canva"],
+        process: [
+          "Defined a clean, coastal aesthetic that reflects Masinloc's natural beauty",
+          "Set color palette and font system for consistent official use",
+        ],
+      },
+      {
+        src: "/MasinlocTourism/Poster-1.png",
+        title: "Event Poster 1",
+        description: "Promotional event poster for a local Masinloc tourism event.",
+        tools: ["Canva", "Photoshop"],
+        process: [
+          "Designed for both print and digital use",
+          "Used destination photography and bold typography to build excitement",
+        ],
+      },
+      {
+        src: "/MasinlocTourism/Poster-2.png",
+        title: "Event Poster 2",
+        description: "Second event poster — alternate design for a different event or announcement.",
+        tools: ["Canva", "Photoshop"],
+        process: ["Maintained brand consistency while adapting layout for the specific event"],
+      },
+      {
+        src: "/MasinlocTourism/Poster-3.png",
+        title: "Event Poster 3",
+        description: "Third event poster — part of the series for Masinloc tourism campaigns.",
+        tools: ["Canva", "Photoshop"],
+        process: ["Created as part of a campaign series with consistent visual language"],
+      },
+      {
+        src: "/MasinlocTourism/Dingalan - Poster Invitation (1).png",
+        title: "Dingalan Invitation Poster",
+        description: "Official invitation poster for a Dingalan-related event — designed for reach and attendance.",
+        tools: ["Canva"],
+        process: [
+          "Designed to communicate event details clearly and invitingly",
+          "Used warm tones and destination imagery to drive interest",
+        ],
+      },
+    ],
   },
 
   {
@@ -495,10 +542,16 @@ export const WORK_ITEMS: WorkItem[] = [
     ],
     result: "A complete brand and online presence built from nothing. Philadelphia locals can now find, verify, and contact Fast Snaking Services directly through Facebook — and the vehicle magnet turns every job into a moving ad.",
     afterPoints: [
-      { icon: "📲", text: "Metrics building up — reach and impressions growing week over week from a zero baseline." },
-      { icon: "📞", text: "Calls are coming in. Locals are finding the page and reaching out directly for service." },
-      { icon: "◈", text: "Full brand built from a single DM — logo, identity, content system, and online presence all created from scratch with zero budget." },
-      { icon: "✦", text: "Vehicle magnet designed and printed — the service van is now a moving billboard across Philadelphia." },
+      { icon: "📞", text: "3–5 calls a week coming in from Philadelphia locals finding the page organically." },
+      { icon: "📲", text: "Reach and impressions growing week over week — all organic, zero ad spend." },
+      { icon: "📍", text: "Localized brand presence established in Philadelphia — community recognizes the name." },
+      { icon: "✦", text: "Vehicle magnet printed and running — the service van is now a rolling ad across the city." },
+    ],
+    beforePoints: [
+      { icon: "💬", text: "A client DM'd me wanting to start a plumbing business. No plan, no money, just drive." },
+      { icon: "📭", text: "Zero brand. Zero logo. Zero social media. Zero budget. Literally nothing to work with." },
+      { icon: "📍", text: "Based in Philadelphia — needed to reach local customers fast without paid ads." },
+      { icon: "🔧", text: "My job: build everything from the ground up and make it look established from day one." },
     ],
     carouselSlides: [
       "/FastToiletSnaking/slide-1.png",

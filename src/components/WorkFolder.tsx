@@ -4,6 +4,79 @@ import { useNavigate } from "@tanstack/react-router";
 import { type WorkItem } from "@/lib/work-data";
 import { useIsClient } from "@/hooks/useIsClient";
 
+const LOCKED_IDS = ["snappy-nomad", "junz-restaurant"];
+
+/* ─── Coming Soon Modal ─── */
+function ComingSoonModal({ title, onClose }: { title: string; onClose: () => void }) {
+  return createPortal(
+    <div
+      className="fixed inset-0 z-[99999] flex items-center justify-center p-4"
+      style={{ background: "oklch(0.1 0.01 240 / 0.65)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)" }}
+      onClick={onClose}
+    >
+      <div
+        className="w-full overflow-hidden rounded-[20px] border border-border bg-card shadow-[0_32px_80px_-16px_oklch(0.2_0.02_240/0.5)]"
+        style={{ maxWidth: 380 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Title bar */}
+        <div className="flex h-10 items-center justify-between border-b border-border bg-secondary/60 px-4" style={{ borderRadius: "20px 20px 0 0" }}>
+          <div className="flex items-center gap-1.5">
+            <button onClick={onClose} className="h-[11px] w-[11px] rounded-full hover:opacity-80 transition" style={{ background: "var(--traffic-red)" }} />
+            <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-yellow)" }} />
+            <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-green)" }} />
+          </div>
+          <span className="text-[11px] tracking-tight text-foreground/45">{title}</span>
+          <button onClick={onClose} className="text-[11px] tracking-tight text-foreground/35 hover:text-foreground transition">✕ close</button>
+        </div>
+
+        {/* Body */}
+        <div className="px-8 py-8 text-center">
+          <div
+            className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-[18px]"
+            style={{ background: "oklch(0.62 0.16 255 / 0.12)", border: "1px solid oklch(0.62 0.16 255 / 0.25)" }}
+          >
+            <span className="text-[30px]">🏗️</span>
+          </div>
+          <p className="text-[10px] uppercase tracking-[0.22em] text-foreground/35 mb-2">Coming Soon</p>
+          <h3 className="text-[20px] font-bold tracking-tightest text-foreground leading-tight mb-3">
+            Brand is being built<br />right now.
+          </h3>
+          <p className="text-[13px] leading-relaxed tracking-tight text-foreground/55 mb-6">
+            Come back later to see it — or get updates on{" "}
+            <a
+              href="https://instagram.com/shanzster.zip"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-foreground/80 underline underline-offset-2 hover:text-foreground transition"
+            >
+              @shanzster.zip
+            </a>{" "}
+            on Instagram.
+          </p>
+          <div className="flex flex-col gap-2.5">
+            <a
+              href="https://instagram.com/shanzster.zip"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 rounded-full bg-foreground px-6 py-2.5 text-[12px] tracking-tight text-background transition hover:opacity-85"
+            >
+              Follow @shanzster.zip ↗
+            </a>
+            <button
+              onClick={onClose}
+              className="rounded-full border border-border px-6 py-2.5 text-[12px] tracking-tight text-foreground/50 transition hover:bg-secondary"
+            >
+              Got it
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
+}
+
 // 3 left, 3 right — neat columns flanking the folder
 // x: distance from center, y: vertical offset from center
 const POSITIONS: { x: number; y: number; rot: number; side: "left" | "right" }[] = [
@@ -76,7 +149,7 @@ function WorkPaper({
       onClick={() => {
         if (!open) return;
         onSelect(item);
-        if (!isMobile) {
+        if (!isMobile && !LOCKED_IDS.includes(item.id)) {
           navigate({ to: "/work/$id", params: { id: item.id } });
         }
       }}
@@ -259,6 +332,7 @@ export function WorkFolderScene({ items }: { items: WorkItem[] }) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [isCompactDevice, setIsCompactDevice] = useState(false);
   const [activeMobileItem, setActiveMobileItem] = useState<WorkItem | null>(null);
+  const [showComingSoon, setShowComingSoon] = useState<string | null>(null);
   const navigate = useNavigate();
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isClient = useIsClient();
@@ -341,6 +415,7 @@ export function WorkFolderScene({ items }: { items: WorkItem[] }) {
 
   return (
     <div className="flex flex-col items-center w-full">
+      {showComingSoon && <ComingSoonModal title={showComingSoon} onClose={() => setShowComingSoon(null)} />}
       {activeMobileItem && isMobile && (
         <MobileWorkPreviewModal
           item={activeMobileItem}
@@ -366,6 +441,12 @@ export function WorkFolderScene({ items }: { items: WorkItem[] }) {
             onCancelClose={cancelClose}
             onScheduleClose={scheduleClose}
             onSelect={(selectedItem) => {
+              if (LOCKED_IDS.includes(selectedItem.id)) {
+                setShowComingSoon(selectedItem.title);
+                setOpen(false);
+                setHoveredIndex(null);
+                return;
+              }
               if (isMobile) {
                 setActiveMobileItem(selectedItem);
               }
