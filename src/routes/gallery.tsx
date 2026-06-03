@@ -45,15 +45,20 @@ const FOLDERS: Folder[] = [
     tabColor: "oklch(0.63 0.19 290)",
     description: "Brand posts, story templates, promo graphics, highlight covers.",
     items: [
-      { id: "g1", title: "Steal & Style — Brand Post",    client: "Steal & Style",   bg: "linear-gradient(135deg, oklch(0.22 0.04 290), oklch(0.42 0.18 280))", type: "image", aspect: "portrait"  },
-      { id: "g2", title: "Story Template",                client: "Steal & Style",   bg: "linear-gradient(135deg, oklch(0.32 0.12 300), oklch(0.55 0.20 285))", type: "image", aspect: "portrait"  },
-      { id: "g3", title: "Highlight Cover Set",           client: "Steal & Style",   bg: "linear-gradient(135deg, oklch(0.45 0.18 270), oklch(0.65 0.14 300))", type: "image", aspect: "square"    },
-      { id: "g4", title: "Promo Graphic",                 client: "Steal & Style",   bg: "linear-gradient(135deg, oklch(0.60 0.22 285), oklch(0.40 0.20 270))", type: "image", aspect: "landscape" },
-      { id: "g5", title: "Caption Card",                  client: "Steal & Style",   bg: "linear-gradient(135deg, oklch(0.50 0.20 275), oklch(0.35 0.16 290))", type: "image", aspect: "square"    },
-      { id: "g6", title: "Collection Launch Graphic",     client: "Steal & Style",   bg: "linear-gradient(135deg, oklch(0.38 0.22 280), oklch(0.58 0.18 295))", type: "image", aspect: "portrait"  },
-      { id: "g7", title: "Destination Post",              client: "Masinloc Tourism",bg: "linear-gradient(135deg, oklch(0.55 0.16 200), oklch(0.72 0.12 210))", type: "image", aspect: "square"    },
-      { id: "g8", title: "Food Feature Post",             client: "Junz Restaurant", bg: "linear-gradient(135deg, oklch(0.65 0.16 55),  oklch(0.78 0.12 70))",  type: "image", aspect: "portrait"  },
-      { id: "g9", title: "Product Showcase",              client: "CSA Print",       bg: "linear-gradient(135deg, oklch(0.50 0.14 255), oklch(0.68 0.10 270))", type: "image", aspect: "landscape" },
+      { id: "g1",  title: "Steal & Style Collection 1",     client: "Steal & Style",     bg: "linear-gradient(135deg, oklch(0.22 0.04 290), oklch(0.42 0.18 280))", src: "/Graphics/00_STEAL&STYLE_COLLECTION-1_SK01-05.png", type: "image", aspect: "landscape" },
+      { id: "g2",  title: "Collection 3 Cover",            client: "Steal & Style",     bg: "linear-gradient(135deg, oklch(0.32 0.12 300), oklch(0.55 0.20 285))", src: "/Graphics/01_Collection3_Cover1.png", type: "image", aspect: "portrait"  },
+      { id: "g3",  title: "Call to Action Post",           client: "Steal & Style",     bg: "linear-gradient(135deg, oklch(0.45 0.18 270), oklch(0.65 0.14 300))", src: "/Graphics/calltoactionpost2.png", type: "image", aspect: "square"    },
+      { id: "g4",  title: "Collection 2 Cover",            client: "Steal & Style",     bg: "linear-gradient(135deg, oklch(0.60 0.22 285), oklch(0.40 0.20 270))", src: "/Graphics/COLLECTION2_CH-01.png", type: "image", aspect: "portrait"  },
+      { id: "g5",  title: "Cover Design 1",                client: "Steal & Style",     bg: "linear-gradient(135deg, oklch(0.50 0.20 275), oklch(0.35 0.16 290))", src: "/Graphics/Cover1 (1).png", type: "image", aspect: "square"    },
+      { id: "g6",  title: "Dingalan Event Invitation",     client: "Masinloc Tourism",  bg: "linear-gradient(135deg, oklch(0.38 0.22 280), oklch(0.58 0.18 295))", src: "/Graphics/Dingalan - Poster Invitation (1).png", type: "image", aspect: "portrait"  },
+      { id: "g7",  title: "Event Invitation Post",         client: "General",           bg: "linear-gradient(135deg, oklch(0.55 0.16 200), oklch(0.72 0.12 210))", src: "/Graphics/InvitationPost.png", type: "image", aspect: "square"    },
+      { id: "g8",  title: "Brand Logo Design",             client: "PSG Hits",          bg: "linear-gradient(135deg, oklch(0.65 0.16 55),  oklch(0.78 0.12 70))",  src: "/Graphics/Logo.png", type: "image", aspect: "square"  },
+      { id: "g9",  title: "Onboarding Post",               client: "General",           bg: "linear-gradient(135deg, oklch(0.50 0.14 255), oklch(0.68 0.10 270))", src: "/Graphics/OnboardingPost.png", type: "image", aspect: "portrait" },
+      { id: "g10", title: "Overall Brand Board",           client: "PSG Hits",          bg: "linear-gradient(135deg, oklch(0.42 0.18 255), oklch(0.58 0.14 262))", src: "/Graphics/OverallBrandBoard.png", type: "image", aspect: "landscape" },
+      { id: "g11", title: "Event Poster 1",                client: "Masinloc Tourism",  bg: "linear-gradient(135deg, oklch(0.48 0.20 258), oklch(0.65 0.14 265))", src: "/Graphics/Poster-1.png", type: "image", aspect: "portrait"  },
+      { id: "g12", title: "Event Poster 2",                client: "Masinloc Tourism",  bg: "linear-gradient(135deg, oklch(0.35 0.22 252), oklch(0.52 0.18 260))", src: "/Graphics/Poster-2.png", type: "image", aspect: "portrait"  },
+      { id: "g13", title: "Slide Design 3",                client: "General",           bg: "linear-gradient(135deg, oklch(0.30 0.16 255), oklch(0.50 0.20 258))", src: "/Graphics/slide-3.png", type: "image", aspect: "landscape" },
+      { id: "g14", title: "Slide Design 5",                client: "General",           bg: "linear-gradient(135deg, oklch(0.38 0.20 255), oklch(0.55 0.18 260))", src: "/Graphics/slide-5.png", type: "image", aspect: "landscape" },
     ],
   },
   {
@@ -73,34 +78,19 @@ const FOLDERS: Folder[] = [
     ],
   },
   {
-    id: "calendars",
-    label: "Content Calendars",
-    icon: "◈",
-    color: "oklch(0.72 0.14 240)",
-    tabColor: "oklch(0.66 0.15 240)",
-    description: "Monthly editorial calendars, posting schedules, campaign timelines.",
-    items: [
-      { id: "cal1", title: "Steal & Style — October 2024",    client: "Steal & Style",    bg: "linear-gradient(135deg, oklch(0.55 0.14 240), oklch(0.72 0.10 250))", type: "image", aspect: "landscape" },
-      { id: "cal2", title: "Masinloc Tourism — Q4 2024",      client: "Masinloc Tourism", bg: "linear-gradient(135deg, oklch(0.60 0.14 220), oklch(0.75 0.10 230))", type: "image", aspect: "landscape" },
-      { id: "cal3", title: "Junz Restaurant — November 2024", client: "Junz Restaurant",  bg: "linear-gradient(135deg, oklch(0.65 0.14 55),  oklch(0.78 0.10 65))",  type: "image", aspect: "landscape" },
-      { id: "cal4", title: "CSA Print — Campaign Brief",      client: "CSA Print",        bg: "linear-gradient(135deg, oklch(0.55 0.12 270), oklch(0.68 0.10 280))", type: "image", aspect: "landscape" },
-      { id: "cal5", title: "Holiday Campaign Timeline",       client: "Steal & Style",    bg: "linear-gradient(135deg, oklch(0.50 0.16 240), oklch(0.65 0.12 255))", type: "image", aspect: "landscape" },
-    ],
-  },
-  {
     id: "ads",
-    label: "Campaign Ads",
+    label: "Campaign Analytics",
     icon: "⬡",
     color: "oklch(0.62 0.20 255)",
     tabColor: "oklch(0.55 0.21 255)",
-    description: "Meta ad creatives, story ads, carousel frames, A/B test variants.",
+    description: "Analytics reports, content calendars, campaign performance data.",
     items: [
-      { id: "a1", title: "Meta Ad Creative",      client: "CSA Print",       bg: "linear-gradient(135deg, oklch(0.38 0.20 255), oklch(0.55 0.18 260))", type: "image", aspect: "square"    },
-      { id: "a2", title: "Story Ad",              client: "Junz Restaurant", bg: "linear-gradient(135deg, oklch(0.45 0.22 250), oklch(0.62 0.16 265))", type: "image", aspect: "portrait"  },
-      { id: "a3", title: "Carousel Ad Frame",     client: "Steal & Style",   bg: "linear-gradient(135deg, oklch(0.30 0.16 255), oklch(0.50 0.20 258))", type: "image", aspect: "landscape" },
-      { id: "a4", title: "A/B Test Variant",      client: "CSA Print",       bg: "linear-gradient(135deg, oklch(0.48 0.20 258), oklch(0.65 0.14 265))", type: "image", aspect: "square"    },
-      { id: "a5", title: "Lookalike Audience Ad", client: "Steal & Style",   bg: "linear-gradient(135deg, oklch(0.35 0.22 252), oklch(0.52 0.18 260))", type: "image", aspect: "portrait"  },
-      { id: "a6", title: "Retargeting Creative",  client: "Junz Restaurant", bg: "linear-gradient(135deg, oklch(0.42 0.18 255), oklch(0.58 0.14 262))", type: "image", aspect: "square"    },
+      { id: "a1", title: "Fast Snaking Analytics",    client: "Fast Snaking Services", bg: "linear-gradient(135deg, oklch(0.38 0.20 255), oklch(0.55 0.18 260))", src: "/Campaigns/fastsanking_analytics.png", type: "image", aspect: "landscape" },
+      { id: "a2", title: "Fast Snaking Calendar",     client: "Fast Snaking Services", bg: "linear-gradient(135deg, oklch(0.45 0.22 250), oklch(0.62 0.16 265))", src: "/Campaigns/fastsanking_contentcalendar.png", type: "image", aspect: "landscape" },
+      { id: "a3", title: "PSG Hits Analytics",        client: "PSG Hits",              bg: "linear-gradient(135deg, oklch(0.30 0.16 255), oklch(0.50 0.20 258))", src: "/Campaigns/PSG_Analytics.png", type: "image", aspect: "landscape" },
+      { id: "a4", title: "PSG Content Calendar",      client: "PSG Hits",              bg: "linear-gradient(135deg, oklch(0.48 0.20 258), oklch(0.65 0.14 265))", src: "/Campaigns/PSG_ContentCalendar.png", type: "image", aspect: "landscape" },
+      { id: "a5", title: "Steal & Style Analytics",   client: "Steal & Style",         bg: "linear-gradient(135deg, oklch(0.35 0.22 252), oklch(0.52 0.18 260))", src: "/Campaigns/stealandstyle_Analytics_Screenshot.png", type: "image", aspect: "landscape" },
+      { id: "a6", title: "Steal & Style Calendar",    client: "Steal & Style",         bg: "linear-gradient(135deg, oklch(0.42 0.18 255), oklch(0.58 0.14 262))", src: "/Campaigns/stealandstyle_ContentCalendar.png", type: "image", aspect: "landscape" },
     ],
   },
 ];
@@ -291,8 +281,6 @@ function GalleryPage() {
       navigate({ to: "/graphics" });
     } else if (folder.id === "videos") {
       navigate({ to: "/videos" });
-    } else if (folder.id === "calendars") {
-      navigate({ to: "/calendars" });
     } else if (folder.id === "ads") {
       navigate({ to: "/ads" });
     } else {
@@ -320,9 +308,9 @@ function GalleryPage() {
           </h1>
         </div>
 
-        {/* 2×2 folder grid OR open folder view */}
+        {/* 3-folder grid OR open folder view */}
         {!openFolder ? (
-          <div className="grid grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {FOLDERS.map((folder) => (
               <FolderCard key={folder.id} folder={folder} onClick={() => handleFolderClick(folder)} />
             ))}

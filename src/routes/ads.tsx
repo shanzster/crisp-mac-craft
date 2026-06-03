@@ -6,8 +6,8 @@ export const Route = createFileRoute("/ads")({
   component: AdsPage,
   head: () => ({
     meta: [
-      { title: "Campaign Ads — Shanzster" },
-      { name: "description", content: "Meta ad creatives, story ads, carousel frames, and A/B test variants." },
+      { title: "Campaign Analytics — Shanzster" },
+      { name: "description", content: "Analytics reports, content calendars, and campaign performance data." },
     ],
   }),
 });
@@ -23,14 +23,12 @@ type Ad = {
 };
 
 const ADS: Ad[] = [
-  { id: "a1", title: "Meta Ad Creative",      client: "CSA Print",       category: "Meta Ads",  bg: "linear-gradient(135deg, oklch(0.38 0.20 255), oklch(0.55 0.18 260))" },
-  { id: "a2", title: "Story Ad",              client: "Junz Restaurant", category: "Stories",   bg: "linear-gradient(135deg, oklch(0.45 0.22 250), oklch(0.62 0.16 265))" },
-  { id: "a3", title: "Carousel Ad Frame",     client: "Steal & Style",   category: "Carousel",  bg: "linear-gradient(135deg, oklch(0.30 0.16 255), oklch(0.50 0.20 258))" },
-  { id: "a4", title: "A/B Test Variant",      client: "CSA Print",       category: "Testing",   bg: "linear-gradient(135deg, oklch(0.48 0.20 258), oklch(0.65 0.14 265))" },
-  { id: "a5", title: "Lookalike Audience Ad", client: "Steal & Style",   category: "Meta Ads",  bg: "linear-gradient(135deg, oklch(0.35 0.22 252), oklch(0.52 0.18 260))" },
-  { id: "a6", title: "Retargeting Creative",  client: "Junz Restaurant", category: "Retarget",  bg: "linear-gradient(135deg, oklch(0.42 0.18 255), oklch(0.58 0.14 262))" },
-  { id: "a7", title: "Lead Generation Ad",    client: "Masinloc Tourism",category: "Lead Gen",  bg: "linear-gradient(135deg, oklch(0.40 0.20 250), oklch(0.60 0.16 260))" },
-  { id: "a8", title: "Video Ad Creative",     client: "Steal & Style",   category: "Video Ads", bg: "linear-gradient(135deg, oklch(0.36 0.18 255), oklch(0.54 0.16 258))" },
+  { id: "a1", title: "Fast Snaking Analytics",    client: "Fast Snaking Services", category: "Analytics",     bg: "linear-gradient(135deg, oklch(0.38 0.20 255), oklch(0.55 0.18 260))", src: "/Campaigns/fastsanking_analytics.png" },
+  { id: "a2", title: "Fast Snaking Calendar",     client: "Fast Snaking Services", category: "Calendar",      bg: "linear-gradient(135deg, oklch(0.45 0.22 250), oklch(0.62 0.16 265))", src: "/Campaigns/fastsanking_contentcalendar.png" },
+  { id: "a3", title: "PSG Hits Analytics",        client: "PSG Hits",              category: "Analytics",     bg: "linear-gradient(135deg, oklch(0.30 0.16 255), oklch(0.50 0.20 258))", src: "/Campaigns/PSG_Analytics.png" },
+  { id: "a4", title: "PSG Content Calendar",      client: "PSG Hits",              category: "Calendar",      bg: "linear-gradient(135deg, oklch(0.48 0.20 258), oklch(0.65 0.14 265))", src: "/Campaigns/PSG_ContentCalendar.png" },
+  { id: "a5", title: "Steal & Style Analytics",   client: "Steal & Style",         category: "Analytics",     bg: "linear-gradient(135deg, oklch(0.35 0.22 252), oklch(0.52 0.18 260))", src: "/Campaigns/stealandstyle_Analytics_Screenshot.png" },
+  { id: "a6", title: "Steal & Style Calendar",    client: "Steal & Style",         category: "Calendar",      bg: "linear-gradient(135deg, oklch(0.42 0.18 255), oklch(0.58 0.14 262))", src: "/Campaigns/stealandstyle_ContentCalendar.png" },
 ];
 
 /* ─── AD CARD ─── */
@@ -248,10 +246,10 @@ function AdsPage() {
             className="font-bold tracking-tightest text-foreground leading-[0.88]" 
             style={{ fontSize: "clamp(36px, 5vw, 64px)" }}
           >
-            Campaign Ads
+            Campaign Analytics
           </h1>
           <p className="mt-3 text-[13px] tracking-tight text-foreground/40 max-w-md">
-            Meta ad creatives, story ads, carousel frames, and A/B test variants — {ADS.length} ad pieces.
+            Analytics reports, content calendars, and campaign performance data — {ADS.length} campaign pieces.
           </p>
         </div>
 

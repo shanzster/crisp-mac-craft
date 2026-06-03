@@ -149,31 +149,31 @@ const CREDENTIALS = [
 
 const DEVICES = [
   {
-    name: "MacBook Air M2",
+    name: "MSI Laptop",
     role: "Primary workstation",
-    icon: "💻",
-    specs: ["Apple M2 chip", "8GB RAM", "256GB SSD", "macOS Sonoma"],
+    image: "/Setup/MSI_Laptop.png",
+    specs: ["Windows 11", "Intel processor", "Gaming performance", "Content creation"],
     color: "oklch(0.94 0.005 240)",
   },
   {
-    name: "iPhone",
-    role: "Content capture",
-    icon: "📱",
-    specs: ["Primary camera", "Content shooting", "Social monitoring", "On-the-go editing"],
+    name: "iPad 11th Gen",
+    role: "Design & illustration",
+    image: "/Setup/Ipad_11th_with_Procreate.png",
+    specs: ["Procreate app", "Digital sketching", "Client presentations", "Design mockups"],
     color: "oklch(0.94 0.005 240)",
   },
   {
-    name: "iPad",
-    role: "Design & sketching",
-    icon: "🖥",
-    specs: ["Canva design", "Mood boarding", "Client presentations", "Reference screen"],
+    name: "Canson Sketchbook",
+    role: "Traditional sketching",
+    image: "/Setup/Canson_Sketchbook.png",
+    specs: ["Paper sketches", "Concept development", "Hand-drawn designs", "Creative brainstorming"],
     color: "oklch(0.94 0.005 240)",
   },
   {
-    name: "External Monitor",
-    role: "Extended workspace",
-    icon: "🖥",
-    specs: ["Dual-screen setup", "Color-accurate display", "Design review", "Video editing"],
+    name: "Jabra Headphones",
+    role: "Audio & focus",
+    image: "/Setup/Jabra_Noise_Cancelling_Headphones.png",
+    specs: ["Noise cancelling", "Video calls", "Music editing", "Focused work sessions"],
     color: "oklch(0.94 0.005 240)",
   },
 ];
@@ -294,34 +294,7 @@ function AboutPage() {
           </div>
         </div>
 
-        {/* ── VIDEO INTRO ── */}
-        <div className="mb-8 rounded-[16px] border border-border bg-card overflow-hidden">
-          <div className="flex h-9 items-center gap-1.5 border-b border-border bg-secondary/60 px-4">
-            <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-red)" }} />
-            <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-yellow)" }} />
-            <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-green)" }} />
-            <span className="ml-auto text-[11px] tracking-tight text-foreground/40">intro.mp4</span>
-          </div>
-          <div
-            className="relative w-full flex items-center justify-center"
-            style={{ aspectRatio: "16/9", background: "oklch(0.10 0.01 240)" }}
-          >
-            {/* ↓ Replace src with your real video path e.g. "/videos/intro.mp4" */}
-            {/* <video src="/videos/intro.mp4" controls poster="/videos/intro-thumb.jpg" className="w-full h-full object-cover" /> */}
-            <div className="flex flex-col items-center gap-3 text-center px-6">
-              <div
-                className="flex h-16 w-16 items-center justify-center rounded-full border border-white/10"
-                style={{ background: "oklch(0.18 0.02 240)" }}
-              >
-                <span className="text-white/40 text-[22px] ml-1">▶</span>
-              </div>
-              <p className="text-white/25 text-[12px] tracking-tight">Video intro coming soon</p>
-              <p className="text-white/15 text-[11px] tracking-tight max-w-xs">
-                Drop your video file at <code className="bg-white/5 px-1.5 py-0.5 rounded">public/videos/intro.mp4</code> and uncomment the video tag above.
-              </p>
-            </div>
-          </div>
-        </div>
+
 
         {/* ── CREDENTIALS ── */}
         <div className="mb-8">
@@ -376,10 +349,19 @@ function AboutPage() {
             {DEVICES.map((device) => (
               <div key={device.name} className="rounded-[16px] border border-border bg-card px-5 py-5">
                 <div
-                  className="flex h-12 w-12 items-center justify-center rounded-[12px] text-[24px] mb-4"
+                  className="flex h-12 w-12 items-center justify-center rounded-[12px] mb-4 overflow-hidden"
                   style={{ background: "var(--secondary)" }}
                 >
-                  {device.icon}
+                  <img 
+                    src={device.image} 
+                    alt={device.name}
+                    className="w-full h-full object-contain"
+                    onError={(e) => {
+                      // Fallback to a generic icon if image fails to load
+                      (e.target as HTMLImageElement).style.display = "none";
+                      (e.target as HTMLImageElement).parentElement!.innerHTML = "🖥";
+                    }}
+                  />
                 </div>
                 <p className="text-[13px] font-semibold tracking-tight text-foreground">{device.name}</p>
                 <p className="text-[11px] tracking-tight text-foreground/40 mt-0.5 mb-3">{device.role}</p>

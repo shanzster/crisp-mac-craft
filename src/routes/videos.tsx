@@ -2,6 +2,76 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { NavBar } from "@/components/NavBar";
 
+/* ─── Coming Soon Modal ─── */
+function ComingSoonModal({ onClose }: { onClose: () => void }) {
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+      style={{ background: "oklch(0.1 0.01 240 / 0.65)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)" }}
+      onClick={onClose}
+    >
+      <div
+        className="w-full overflow-hidden rounded-[20px] border border-border bg-card shadow-[0_32px_80px_-16px_oklch(0.2_0.02_240/0.5)]"
+        style={{ maxWidth: 380 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Title bar */}
+        <div className="flex h-10 items-center justify-between border-b border-border bg-secondary/60 px-4" style={{ borderRadius: "20px 20px 0 0" }}>
+          <div className="flex items-center gap-1.5">
+            <button onClick={onClose} className="h-[11px] w-[11px] rounded-full hover:opacity-80 transition" style={{ background: "var(--traffic-red)" }} />
+            <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-yellow)" }} />
+            <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-green)" }} />
+          </div>
+          <span className="text-[11px] tracking-tight text-foreground/45">Videos & Reels</span>
+          <button onClick={onClose} className="text-[11px] tracking-tight text-foreground/35 hover:text-foreground transition">✕ close</button>
+        </div>
+
+        {/* Body */}
+        <div className="px-8 py-8 text-center">
+          <div
+            className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-[18px]"
+            style={{ background: "oklch(0.28 0.04 240 / 0.12)", border: "1px solid oklch(0.28 0.04 240 / 0.25)" }}
+          >
+            <span className="text-[30px]">🎬</span>
+          </div>
+          <p className="text-[10px] uppercase tracking-[0.22em] text-foreground/35 mb-2">Building it</p>
+          <h3 className="text-[20px] font-bold tracking-tightest text-foreground leading-tight mb-3">
+            Videos section is<br />being built.
+          </h3>
+          <p className="text-[13px] leading-relaxed tracking-tight text-foreground/55 mb-6">
+            Come back later to see all the video content — or get updates on{" "}
+            <a
+              href="https://instagram.com/shanzster.zip"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-foreground/80 underline underline-offset-2 hover:text-foreground transition"
+            >
+              @shanzster.zip
+            </a>{" "}
+            on Instagram.
+          </p>
+          <div className="flex flex-col gap-2.5">
+            <a
+              href="https://instagram.com/shanzster.zip"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 rounded-full bg-foreground px-6 py-2.5 text-[12px] tracking-tight text-background transition hover:opacity-85"
+            >
+              Follow @shanzster.zip ↗
+            </a>
+            <button
+              onClick={onClose}
+              className="rounded-full border border-border px-6 py-2.5 text-[12px] tracking-tight text-foreground/50 transition hover:bg-secondary"
+            >
+              Got it
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export const Route = createFileRoute("/videos")({
   component: VideosPage,
   head: () => ({
@@ -204,37 +274,14 @@ function FullViewModal({
 
 /* ─── PAGE ─── */
 function VideosPage() {
-  const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
-  const [selectedIndex, setSelectedIndex] = useState<number>(0);
-
-  const openVideo = (video: Video, index: number) => {
-    setSelectedVideo(video);
-    setSelectedIndex(index);
-  };
-
-  const closeVideo = () => {
-    setSelectedVideo(null);
-  };
-
-  const goToNext = () => {
-    if (selectedIndex < VIDEOS.length - 1) {
-      const nextIndex = selectedIndex + 1;
-      setSelectedIndex(nextIndex);
-      setSelectedVideo(VIDEOS[nextIndex]);
-    }
-  };
-
-  const goToPrev = () => {
-    if (selectedIndex > 0) {
-      const prevIndex = selectedIndex - 1;
-      setSelectedIndex(prevIndex);
-      setSelectedVideo(VIDEOS[prevIndex]);
-    }
-  };
+  const [showComingSoon, setShowComingSoon] = useState(false);
 
   return (
     <div className="min-h-screen bg-background pb-32">
       <NavBar />
+      
+      {showComingSoon && <ComingSoonModal onClose={() => setShowComingSoon(false)} />}
+      
       <main className="mx-auto max-w-[1200px] px-6 pt-10 sm:px-10">
         <Link 
           to="/gallery" 
@@ -255,33 +302,60 @@ function VideosPage() {
             Videos & Reels
           </h1>
           <p className="mt-3 text-[13px] tracking-tight text-foreground/40 max-w-md">
-            Reels, vlogs, promo videos, motion captions, and collection launches — {VIDEOS.length} video pieces.
+            Reels, vlogs, promo videos, motion captions, and collection launches — currently being built.
           </p>
         </div>
 
-        {/* Videos Grid */}
+        {/* Locked Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 lg:gap-8">
-          {VIDEOS.map((video, index) => (
-            <VideoCard 
-              key={video.id} 
-              video={video} 
-              onClick={() => openVideo(video, index)}
-            />
+          {VIDEOS.map((video) => (
+            <button 
+              key={video.id}
+              onClick={() => setShowComingSoon(true)}
+              className="group relative w-full text-left cursor-pointer opacity-50"
+            >
+              {/* Video Preview */}
+              <div 
+                className="relative w-full rounded-lg overflow-hidden border border-border/20"
+                style={{ aspectRatio: "9 / 16", background: video.bg }}
+              >
+                <div className="w-full h-full flex flex-col items-center justify-center gap-2">
+                  <span className="text-white/10 text-[32px]">▶</span>
+                  <p className="text-white/12 text-[10px] tracking-[0.14em] uppercase">
+                    Video
+                  </p>
+                </div>
+                
+                {/* Lock overlay */}
+                <div
+                  className="absolute inset-0 flex flex-col items-center justify-center gap-1"
+                  style={{ background: "oklch(0.1 0.01 240 / 0.6)", backdropFilter: "blur(3px)" }}
+                >
+                  <span className="text-[22px]">🎬</span>
+                  <p className="text-[8px] uppercase tracking-[0.16em] text-white/60">building</p>
+                </div>
+                
+                {/* Category Badge */}
+                <div className="absolute top-3 left-3">
+                  <span className="inline-block px-2.5 py-1 rounded-full bg-background/90 backdrop-blur-sm text-[9px] uppercase tracking-[0.2em] text-foreground/60 border border-border/30">
+                    {video.category}
+                  </span>
+                </div>
+              </div>
+
+              {/* Info */}
+              <div className="mt-3">
+                <h3 className="text-[13px] font-medium tracking-tight text-foreground leading-snug">
+                  {video.title}
+                </h3>
+                <p className="text-[11px] tracking-tight text-foreground/50 mt-1">
+                  {video.client}
+                </p>
+              </div>
+            </button>
           ))}
         </div>
       </main>
-
-      {/* Full View Modal */}
-      {selectedVideo && (
-        <FullViewModal
-          video={selectedVideo}
-          onClose={closeVideo}
-          onNext={goToNext}
-          onPrev={goToPrev}
-          currentIndex={selectedIndex}
-          total={VIDEOS.length}
-        />
-      )}
     </div>
   );
 }

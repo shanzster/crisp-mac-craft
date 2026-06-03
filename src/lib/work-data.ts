@@ -293,6 +293,7 @@ export const WORK_ITEMS: WorkItem[] = [
     platform: "Facebook",
     duration: "Ongoing",
     tools: ["Canva", "Photoshop"],
+    logo: "/JunzRestaurant/logo.jpg",
 
     overview:
       "Junz Restaurant is a local food business that needed a social media presence to drive foot traffic and build a loyal customer base. Food businesses live and die by their online presence â€” a good-looking page can fill tables.",

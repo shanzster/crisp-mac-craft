@@ -1144,7 +1144,14 @@ function Testimonials() {
 
 /* ───────── SOCIAL FEED ───────── */
 function SocialFeed() {
-  const posts = Array.from({ length: 6 }, (_, i) => ({ id: i }));
+  const posts = [
+    { id: 1, image: "/LatestPosts/Brand-Kit-Vertical.png", alt: "Brand Kit Design" },
+    { id: 2, image: "/LatestPosts/calltoactionpost2.png", alt: "Call to Action Post" },
+    { id: 3, image: "/LatestPosts/Collection2_Cover1.png", alt: "Collection Cover" },
+    { id: 4, image: "/LatestPosts/Cover1 (1).png", alt: "Cover Design" },
+    { id: 5, image: "/LatestPosts/OnboardingPost.png", alt: "Onboarding Post" },
+    { id: 6, image: "/LatestPosts/WeExistPost.png", alt: "We Exist Post" },
+  ];
 
   return (
     <section className="mt-20">
@@ -1162,24 +1169,38 @@ function SocialFeed() {
         </div>
         {/* Grid */}
         <div className="grid grid-cols-3 gap-px bg-border">
-          {posts.map((p) => (
+          {posts.map((post) => (
             <div
-              key={p.id}
-              className="aspect-square bg-secondary/40 flex items-center justify-center"
+              key={post.id}
+              className="aspect-square bg-secondary/40 relative group overflow-hidden"
             >
-              <div className="text-center">
-                <p className="text-[10px] uppercase tracking-[0.16em] text-foreground/20">Post {p.id + 1}</p>
-                <p className="text-[9px] tracking-tight text-foreground/15 mt-1">screenshot here</p>
-              </div>
+              <img
+                src={post.image}
+                alt={post.alt}
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                onError={(e) => {
+                  // Fallback if image fails to load
+                  (e.target as HTMLImageElement).style.display = "none";
+                  (e.target as HTMLImageElement).parentElement!.innerHTML = `
+                    <div class="flex items-center justify-center h-full">
+                      <div class="text-center">
+                        <p class="text-[10px] uppercase tracking-[0.16em] text-foreground/20">Post ${post.id}</p>
+                        <p class="text-[9px] tracking-tight text-foreground/15 mt-1">image not found</p>
+                      </div>
+                    </div>
+                  `;
+                }}
+              />
+              <div className="absolute inset-0 bg-background/0 group-hover:bg-background/10 transition-colors duration-300" />
             </div>
           ))}
         </div>
         <div className="px-6 py-4 flex items-center justify-between border-t border-border">
           <p className="text-[11px] tracking-tight text-foreground/40">
-            Add real screenshots from your managed pages
+            Recent posts from managed social media accounts
           </p>
           <a
-            href="https://instagram.com/stealandstyle.co"
+            href="https://instagram.com/shanzster.zip"
             target="_blank"
             rel="noopener noreferrer"
             className="text-[11px] tracking-tight text-foreground/50 hover:text-foreground transition"
