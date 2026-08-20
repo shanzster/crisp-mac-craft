@@ -1,6 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { NavBar } from "@/components/NavBar";
+import { type Media as Graphic } from "@/lib/media-data";
+import { useGraphics } from "@/lib/content";
+import { EditableText, EditableImage, useEdit } from "@/lib/edit-mode";
 
 export const Route = createFileRoute("/graphics")({
   component: GraphicsPage,
@@ -12,52 +15,22 @@ export const Route = createFileRoute("/graphics")({
   }),
 });
 
-/* ─── DATA ─── */
-type Graphic = {
-  id: string;
-  title: string;
-  client: string;
-  category: string;
-  bg: string;
-  src?: string;
-};
-
-const GRAPHICS: Graphic[] = [
-  { id: "g1",  title: "Steal & Style Collection 1",     client: "Steal & Style",     category: "Collection",   bg: "linear-gradient(135deg, oklch(0.22 0.04 290), oklch(0.42 0.18 280))", src: "/Graphics/00_STEAL&STYLE_COLLECTION-1_SK01-05.png" },
-  { id: "g2",  title: "Collection 3 Cover",            client: "Steal & Style",     category: "Cover Design", bg: "linear-gradient(135deg, oklch(0.32 0.12 300), oklch(0.55 0.20 285))", src: "/Graphics/01_Collection3_Cover1.png" },
-  { id: "g3",  title: "Call to Action Post",           client: "Steal & Style",     category: "Social Post",  bg: "linear-gradient(135deg, oklch(0.45 0.18 270), oklch(0.65 0.14 300))", src: "/Graphics/calltoactionpost2.png" },
-  { id: "g4",  title: "Collection 2 Cover",            client: "Steal & Style",     category: "Cover Design", bg: "linear-gradient(135deg, oklch(0.60 0.22 285), oklch(0.40 0.20 270))", src: "/Graphics/COLLECTION2_CH-01.png" },
-  { id: "g5",  title: "Cover Design 1",                client: "Steal & Style",     category: "Cover Design", bg: "linear-gradient(135deg, oklch(0.50 0.20 275), oklch(0.35 0.16 290))", src: "/Graphics/Cover1 (1).png" },
-  { id: "g6",  title: "Dingalan Event Invitation",     client: "Masinloc Tourism",  category: "Event",        bg: "linear-gradient(135deg, oklch(0.38 0.22 280), oklch(0.58 0.18 295))", src: "/Graphics/Dingalan - Poster Invitation (1).png" },
-  { id: "g7",  title: "Event Invitation Post",         client: "General",           category: "Event",        bg: "linear-gradient(135deg, oklch(0.55 0.16 200), oklch(0.72 0.12 210))", src: "/Graphics/InvitationPost.png" },
-  { id: "g8",  title: "PSG Hits Logo",                 client: "PSG Hits",          category: "Logo Design",  bg: "linear-gradient(135deg, oklch(0.65 0.16 55),  oklch(0.78 0.12 70))",  src: "/Graphics/Logo.png" },
-  { id: "g9",  title: "Onboarding Post",               client: "General",           category: "Social Post",  bg: "linear-gradient(135deg, oklch(0.50 0.14 255), oklch(0.68 0.10 270))", src: "/Graphics/OnboardingPost.png" },
-  { id: "g10", title: "PSG Hits Brand Board",          client: "PSG Hits",          category: "Brand Kit",    bg: "linear-gradient(135deg, oklch(0.60 0.14 220), oklch(0.75 0.10 230))", src: "/Graphics/OverallBrandBoard.png" },
-  { id: "g11", title: "Event Poster 1",                client: "Masinloc Tourism",  category: "Event",        bg: "linear-gradient(135deg, oklch(0.45 0.16 240), oklch(0.62 0.12 250))", src: "/Graphics/Poster-1.png" },
-  { id: "g12", title: "Event Poster 2",                client: "Masinloc Tourism",  category: "Event",        bg: "linear-gradient(135deg, oklch(0.70 0.14 60),  oklch(0.82 0.10 75))",  src: "/Graphics/Poster-2.png" },
-  { id: "g13", title: "Slide Design 3",                client: "General",           category: "Presentation", bg: "linear-gradient(135deg, oklch(0.42 0.18 255), oklch(0.58 0.14 262))", src: "/Graphics/slide-3.png" },
-  { id: "g14", title: "Slide Design 5",                client: "General",           category: "Presentation", bg: "linear-gradient(135deg, oklch(0.35 0.22 252), oklch(0.52 0.18 260))", src: "/Graphics/slide-5.png" },
-];
 
 /* ─── GRAPHIC CARD ─── */
 function GraphicCard({ graphic, onClick }: { graphic: Graphic; onClick: () => void }) {
+  const { editing } = useEdit();
   return (
-    <button 
-      onClick={onClick}
+    <button
+      onClick={() => { if (!editing) onClick(); }}
       className="group relative w-full text-left cursor-pointer"
     >
       {/* Graphic Preview */}
-      <div 
+      <div
         className="relative w-full rounded-lg overflow-hidden border border-border/20 transition-all duration-300 hover:border-border/40 hover:shadow-lg hover:scale-[1.02]"
         style={{ aspectRatio: "1 / 1", background: graphic.bg }}
       >
-        {graphic.src ? (
-          <img 
-            src={graphic.src} 
-            alt={graphic.title} 
-            className="w-full h-full object-contain"
-          />
-        ) : (
+        <EditableImage collection="graphics" id={graphic.id} item={graphic} path={["src"]} src={graphic.src ?? ""} alt={graphic.title} wrapperClassName="absolute inset-0" className="w-full h-full object-contain" />
+        {!graphic.src && !editing && (
           <div className="w-full h-full flex flex-col items-center justify-center gap-2">
             <span className="text-white/10 text-[32px]">✦</span>
             <p className="text-white/12 text-[10px] tracking-[0.14em] uppercase">
@@ -65,12 +38,10 @@ function GraphicCard({ graphic, onClick }: { graphic: Graphic; onClick: () => vo
             </p>
           </div>
         )}
-        
+
         {/* Category Badge */}
         <div className="absolute top-3 left-3">
-          <span className="inline-block px-2.5 py-1 rounded-full bg-background/90 backdrop-blur-sm text-[9px] uppercase tracking-[0.2em] text-foreground/60 border border-border/30">
-            {graphic.category}
-          </span>
+          <EditableText collection="graphics" id={graphic.id} item={graphic} path={["category"]} value={graphic.category} className="inline-block px-2.5 py-1 rounded-full bg-background/90 backdrop-blur-sm text-[9px] uppercase tracking-[0.2em] text-foreground/60 border border-border/30" />
         </div>
         
         {/* Hover Overlay */}
@@ -85,12 +56,8 @@ function GraphicCard({ graphic, onClick }: { graphic: Graphic; onClick: () => vo
 
       {/* Info */}
       <div className="mt-3">
-        <h3 className="text-[13px] font-semibold tracking-tight text-foreground leading-snug group-hover:text-foreground/70 transition-colors">
-          {graphic.title}
-        </h3>
-        <p className="text-[11px] tracking-tight text-foreground/50 mt-1">
-          {graphic.client}
-        </p>
+        <EditableText collection="graphics" id={graphic.id} item={graphic} path={["title"]} value={graphic.title} as="h3" className="text-[13px] font-semibold tracking-tight text-foreground leading-snug group-hover:text-foreground/70 transition-colors" />
+        <EditableText collection="graphics" id={graphic.id} item={graphic} path={["client"]} value={graphic.client} as="p" className="text-[11px] tracking-tight text-foreground/50 mt-1" />
       </div>
     </button>
   );
@@ -206,6 +173,7 @@ function FullViewModal({
 
 /* ─── PAGE ─── */
 function GraphicsPage() {
+  const { items: GRAPHICS } = useGraphics();
   const [selectedGraphic, setSelectedGraphic] = useState<Graphic | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
 

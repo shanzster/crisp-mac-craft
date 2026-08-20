@@ -1,6 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { NavBar } from "@/components/NavBar";
+import { type Media as Ad } from "@/lib/media-data";
+import { useAds } from "@/lib/content";
+import { EditableText, EditableImage, useEdit } from "@/lib/edit-mode";
 
 export const Route = createFileRoute("/ads")({
   component: AdsPage,
@@ -12,44 +15,21 @@ export const Route = createFileRoute("/ads")({
   }),
 });
 
-/* ─── DATA ─── */
-type Ad = {
-  id: string;
-  title: string;
-  client: string;
-  category: string;
-  bg: string;
-  src?: string;
-};
-
-const ADS: Ad[] = [
-  { id: "a1", title: "Fast Snaking Analytics",    client: "Fast Snaking Services", category: "Analytics",     bg: "linear-gradient(135deg, oklch(0.38 0.20 255), oklch(0.55 0.18 260))", src: "/Campaigns/fastsanking_analytics.png" },
-  { id: "a2", title: "Fast Snaking Calendar",     client: "Fast Snaking Services", category: "Calendar",      bg: "linear-gradient(135deg, oklch(0.45 0.22 250), oklch(0.62 0.16 265))", src: "/Campaigns/fastsanking_contentcalendar.png" },
-  { id: "a3", title: "PSG Hits Analytics",        client: "PSG Hits",              category: "Analytics",     bg: "linear-gradient(135deg, oklch(0.30 0.16 255), oklch(0.50 0.20 258))", src: "/Campaigns/PSG_Analytics.png" },
-  { id: "a4", title: "PSG Content Calendar",      client: "PSG Hits",              category: "Calendar",      bg: "linear-gradient(135deg, oklch(0.48 0.20 258), oklch(0.65 0.14 265))", src: "/Campaigns/PSG_ContentCalendar.png" },
-  { id: "a5", title: "Steal & Style Analytics",   client: "Steal & Style",         category: "Analytics",     bg: "linear-gradient(135deg, oklch(0.35 0.22 252), oklch(0.52 0.18 260))", src: "/Campaigns/stealandstyle_Analytics_Screenshot.png" },
-  { id: "a6", title: "Steal & Style Calendar",    client: "Steal & Style",         category: "Calendar",      bg: "linear-gradient(135deg, oklch(0.42 0.18 255), oklch(0.58 0.14 262))", src: "/Campaigns/stealandstyle_ContentCalendar.png" },
-];
-
 /* ─── AD CARD ─── */
 function AdCard({ ad, onClick }: { ad: Ad; onClick: () => void }) {
+  const { editing } = useEdit();
   return (
-    <button 
-      onClick={onClick}
+    <button
+      onClick={() => { if (!editing) onClick(); }}
       className="group relative w-full text-left cursor-pointer"
     >
       {/* Ad Preview */}
-      <div 
+      <div
         className="relative w-full rounded-lg overflow-hidden border border-border/20 transition-all duration-300 hover:border-border/40 hover:shadow-lg hover:scale-[1.02]"
         style={{ aspectRatio: "1 / 1", background: ad.bg }}
       >
-        {ad.src ? (
-          <img 
-            src={ad.src} 
-            alt={ad.title} 
-            className="w-full h-full object-contain"
-          />
-        ) : (
+        <EditableImage collection="ads" id={ad.id} item={ad} path={["src"]} src={ad.src ?? ""} alt={ad.title} wrapperClassName="absolute inset-0" className="w-full h-full object-contain" />
+        {!ad.src && !editing && (
           <div className="w-full h-full flex flex-col items-center justify-center gap-2">
             <span className="text-white/10 text-[32px]">⬡</span>
             <p className="text-white/12 text-[10px] tracking-[0.14em] uppercase">
@@ -60,9 +40,7 @@ function AdCard({ ad, onClick }: { ad: Ad; onClick: () => void }) {
         
         {/* Category Badge */}
         <div className="absolute top-3 left-3">
-          <span className="inline-block px-2.5 py-1 rounded-full bg-background/90 backdrop-blur-sm text-[9px] uppercase tracking-[0.2em] text-foreground/60 border border-border/30">
-            {ad.category}
-          </span>
+          <EditableText collection="ads" id={ad.id} item={ad} path={["category"]} value={ad.category} className="inline-block px-2.5 py-1 rounded-full bg-background/90 backdrop-blur-sm text-[9px] uppercase tracking-[0.2em] text-foreground/60 border border-border/30" />
         </div>
         
         {/* Hover Overlay */}
@@ -77,12 +55,8 @@ function AdCard({ ad, onClick }: { ad: Ad; onClick: () => void }) {
 
       {/* Info */}
       <div className="mt-3">
-        <h3 className="text-[13px] font-semibold tracking-tight text-foreground leading-snug group-hover:text-foreground/70 transition-colors">
-          {ad.title}
-        </h3>
-        <p className="text-[11px] tracking-tight text-foreground/50 mt-1">
-          {ad.client}
-        </p>
+        <EditableText collection="ads" id={ad.id} item={ad} path={["title"]} value={ad.title} as="h3" className="text-[13px] font-semibold tracking-tight text-foreground leading-snug group-hover:text-foreground/70 transition-colors" />
+        <EditableText collection="ads" id={ad.id} item={ad} path={["client"]} value={ad.client} as="p" className="text-[11px] tracking-tight text-foreground/50 mt-1" />
       </div>
     </button>
   );
@@ -198,6 +172,7 @@ function FullViewModal({
 
 /* ─── PAGE ─── */
 function AdsPage() {
+  const { items: ADS } = useAds();
   const [selectedAd, setSelectedAd] = useState<Ad | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
 

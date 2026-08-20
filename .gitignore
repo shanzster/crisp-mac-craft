@@ -33,3 +33,6 @@ dist-ssr
 *.sw?
 .vercel
 .env*
+
+# Instagram fetch — holds a private access token
+scripts/instagram.config.json

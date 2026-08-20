@@ -1,6 +1,9 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { NavBar } from "@/components/NavBar";
+import { Reveal } from "@/hooks/useScrollReveal";
+import { type Folder, type MediaItem } from "@/lib/gallery-data";
+import { useGallery } from "@/lib/content";
 
 export const Route = createFileRoute("/gallery")({
   component: GalleryPage,
@@ -12,88 +15,8 @@ export const Route = createFileRoute("/gallery")({
   }),
 });
 
-/* ─── TYPES ─── */
 
-type MediaItem = {
-  id: string;
-  title: string;
-  client: string;
-  bg: string;
-  src?: string;
-  type: "image" | "video";
-  aspect: "square" | "portrait" | "landscape";
-};
 
-type Folder = {
-  id: string;
-  label: string;
-  icon: string;
-  color: string;
-  tabColor: string;
-  description: string;
-  items: MediaItem[];
-};
-
-/* ─── DATA ─── */
-
-const FOLDERS: Folder[] = [
-  {
-    id: "graphics",
-    label: "Graphics",
-    icon: "✦",
-    color: "oklch(0.70 0.18 290)",
-    tabColor: "oklch(0.63 0.19 290)",
-    description: "Brand posts, story templates, promo graphics, highlight covers.",
-    items: [
-      { id: "g1",  title: "Steal & Style Collection 1",     client: "Steal & Style",     bg: "linear-gradient(135deg, oklch(0.22 0.04 290), oklch(0.42 0.18 280))", src: "/Graphics/00_STEAL&STYLE_COLLECTION-1_SK01-05.png", type: "image", aspect: "landscape" },
-      { id: "g2",  title: "Collection 3 Cover",            client: "Steal & Style",     bg: "linear-gradient(135deg, oklch(0.32 0.12 300), oklch(0.55 0.20 285))", src: "/Graphics/01_Collection3_Cover1.png", type: "image", aspect: "portrait"  },
-      { id: "g3",  title: "Call to Action Post",           client: "Steal & Style",     bg: "linear-gradient(135deg, oklch(0.45 0.18 270), oklch(0.65 0.14 300))", src: "/Graphics/calltoactionpost2.png", type: "image", aspect: "square"    },
-      { id: "g4",  title: "Collection 2 Cover",            client: "Steal & Style",     bg: "linear-gradient(135deg, oklch(0.60 0.22 285), oklch(0.40 0.20 270))", src: "/Graphics/COLLECTION2_CH-01.png", type: "image", aspect: "portrait"  },
-      { id: "g5",  title: "Cover Design 1",                client: "Steal & Style",     bg: "linear-gradient(135deg, oklch(0.50 0.20 275), oklch(0.35 0.16 290))", src: "/Graphics/Cover1 (1).png", type: "image", aspect: "square"    },
-      { id: "g6",  title: "Dingalan Event Invitation",     client: "Masinloc Tourism",  bg: "linear-gradient(135deg, oklch(0.38 0.22 280), oklch(0.58 0.18 295))", src: "/Graphics/Dingalan - Poster Invitation (1).png", type: "image", aspect: "portrait"  },
-      { id: "g7",  title: "Event Invitation Post",         client: "General",           bg: "linear-gradient(135deg, oklch(0.55 0.16 200), oklch(0.72 0.12 210))", src: "/Graphics/InvitationPost.png", type: "image", aspect: "square"    },
-      { id: "g8",  title: "Brand Logo Design",             client: "PSG Hits",          bg: "linear-gradient(135deg, oklch(0.65 0.16 55),  oklch(0.78 0.12 70))",  src: "/Graphics/Logo.png", type: "image", aspect: "square"  },
-      { id: "g9",  title: "Onboarding Post",               client: "General",           bg: "linear-gradient(135deg, oklch(0.50 0.14 255), oklch(0.68 0.10 270))", src: "/Graphics/OnboardingPost.png", type: "image", aspect: "portrait" },
-      { id: "g10", title: "Overall Brand Board",           client: "PSG Hits",          bg: "linear-gradient(135deg, oklch(0.42 0.18 255), oklch(0.58 0.14 262))", src: "/Graphics/OverallBrandBoard.png", type: "image", aspect: "landscape" },
-      { id: "g11", title: "Event Poster 1",                client: "Masinloc Tourism",  bg: "linear-gradient(135deg, oklch(0.48 0.20 258), oklch(0.65 0.14 265))", src: "/Graphics/Poster-1.png", type: "image", aspect: "portrait"  },
-      { id: "g12", title: "Event Poster 2",                client: "Masinloc Tourism",  bg: "linear-gradient(135deg, oklch(0.35 0.22 252), oklch(0.52 0.18 260))", src: "/Graphics/Poster-2.png", type: "image", aspect: "portrait"  },
-      { id: "g13", title: "Slide Design 3",                client: "General",           bg: "linear-gradient(135deg, oklch(0.30 0.16 255), oklch(0.50 0.20 258))", src: "/Graphics/slide-3.png", type: "image", aspect: "landscape" },
-      { id: "g14", title: "Slide Design 5",                client: "General",           bg: "linear-gradient(135deg, oklch(0.38 0.20 255), oklch(0.55 0.18 260))", src: "/Graphics/slide-5.png", type: "image", aspect: "landscape" },
-    ],
-  },
-  {
-    id: "videos",
-    label: "Videos & Reels",
-    icon: "▶",
-    color: "oklch(0.28 0.04 240)",
-    tabColor: "oklch(0.22 0.04 240)",
-    description: "Reels, vlogs, promo videos, motion captions, collection launches.",
-    items: [
-      { id: "v1", title: "Collection Launch Reel",   client: "Steal & Style",    bg: "linear-gradient(135deg, oklch(0.14 0.02 240), oklch(0.28 0.06 250))", type: "video", aspect: "portrait"  },
-      { id: "v2", title: "Promotional Video",        client: "Masinloc Tourism", bg: "linear-gradient(135deg, oklch(0.18 0.03 240), oklch(0.32 0.08 245))", type: "video", aspect: "landscape" },
-      { id: "v3", title: "Vlog Edit",                client: "Steal & Style",    bg: "linear-gradient(135deg, oklch(0.22 0.04 240), oklch(0.40 0.10 255))", type: "video", aspect: "portrait"  },
-      { id: "v4", title: "Motion Caption Overlay",   client: "Steal & Style",    bg: "linear-gradient(135deg, oklch(0.16 0.02 240), oklch(0.30 0.07 248))", type: "video", aspect: "square"    },
-      { id: "v5", title: "Freeze Frame Reel",        client: "Steal & Style",    bg: "linear-gradient(135deg, oklch(0.20 0.03 240), oklch(0.35 0.09 252))", type: "video", aspect: "portrait"  },
-      { id: "v6", title: "Restaurant Promo",         client: "Junz Restaurant",  bg: "linear-gradient(135deg, oklch(0.18 0.02 240), oklch(0.28 0.06 248))", type: "video", aspect: "landscape" },
-    ],
-  },
-  {
-    id: "ads",
-    label: "Campaign Analytics",
-    icon: "⬡",
-    color: "oklch(0.62 0.20 255)",
-    tabColor: "oklch(0.55 0.21 255)",
-    description: "Analytics reports, content calendars, campaign performance data.",
-    items: [
-      { id: "a1", title: "Fast Snaking Analytics",    client: "Fast Snaking Services", bg: "linear-gradient(135deg, oklch(0.38 0.20 255), oklch(0.55 0.18 260))", src: "/Campaigns/fastsanking_analytics.png", type: "image", aspect: "landscape" },
-      { id: "a2", title: "Fast Snaking Calendar",     client: "Fast Snaking Services", bg: "linear-gradient(135deg, oklch(0.45 0.22 250), oklch(0.62 0.16 265))", src: "/Campaigns/fastsanking_contentcalendar.png", type: "image", aspect: "landscape" },
-      { id: "a3", title: "PSG Hits Analytics",        client: "PSG Hits",              bg: "linear-gradient(135deg, oklch(0.30 0.16 255), oklch(0.50 0.20 258))", src: "/Campaigns/PSG_Analytics.png", type: "image", aspect: "landscape" },
-      { id: "a4", title: "PSG Content Calendar",      client: "PSG Hits",              bg: "linear-gradient(135deg, oklch(0.48 0.20 258), oklch(0.65 0.14 265))", src: "/Campaigns/PSG_ContentCalendar.png", type: "image", aspect: "landscape" },
-      { id: "a5", title: "Steal & Style Analytics",   client: "Steal & Style",         bg: "linear-gradient(135deg, oklch(0.35 0.22 252), oklch(0.52 0.18 260))", src: "/Campaigns/stealandstyle_Analytics_Screenshot.png", type: "image", aspect: "landscape" },
-      { id: "a6", title: "Steal & Style Calendar",    client: "Steal & Style",         bg: "linear-gradient(135deg, oklch(0.42 0.18 255), oklch(0.58 0.14 262))", src: "/Campaigns/stealandstyle_ContentCalendar.png", type: "image", aspect: "landscape" },
-    ],
-  },
-];
 
 /* ─── FOLDER SVG — exact hero folder style ─── */
 
@@ -121,19 +44,58 @@ function FolderIcon({ color, tabColor, size = 72 }: { color: string; tabColor: s
 
 /* ─── FOLDER CARD (2×2 grid) ─── */
 
-function FolderCard({ folder, onClick }: { folder: Folder; onClick: () => void }) {
+function FolderCard({ folder, onClick, index }: { folder: Folder; onClick: () => void; index: number }) {
   const [hovered, setHovered] = useState(false);
+
+  // Up to 3 previews peeking out of the folder — real files first
+  const previews = [...(folder.items ?? [])].sort((a, b) => (b.src ? 1 : 0) - (a.src ? 1 : 0)).slice(0, 3);
+
+  // Tucked inside the folder → fanned out on hover
+  const tucked = "translate(-50%, 14px) rotate(0deg) scale(0.85)";
+  const fanned = [
+    "translate(-108%, -30px) rotate(-11deg)",
+    "translate(-50%, -44px) rotate(0deg)",
+    "translate(8%, -30px) rotate(11deg)",
+  ];
+
   return (
     <button
-      className="group relative flex flex-col items-center gap-3 focus:outline-none p-6 rounded-[20px] border border-border bg-card transition-all duration-300 hover:shadow-[0_12px_40px_-10px_oklch(0.2_0.02_240/0.18)] hover:-translate-y-1"
+      className="group relative flex flex-col items-center gap-3 focus:outline-none p-6 pt-12 rounded-[20px] border border-border bg-card transition-all duration-300 hover:shadow-[0_12px_40px_-10px_oklch(0.2_0.02_240/0.18)] hover:-translate-y-1 overflow-hidden"
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       aria-label={`Open ${folder.label}`}
+      style={{ animation: `fade-up-in 0.5s cubic-bezier(.2,.8,.2,1) ${index * 80}ms both` }}
     >
-      {/* Folder icon */}
-      <div className="transition-transform duration-300 group-hover:-translate-y-1">
-        <FolderIcon color={folder.color} tabColor={folder.tabColor} size={80} />
+      {/* Folder + peeking previews */}
+      <div className="relative">
+        {previews.map((it, i) => (
+          <div
+            key={it.id}
+            className="absolute left-1/2 top-0 rounded-[6px] overflow-hidden border border-border/60 pointer-events-none"
+            style={{
+              width: 46,
+              height: 58,
+              background: it.bg,
+              boxShadow: "0 4px 12px -4px oklch(0.2 0.02 240 / 0.3)",
+              transform: hovered ? fanned[i] : tucked,
+              opacity: hovered ? 1 : i === 1 ? 0.9 : 0,
+              transition: `transform 0.4s cubic-bezier(.2,.8,.2,1) ${i * 40}ms, opacity 0.3s ease ${i * 40}ms`,
+              zIndex: 0,
+            }}
+          >
+            {it.src ? (
+              <img src={it.src} alt="" className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                <span className="text-white/30 text-[13px]">{it.type === "video" ? "▶" : "✦"}</span>
+              </div>
+            )}
+          </div>
+        ))}
+        <div className="relative z-10 transition-transform duration-300 group-hover:-translate-y-0.5">
+          <FolderIcon color={folder.color} tabColor={folder.tabColor} size={80} />
+        </div>
       </div>
 
       {/* Label */}
@@ -150,7 +112,7 @@ function FolderCard({ folder, onClick }: { folder: Folder; onClick: () => void }
           color: hovered ? "white" : "oklch(0.18 0.01 240 / 0.45)",
         }}
       >
-        {folder.items.length} items
+        {(folder.items ?? []).length} items · open →
       </div>
     </button>
   );
@@ -238,7 +200,7 @@ function FolderView({ folder, onClose, onItemClick }: { folder: Folder; onClose:
           <FolderIcon color={folder.color} tabColor={folder.tabColor} size={36} />
           <div>
             <h2 className="text-[18px] font-bold tracking-tightest text-foreground">{folder.label}</h2>
-            <p className="text-[11px] tracking-tight text-foreground/40">{folder.items.length} items</p>
+            <p className="text-[11px] tracking-tight text-foreground/40">{(folder.items ?? []).length} items</p>
           </div>
         </div>
         <button
@@ -251,7 +213,7 @@ function FolderView({ folder, onClose, onItemClick }: { folder: Folder; onClose:
 
       {/* Grid */}
       <div style={{ columns: "3 160px", columnGap: "1rem" }}>
-        {folder.items.map((item) => (
+        {(folder.items ?? []).map((item) => (
           <div key={item.id} className="mb-4 break-inside-avoid">
             <MediaCard item={item} onClick={() => onItemClick(item)} />
           </div>
@@ -262,7 +224,7 @@ function FolderView({ folder, onClose, onItemClick }: { folder: Folder; onClose:
       <div className="mt-10 rounded-[12px] border border-border bg-secondary/40 px-5 py-4 flex items-start gap-3">
         <span className="text-foreground/25 text-[16px] mt-0.5">📁</span>
         <p className="text-[11px] tracking-tight text-foreground/40 leading-relaxed">
-          Add real files to <code className="bg-secondary px-1 py-0.5 rounded text-[10px]">public/gallery/{folder.id}/</code> and set the <code className="bg-secondary px-1 py-0.5 rounded text-[10px]">src</code> field in the <code className="bg-secondary px-1 py-0.5 rounded text-[10px]">FOLDERS</code> array.
+          Add or edit items in the <code className="bg-secondary px-1 py-0.5 rounded text-[10px]">Gallery</code> tab of <code className="bg-secondary px-1 py-0.5 rounded text-[10px]">/admin</code> — set each item's image to a file path or URL.
         </p>
       </div>
     </div>
@@ -272,12 +234,16 @@ function FolderView({ folder, onClose, onItemClick }: { folder: Folder; onClose:
 /* ─── PAGE ─── */
 
 function GalleryPage() {
+  const { items: FOLDERS } = useGallery();
+  const RECENTS = FOLDERS.flatMap((f) => (f.items ?? []).filter((i) => i.src));
   const [openFolder, setOpenFolder] = useState<Folder | null>(null);
   const [lightbox, setLightbox] = useState<MediaItem | null>(null);
   const navigate = useNavigate();
 
   function handleFolderClick(folder: Folder) {
-    if (folder.id === "graphics") {
+    if (folder.id === "socials") {
+      navigate({ to: "/socials" });
+    } else if (folder.id === "graphics") {
       navigate({ to: "/graphics" });
     } else if (folder.id === "videos") {
       navigate({ to: "/videos" });
@@ -300,21 +266,60 @@ function GalleryPage() {
         </Link>
 
         {/* Header */}
-        <div className="mb-10">
-          <p className="text-[10px] uppercase tracking-[0.26em] text-foreground/35 mb-3">Gallery</p>
-          <h1 className="font-bold tracking-tightest text-foreground leading-[0.88]" style={{ fontSize: "clamp(44px, 6vw, 80px)" }}>
-            All the work.<br />
-            <span style={{ color: "oklch(0.18 0.01 240 / 0.22)" }}>Every piece.</span>
-          </h1>
+        <div className="mb-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.26em] text-foreground/35 mb-3">Gallery</p>
+            <h1 className="font-bold tracking-tightest text-foreground leading-[0.88]" style={{ fontSize: "clamp(44px, 6vw, 80px)" }}>
+              All the work.<br />
+              <span style={{ color: "oklch(0.18 0.01 240 / 0.22)" }}>Every piece.</span>
+            </h1>
+            <p className="mt-5 text-[14px] leading-relaxed tracking-tight text-foreground/55 max-w-lg">
+              Graphics, video, and the numbers behind them — organized the way I'd organize a desktop. Hover a folder to peek inside.
+            </p>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="rounded-full border border-border bg-card px-3 py-1 text-[11px] tracking-tight text-foreground/50">
+              {FOLDERS.reduce((n, f) => n + (f.items ?? []).length, 0)} files
+            </span>
+            <span className="rounded-full border border-border bg-card px-3 py-1 text-[11px] tracking-tight text-foreground/50">
+              {FOLDERS.length} folders
+            </span>
+          </div>
         </div>
 
         {/* 3-folder grid OR open folder view */}
         {!openFolder ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {FOLDERS.map((folder) => (
-              <FolderCard key={folder.id} folder={folder} onClick={() => handleFolderClick(folder)} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {FOLDERS.map((folder, i) => (
+                <FolderCard key={folder.id} folder={folder} index={i} onClick={() => handleFolderClick(folder)} />
+              ))}
+            </div>
+
+            {/* ── Recents — real work, visible immediately ── */}
+            <Reveal>
+              <div className="mt-14">
+                <div className="flex items-end justify-between mb-5">
+                  <div className="flex items-baseline gap-3">
+                    <p className="text-[10px] uppercase tracking-[0.26em] text-foreground/35">Recents</p>
+                    <p className="text-[11px] tracking-tight text-foreground/30">click to preview</p>
+                  </div>
+                  <p className="text-[11px] tracking-tight text-foreground/35">{RECENTS.length} files</p>
+                </div>
+                <div style={{ columns: "4 180px", columnGap: "1rem" }}>
+                  {RECENTS.map((item, i) => (
+                    <div
+                      key={item.id}
+                      className="mb-4 break-inside-avoid"
+                      style={{ animation: `fade-up-in 0.45s cubic-bezier(.2,.8,.2,1) ${i * 40}ms both` }}
+                    >
+                      <MediaCard item={item} onClick={() => setLightbox(item)} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </Reveal>
+          </>
         ) : (
           <FolderView
             folder={openFolder}

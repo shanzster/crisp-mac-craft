@@ -1,6 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { NavBar } from "@/components/NavBar";
+import { type Media as Calendar } from "@/lib/media-data";
+import { useCalendars } from "@/lib/content";
+import { EditableText, EditableImage, useEdit } from "@/lib/edit-mode";
 
 export const Route = createFileRoute("/calendars")({
   component: CalendarsPage,
@@ -12,44 +15,22 @@ export const Route = createFileRoute("/calendars")({
   }),
 });
 
-/* ─── DATA ─── */
-type Calendar = {
-  id: string;
-  title: string;
-  client: string;
-  category: string;
-  bg: string;
-  src?: string;
-};
-
-const CALENDARS: Calendar[] = [
-  { id: "cal1", title: "Steal & Style — October 2024",    client: "Steal & Style",    category: "Monthly",   bg: "linear-gradient(135deg, oklch(0.55 0.14 240), oklch(0.72 0.10 250))" },
-  { id: "cal2", title: "Masinloc Tourism — Q4 2024",      client: "Masinloc Tourism", category: "Quarterly", bg: "linear-gradient(135deg, oklch(0.60 0.14 220), oklch(0.75 0.10 230))" },
-  { id: "cal3", title: "Junz Restaurant — November 2024", client: "Junz Restaurant",  category: "Monthly",   bg: "linear-gradient(135deg, oklch(0.65 0.14 55),  oklch(0.78 0.10 65))"  },
-  { id: "cal4", title: "CSA Print — Campaign Brief",      client: "CSA Print",        category: "Campaign",  bg: "linear-gradient(135deg, oklch(0.55 0.12 270), oklch(0.68 0.10 280))" },
-  { id: "cal5", title: "Holiday Campaign Timeline",       client: "Steal & Style",    category: "Campaign",  bg: "linear-gradient(135deg, oklch(0.50 0.16 240), oklch(0.65 0.12 255))" },
-  { id: "cal6", title: "Summer Content Strategy",         client: "Masinloc Tourism", category: "Seasonal",  bg: "linear-gradient(135deg, oklch(0.58 0.14 210), oklch(0.72 0.10 220))" },
-];
 
 /* ─── CALENDAR CARD ─── */
 function CalendarCard({ calendar, onClick }: { calendar: Calendar; onClick: () => void }) {
+  const { editing } = useEdit();
   return (
-    <button 
-      onClick={onClick}
+    <button
+      onClick={() => { if (!editing) onClick(); }}
       className="group relative w-full text-left cursor-pointer"
     >
       {/* Calendar Preview */}
-      <div 
+      <div
         className="relative w-full rounded-lg overflow-hidden border border-border/20 transition-all duration-300 hover:border-border/40 hover:shadow-lg hover:scale-[1.02]"
         style={{ aspectRatio: "16 / 9", background: calendar.bg }}
       >
-        {calendar.src ? (
-          <img 
-            src={calendar.src} 
-            alt={calendar.title} 
-            className="w-full h-full object-contain"
-          />
-        ) : (
+        <EditableImage collection="calendars" id={calendar.id} item={calendar} path={["src"]} src={calendar.src ?? ""} alt={calendar.title} wrapperClassName="absolute inset-0" className="w-full h-full object-contain" />
+        {!calendar.src && !editing && (
           <div className="w-full h-full flex flex-col items-center justify-center gap-2">
             <span className="text-white/10 text-[32px]">◈</span>
             <p className="text-white/12 text-[10px] tracking-[0.14em] uppercase">
@@ -57,12 +38,10 @@ function CalendarCard({ calendar, onClick }: { calendar: Calendar; onClick: () =
             </p>
           </div>
         )}
-        
+
         {/* Category Badge */}
         <div className="absolute top-3 left-3">
-          <span className="inline-block px-2.5 py-1 rounded-full bg-background/90 backdrop-blur-sm text-[9px] uppercase tracking-[0.2em] text-foreground/60 border border-border/30">
-            {calendar.category}
-          </span>
+          <EditableText collection="calendars" id={calendar.id} item={calendar} path={["category"]} value={calendar.category} className="inline-block px-2.5 py-1 rounded-full bg-background/90 backdrop-blur-sm text-[9px] uppercase tracking-[0.2em] text-foreground/60 border border-border/30" />
         </div>
         
         {/* Hover Overlay */}
@@ -77,12 +56,8 @@ function CalendarCard({ calendar, onClick }: { calendar: Calendar; onClick: () =
 
       {/* Info */}
       <div className="mt-3">
-        <h3 className="text-[13px] font-semibold tracking-tight text-foreground leading-snug group-hover:text-foreground/70 transition-colors">
-          {calendar.title}
-        </h3>
-        <p className="text-[11px] tracking-tight text-foreground/50 mt-1">
-          {calendar.client}
-        </p>
+        <EditableText collection="calendars" id={calendar.id} item={calendar} path={["title"]} value={calendar.title} as="h3" className="text-[13px] font-semibold tracking-tight text-foreground leading-snug group-hover:text-foreground/70 transition-colors" />
+        <EditableText collection="calendars" id={calendar.id} item={calendar} path={["client"]} value={calendar.client} as="p" className="text-[11px] tracking-tight text-foreground/50 mt-1" />
       </div>
     </button>
   );
@@ -198,6 +173,7 @@ function FullViewModal({
 
 /* ─── PAGE ─── */
 function CalendarsPage() {
+  const { items: CALENDARS } = useCalendars();
   const [selectedCalendar, setSelectedCalendar] = useState<Calendar | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
 

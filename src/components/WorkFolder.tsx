@@ -3,8 +3,9 @@ import { createPortal } from "react-dom";
 import { useNavigate } from "@tanstack/react-router";
 import { type WorkItem } from "@/lib/work-data";
 import { useIsClient } from "@/hooks/useIsClient";
+import { TrafficLights } from "@/components/TrafficLights";
 
-const LOCKED_IDS = ["snappy-nomad", "junz-restaurant"];
+const LOCKED_IDS = ["snappy-nomad"];
 
 /* ─── Coming Soon Modal ─── */
 function ComingSoonModal({ title, onClose }: { title: string; onClose: () => void }) {
@@ -21,11 +22,7 @@ function ComingSoonModal({ title, onClose }: { title: string; onClose: () => voi
       >
         {/* Title bar */}
         <div className="flex h-10 items-center justify-between border-b border-border bg-secondary/60 px-4" style={{ borderRadius: "20px 20px 0 0" }}>
-          <div className="flex items-center gap-1.5">
-            <button onClick={onClose} className="h-[11px] w-[11px] rounded-full hover:opacity-80 transition" style={{ background: "var(--traffic-red)" }} />
-            <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-yellow)" }} />
-            <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-green)" }} />
-          </div>
+          <TrafficLights onClose={onClose} />
           <span className="text-[11px] tracking-tight text-foreground/45">{title}</span>
           <button onClick={onClose} className="text-[11px] tracking-tight text-foreground/35 hover:text-foreground transition">✕ close</button>
         </div>
@@ -77,17 +74,19 @@ function ComingSoonModal({ title, onClose }: { title: string; onClose: () => voi
   );
 }
 
-// 3 left, 3 right — neat columns flanking the folder
+// 4 left, 4 right — neat columns flanking the folder (supports up to 8 cards)
 // x: distance from center, y: vertical offset from center
 const POSITIONS: { x: number; y: number; rot: number; side: "left" | "right" }[] = [
   // Left column — top to bottom
-  { x: -380, y: -200, rot: -5,  side: "left"  },
-  { x: -380, y:    0, rot: -3,  side: "left"  },
-  { x: -380, y:  200, rot: -7,  side: "left"  },
+  { x: -380, y: -240, rot: -5,  side: "left"  },
+  { x: -380, y:  -80, rot: -3,  side: "left"  },
+  { x: -380, y:   80, rot: -6,  side: "left"  },
+  { x: -380, y:  240, rot: -4,  side: "left"  },
   // Right column — top to bottom
-  { x:  380, y: -200, rot:  5,  side: "right" },
-  { x:  380, y:    0, rot:  3,  side: "right" },
-  { x:  380, y:  200, rot:  7,  side: "right" },
+  { x:  380, y: -240, rot:  5,  side: "right" },
+  { x:  380, y:  -80, rot:  3,  side: "right" },
+  { x:  380, y:   80, rot:  6,  side: "right" },
+  { x:  380, y:  240, rot:  4,  side: "right" },
 ];
 
 /* ─── Paper card ─── */
@@ -218,9 +217,7 @@ function MobileWorkPreviewModal({
       >
         <div className="flex h-9 items-center justify-between border-b border-border bg-secondary/60 px-3">
           <div className="flex items-center gap-1.5">
-            <span className="block h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-red)" }} />
-            <span className="block h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-yellow)" }} />
-            <span className="block h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-green)" }} />
+            <TrafficLights size={11} />
           </div>
           <button onClick={onClose} className="text-[11px] tracking-tight text-foreground/50 hover:text-foreground transition">
             Close
@@ -407,8 +404,8 @@ export function WorkFolderScene({ items }: { items: WorkItem[] }) {
     };
   }, []);
 
-  // Only show first 6 items (3 left, 3 right)
-  const visible = items.slice(0, 6);
+  // Show up to 8 items (4 left, 4 right)
+  const visible = items.slice(0, 8);
 
   // Before client hydration, treat as desktop to match SSR output exactly
   const isMobile = isClient && isCompactDevice;
@@ -426,7 +423,7 @@ export function WorkFolderScene({ items }: { items: WorkItem[] }) {
 
       <div
         className="relative flex items-center justify-center w-full"
-        style={{ height: isMobile ? 300 : 720 }}
+        style={{ height: isMobile ? 320 : 780 }}
       >
         {/* Cards */}
         {visible.map((item, i) => (

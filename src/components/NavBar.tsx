@@ -73,7 +73,7 @@ const DOCK_ITEMS = [
   },
   {
     label: "Services",
-    href: "/#services",
+    href: "/services",
     icon: (
       <svg viewBox="0 0 28 28" fill="none" className="w-full h-full">
         <rect width="28" height="28" rx="7" fill="oklch(0.60 0.16 170)" />
@@ -89,6 +89,16 @@ const DOCK_ITEMS = [
         <rect width="28" height="28" rx="7" fill="oklch(0.68 0.18 27)" />
         <path d="M6 9.5C6 8.67 6.67 8 7.5 8h13c.83 0 1.5.67 1.5 1.5v9c0 .83-.67 1.5-1.5 1.5h-13C6.67 20 6 19.33 6 18.5v-9Z" stroke="white" strokeOpacity="0.9" strokeWidth="1.8" />
         <path d="M6 10l8 5.5L22 10" stroke="white" strokeOpacity="0.9" strokeWidth="1.8" strokeLinecap="round" />
+      </svg>
+    ),
+  },
+  {
+    label: "Skim",
+    href: "/skim",
+    icon: (
+      <svg viewBox="0 0 28 28" fill="none" className="w-full h-full">
+        <rect width="28" height="28" rx="7" fill="oklch(0.66 0.17 300)" />
+        <path d="M15 5l-8 10h5l-2 8 8-10h-5l2-8Z" fill="white" fillOpacity="0.9" />
       </svg>
     ),
   },
@@ -216,6 +226,7 @@ export function NavBar() {
               <a
                 key={navItem.label}
                 href={navItem.href}
+                aria-label={navItem.label}
                 className="relative flex flex-col items-center"
                 style={{
                   transition: "transform 0.2s cubic-bezier(.2,.8,.2,1)",

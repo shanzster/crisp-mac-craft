@@ -1,17 +1,21 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect, useRef } from "react";
 import { WORK_ITEMS, type WorkItem } from "@/lib/work-data";
+import { useWork } from "@/lib/content";
+import { EditableText, EditableImage } from "@/lib/edit-mode";
 import { NavBar } from "@/components/NavBar";
+import { TrafficLights } from "@/components/TrafficLights";
 
 export const Route = createFileRoute("/work/$id")({
   component: WorkDetail,
   loader: ({ params }) => {
-    const item = WORK_ITEMS.find((w) => w.id === params.id);
-    if (!item) throw notFound();
-    return item;
+    // Seed lookup is only for the initial title / instant render; the live
+    // content (including CMS edits and new items) is resolved in the component.
+    const seed = WORK_ITEMS.find((w) => w.id === params.id) ?? null;
+    return { id: params.id, seed };
   },
   head: ({ loaderData }) => ({
-    meta: [{ title: `${loaderData?.title} — Shanzster` }],
+    meta: [{ title: `${loaderData?.seed?.title ?? "Project"} — Shanzster` }],
   }),
 });
 
@@ -82,11 +86,7 @@ function GraphicModal({
       >
         {/* macOS title bar */}
         <div className="flex h-10 items-center justify-between border-b border-border bg-secondary/60 px-5 shrink-0 sticky top-0 z-10">
-          <div className="flex items-center gap-1.5">
-            <button onClick={onClose} className="h-[11px] w-[11px] rounded-full transition hover:opacity-80" style={{ background: "var(--traffic-red)" }} />
-            <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-yellow)" }} />
-            <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-green)" }} />
-          </div>
+          <TrafficLights onClose={onClose} />
           <span className="text-[11px] tracking-tight text-foreground/50">{graphic.title}.jpeg</span>
           <button onClick={onClose} className="text-[11px] tracking-tight text-foreground/35 hover:text-foreground transition">
             ✕ close
@@ -431,9 +431,7 @@ function CarouselSection({ item }: { item: WorkItem }) {
           {/* macOS title bar */}
           <div className="flex h-9 items-center justify-between border-b border-border bg-secondary/60 px-4">
             <div className="flex items-center gap-1.5">
-              <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-red)" }} />
-              <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-yellow)" }} />
-              <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-green)" }} />
+              <TrafficLights size={11} />
             </div>
             <span className="text-[11px] tracking-tight text-foreground/50">carousel_post.instagram</span>
             <span className="text-[10px] tracking-tight text-foreground/30">{current + 1} / {slides.length}</span>
@@ -548,7 +546,34 @@ function CarouselSection({ item }: { item: WorkItem }) {
 
 /* ─── Main page ─── */
 function WorkDetail() {
-  const item = Route.useLoaderData();
+  const { id, seed } = Route.useLoaderData();
+  const { items, loading } = useWork();
+  // Prefer the live (CMS) version; fall back to the seed while it loads.
+  const item: WorkItem | null = items.find((w) => w.id === id) ?? seed;
+
+  if (!item) {
+    return (
+      <div className="min-h-screen bg-background">
+        <NavBar />
+        <main className="mx-auto max-w-[1200px] px-6 pt-24 sm:px-10 text-center">
+          {loading ? (
+            <p className="text-[13px] tracking-tight text-foreground/40">Loading…</p>
+          ) : (
+            <>
+              <h1 className="text-xl font-semibold tracking-tight text-foreground">Project not found</h1>
+              <p className="mt-2 text-[13px] text-foreground/50">This case study doesn't exist or was removed.</p>
+              <Link
+                to="/"
+                className="mt-6 inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+              >
+                Go home
+              </Link>
+            </>
+          )}
+        </main>
+      </div>
+    );
+  }
 
   // Gallery items — extract src strings from graphics, combine with reels + gallery
   const galleryItems: (string | undefined)[] = [
@@ -575,13 +600,17 @@ function WorkDetail() {
         {/* ── 1. Header ── */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.26em] text-foreground/35 mb-2">{item.category}</p>
-            <h1
+            <EditableText collection="work" id={item.id} item={item} path={["category"]} value={item.category} as="p" className="text-[10px] uppercase tracking-[0.26em] text-foreground/35 mb-2" />
+            <EditableText
+              collection="work"
+              id={item.id}
+              item={item}
+              path={["title"]}
+              value={item.title}
+              as="h1"
               className="font-bold tracking-tightest text-foreground leading-[0.88]"
               style={{ fontSize: "clamp(44px, 6vw, 88px)" }}
-            >
-              {item.title}
-            </h1>
+            />
             <div className="mt-3 flex flex-wrap gap-2">
               <span className="rounded-full border border-border bg-card px-3 py-1 text-[11px] tracking-tight text-foreground/50">{item.tag}</span>
               {item.platform && <span className="rounded-full border border-border bg-card px-3 py-1 text-[11px] tracking-tight text-foreground/50">{item.platform}</span>}
@@ -593,10 +622,7 @@ function WorkDetail() {
             className="rounded-[16px] border border-border overflow-hidden shrink-0 flex items-center justify-center"
             style={{ width: 80, height: 80, background: item.color }}
           >
-            {item.logo
-              ? <img src={item.logo} alt={`${item.client} logo`} className="w-full h-full object-contain p-2" />
-              : <p className="text-white/30 text-[11px] tracking-tight">logo</p>
-            }
+            <EditableImage collection="work" id={item.id} item={item} path={["logo"]} src={item.logo ?? ""} alt={`${item.client} logo`} wrapperClassName="flex items-center justify-center w-full h-full" className="w-full h-full object-contain p-2" />
           </div>
         </div>
 
@@ -607,9 +633,7 @@ function WorkDetail() {
             {/* Before — image if exists, else story text */}
             <div className="rounded-[14px] border border-border overflow-hidden mac-shadow">
               <div className="flex h-8 items-center gap-1.5 border-b border-border bg-secondary/60 px-3">
-                <span className="h-[9px] w-[9px] rounded-full" style={{ background: "var(--traffic-red)" }} />
-                <span className="h-[9px] w-[9px] rounded-full" style={{ background: "var(--traffic-yellow)" }} />
-                <span className="h-[9px] w-[9px] rounded-full" style={{ background: "var(--traffic-green)" }} />
+                <TrafficLights size={9} />
                 <span className="ml-2 text-[10px] tracking-tight text-foreground/40">before.jpeg</span>
               </div>
               {item.beforeImg ? (
@@ -641,9 +665,7 @@ function WorkDetail() {
             {/* After — results text */}
             <div className="rounded-[14px] border border-border overflow-hidden mac-shadow flex flex-col">
               <div className="flex h-8 items-center gap-1.5 border-b border-border bg-secondary/60 px-3">
-                <span className="h-[9px] w-[9px] rounded-full" style={{ background: "var(--traffic-red)" }} />
-                <span className="h-[9px] w-[9px] rounded-full" style={{ background: "var(--traffic-yellow)" }} />
-                <span className="h-[9px] w-[9px] rounded-full" style={{ background: "var(--traffic-green)" }} />
+                <TrafficLights size={9} />
                 <span className="ml-2 text-[10px] tracking-tight text-foreground/40">after.md</span>
               </div>
               <div
@@ -683,9 +705,7 @@ function WorkDetail() {
             <div className="rounded-[14px] border border-border bg-card overflow-hidden mac-shadow">
               <div className="flex h-9 items-center justify-between border-b border-border bg-secondary/60 px-4">
                 <div className="flex items-center gap-1.5">
-                  <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-red)" }} />
-                  <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-yellow)" }} />
-                  <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-green)" }} />
+                  <TrafficLights size={11} />
                 </div>
                 <span className="text-[11px] tracking-tight text-foreground/50">{item.websiteUrl.replace("https://", "")}</span>
                 <a
@@ -717,9 +737,7 @@ function WorkDetail() {
                 <div key={doc.url} className="rounded-[14px] border border-border bg-card overflow-hidden mac-shadow flex flex-col">
                   <div className="flex h-9 items-center justify-between border-b border-border bg-secondary/60 px-4 shrink-0">
                     <div className="flex items-center gap-1.5">
-                      <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-red)" }} />
-                      <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-yellow)" }} />
-                      <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-green)" }} />
+                      <TrafficLights size={11} />
                     </div>
                     <span className="text-[11px] tracking-tight text-foreground/50 truncate mx-3">{doc.title}</span>
                     <a
@@ -750,11 +768,9 @@ function WorkDetail() {
             <div className="rounded-[14px] border border-border bg-card overflow-hidden mac-shadow">
               <div className="flex h-9 items-center justify-between border-b border-border bg-secondary/60 px-4">
                 <div className="flex items-center gap-1.5">
-                  <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-red)" }} />
-                  <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-yellow)" }} />
-                  <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-green)" }} />
+                  <TrafficLights size={11} />
                 </div>
-                <span className="text-[11px] tracking-tight text-foreground/50">PSGHits_PrintingGuidelines.pdf</span>
+                <span className="text-[11px] tracking-tight text-foreground/50">PrintingGuidelines.pdf</span>
                 <div className="w-10" />
               </div>
               <div style={{ height: 480 }}>
@@ -778,9 +794,7 @@ function WorkDetail() {
           <div className="rounded-[14px] border border-border bg-card overflow-hidden mac-shadow">
             <div className="flex h-9 items-center justify-between border-b border-border bg-secondary/60 px-4">
               <div className="flex items-center gap-1.5">
-                <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-red)" }} />
-                <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-yellow)" }} />
-                <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-green)" }} />
+                <TrafficLights size={11} />
               </div>
               <span className="text-[11px] tracking-tight text-foreground/50">content_calendar.notion</span>
               <div className="w-10" />
@@ -827,9 +841,7 @@ function WorkDetail() {
           <div className="rounded-[14px] border border-border bg-card overflow-hidden mac-shadow">
             <div className="flex h-9 items-center justify-between border-b border-border bg-secondary/60 px-4">
               <div className="flex items-center gap-1.5">
-                <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-red)" }} />
-                <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-yellow)" }} />
-                <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-green)" }} />
+                <TrafficLights size={11} />
               </div>
               <span className="text-[11px] tracking-tight text-foreground/50">analytics.csv</span>
               <div className="w-10" />
@@ -868,7 +880,7 @@ function WorkDetail() {
                 style={{ background: `${item.color}18` }}
               >
                 <p className="text-[10px] uppercase tracking-[0.18em] text-foreground/35 mb-1">Result</p>
-                <p className="text-[15px] font-semibold tracking-tightest text-foreground">{item.result}</p>
+                <EditableText collection="work" id={item.id} item={item} path={["result"]} value={item.result} as="p" className="text-[15px] font-semibold tracking-tightest text-foreground" />
               </div>
             </div>
           </div>
@@ -886,9 +898,7 @@ function WorkDetail() {
                   style={{ aspectRatio: "9/16" }}
                 >
                   <div className="flex h-8 items-center gap-1.5 border-b border-border bg-secondary/60 px-3">
-                    <span className="h-[9px] w-[9px] rounded-full" style={{ background: "var(--traffic-red)" }} />
-                    <span className="h-[9px] w-[9px] rounded-full" style={{ background: "var(--traffic-yellow)" }} />
-                    <span className="h-[9px] w-[9px] rounded-full" style={{ background: "var(--traffic-green)" }} />
+                    <TrafficLights size={9} />
                     <span className="ml-2 text-[9px] tracking-tight text-foreground/40">reel_{i + 1}.mp4</span>
                   </div>
                   <ImgBox
@@ -909,9 +919,7 @@ function WorkDetail() {
           <div className="rounded-[14px] border border-border bg-card overflow-hidden mac-shadow">
             <div className="flex h-9 items-center justify-between border-b border-border bg-secondary/60 px-4">
               <div className="flex items-center gap-1.5">
-                <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-red)" }} />
-                <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-yellow)" }} />
-                <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-green)" }} />
+                <TrafficLights size={11} />
               </div>
               <span className="text-[11px] tracking-tight text-foreground/50">gallery.finder</span>
               <span className="text-[10px] tracking-tight text-foreground/30">{galleryPlaceholders.length} items</span>

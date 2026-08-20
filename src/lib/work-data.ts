@@ -1,4 +1,4 @@
-﻿export type WorkItem = {
+export type WorkItem = {
   id: string;
   title: string;
   client: string;
@@ -17,7 +17,7 @@
   duration?: string;
   platform?: string;
 
-  // Visual assets â€” all optional, swap placeholders for real files
+  // Visual assets — all optional, swap placeholders for real files
   logo?: string;
   beforeImg?: string;
   afterImg?: string;
@@ -43,172 +43,273 @@
 };
 
 export const WORK_ITEMS: WorkItem[] = [
+  /* ───────── FASHION — FULL-STACK ───────── */
   {
-    id: "steal-and-style",
-    title: "Steal & Style",
-    client: "Steal & Style",
-    tag: "Instagram Â· Fashion",
-    category: "Social Media Management",
-    color: "oklch(0.16 0.02 240)",
-    platform: "Instagram",
+    id: "oaklynwear",
+    title: "Oaklynwear",
+    client: "Oaklynwear",
+    tag: "Instagram · TikTok · Fashion",
+    category: "Full-Stack Growth",
+    color: "oklch(0.20 0.02 240)",
+    platform: "Instagram · TikTok · Meta Ads · Google Ads",
     duration: "Ongoing",
-    tools: ["Canva", "Photoshop", "CapCut", "Notion"],
-    logo: "/StealandStyle/logo.jpg",
-    beforeImg: "/StealandStyle/LowBrandVisibility.png",
-    graphics: [
-      {
-        src: "/StealandStyle/BrandKit.png",
-        title: "Brand Kit",
-        description: "Full brand kit â€” colors, typography, and visual guidelines built for Steal & Style.",
-        tools: ["Canva", "Adobe Illustrator"],
-        process: [
-          "Studied the brand colors and existing content to understand the visual direction",
-          "Sketched a layout that puts the product front and center with minimal distraction",
-          "Built the template in Canva with locked brand elements and editable zones",
-          "Tested with 3 different product photos to make sure it worked across styles",
-          "Delivered as a shared Canva template the client can update themselves",
-        ],
-      },
-      {
-        src: "/StealandStyle/BrandPersonality.png",
-        title: "Brand Personality",
-        description: "Brand personality board defining tone, voice, and aesthetic direction.",
-        tools: ["Canva"],
-        process: [
-          "Analyzed top-performing fashion stories to understand what formats get taps",
-          "Chose a bold, full-bleed layout that works with both product photos and flat lays",
-          "Built 3 variations: new arrival, sale, and poll â€” all matching the brand palette",
-          "Added animated text elements for the versions that needed more energy",
-        ],
-      },
-      {
-        src: "/StealandStyle/Cover1 (1).png",
-        title: "Collection Cover",
-        description: "Collection launch cover graphic. Used for feed posts and story headers.",
-        tools: ["Canva", "Photoshop"],
-        process: [
-          "Briefed on the sale details â€” discount amount, duration, and key products",
-          "Designed with high contrast and large type to communicate the offer instantly",
-          "Used Photoshop to cut out product images for a cleaner, more premium look",
-          "Created feed post and story versions for consistent cross-format promotion",
-        ],
-      },
-      {
-        src: "/StealandStyle/01_Collection3_Cover1.png",
-        title: "Collection 3 Cover",
-        description: "Hero cover for Collection 3 launch.",
-        tools: ["Canva", "Adobe Illustrator"],
-        process: [
-          "Audited the profile and identified which highlight categories were needed",
-          "Designed minimal icon set in Illustrator â€” clean lines, consistent stroke weight",
-          "Applied brand colors as backgrounds to tie the covers to the overall aesthetic",
-          "Exported at correct Instagram dimensions and uploaded to the profile",
-        ],
-      },
-      {
-        src: "/StealandStyle/Steal&Style_IGStory.png",
-        title: "Instagram Story",
-        description: "Story template for new arrivals. Bold typography designed to stop the scroll.",
-        tools: ["Canva"],
-        process: [
-          "Identified high-engagement caption formats from competitor research",
-          "Wrote the copy first, then designed around it â€” text is the hero here",
-          "Kept the layout clean so the words are readable even at thumbnail size",
-          "A/B tested two versions to see which drove more saves",
-        ],
-      },
-      {
-        src: "/StealandStyle/01_Collection3_Teaser.png",
-        title: "Collection Launch Teaser",
-        description: "Launch teaser graphic for Collection 3 drop. Built hype before the full reveal.",
-        tools: ["Canva", "Photoshop"],
-        process: [
-          "Planned a 3-post teaser sequence leading up to the launch date",
-          "Used Photoshop to create a blurred/cropped product reveal for the teaser",
-          "Designed the full reveal graphic with the collection name and key pieces",
-          "Coordinated the posting schedule to maximize anticipation",
-        ],
-      },
-    ],
-    gallery: [
-      "/StealandStyle/00_STEAL&STYLE_COLLECTION-1_SK01-05.png",
-      "/StealandStyle/00_STEAL&STYLE_COLLECTION-1_SK01.png",
-      "/StealandStyle/00_STEAL&STYLE_COLLECTION-1_SK02.png",
-      "/StealandStyle/00_STEAL&STYLE_COLLECTION-1_SK06-10.png",
-      "/StealandStyle/00_STEAL&STYLE_COLLECTION-1_SK06.png",
-      "/StealandStyle/02_Collection3_SH01.png",
-      "/StealandStyle/08_Collection3_SH06.png",
-      "/StealandStyle/COLLECTION2_CH-01.png",
-      "/StealandStyle/COLLECTION2_CH-02.png",
-      "/StealandStyle/Collection2_Cover1.png",
-      "/StealandStyle/Collection2_Cover2.png",
-      "/StealandStyle/Collection4_PA-01.png",
-      "/StealandStyle/Collection4_PA-02.png",
-      "/StealandStyle/Cover2.png",
-      "/StealandStyle/StealandStyleXThe19thStreetCafe.png",
-      "/StealandStyle/SW-01 (1).png",
-      "/StealandStyle/SW-02.png",
-      "/StealandStyle/B2B-1.png",
-    ],
+    tools: ["Meta Ads Manager", "Google Ads", "Canva", "Photoshop", "CapCut", "Notion"],
 
     overview:
-      "Steal & Style is a Filipino fashion brand built around affordable, trendy pieces with a strong local identity. They needed a social media presence that felt alive â€” not just product posts, but a personality that people actually wanted to follow.",
+      "Oaklynwear is a US-based fashion brand. I run everything on the marketing side — Google Ads, Meta Ads, social media management, branding, and day-to-day account management. One person, the full stack.",
 
     challenge:
-      "The brand had no established voice, no content system, and no visual consistency. Posts were sporadic and didn't reflect the brand's playful, internet-native personality. Engagement was low and the page felt like a catalog rather than a community.",
+      "A fashion e-commerce brand competing in a crowded US market needs paid and organic working together — ads that convert, a feed that builds trust, and a brand identity that ties it all into one recognizable look. Handling those in isolation wastes budget; handling them together compounds.",
 
     approach:
-      "I started by defining who the brand was talking to â€” young Filipino fashion consumers who live on the internet. From there I built a voice that mixed local humor, trending formats, and genuine fashion commentary. The goal was to make the page feel like a person, not a store.",
+      "I treat the brand as one funnel. Organic content builds the brand and warms the audience; Meta and Google campaigns capture demand and retarget engaged visitors; the branding keeps every touchpoint — ad, post, story — unmistakably Oaklynwear.",
 
     workflow: [
-      "Brand audit â€” reviewed existing content and identified what wasn't working",
-      "Audience research â€” mapped the target demographic and what content they engage with",
-      "Voice & tone guide â€” documented the brand personality, language style, and content rules",
-      "Content pillars â€” defined 4 recurring content types to keep the feed varied and strategic",
-      "Monthly calendar â€” planned posts around product drops, trends, and key dates",
-      "Template system â€” built reusable Canva templates for posts and stories",
-      "Execution â€” wrote captions, designed graphics, scheduled and published",
-      "Review â€” monthly performance check and strategy adjustment",
+      "Brand & account audit — reviewed identity, content, and existing ad accounts",
+      "Positioning — defined the visual direction and voice for the US fashion audience",
+      "Content system — content pillars, calendar, and reusable template kit",
+      "Paid setup — structured Meta and Google Ads campaigns with clean tracking",
+      "Creative production — designed ad creatives and organic posts to one visual system",
+      "Management — daily posting, community management, and budget optimization",
+      "Reporting — regular performance reviews across paid and organic",
     ],
 
     what: [
-      "Brand voice and tone guidelines",
-      "Monthly content calendar",
-      "Caption writing with Filipino internet humor",
-      "Post and story template design in Canva",
-      "Community management and DM responses",
-      "Reels editing for product showcases",
+      "Google Ads campaign setup & management",
+      "Meta Ads (Facebook & Instagram) campaigns",
+      "Full social media management",
+      "Brand identity & visual direction",
+      "Ad creative & content design",
+      "Account management & reporting",
     ],
 
-    afterImg: "/StealandStyle/B2B-1.png",
     result:
-      "Built a comprehensive brand personality from the ground up, generated consistent revenue growth, and secured a B2B collaboration â€” I sourced the client, pitched the idea, and handled all the paperwork.",
-    calendarImg: "/StealandStyle/ContentCalendar.png",
-    analytics: [
-      { label: "Profile Views",     value: "3.5K" },
-      { label: "Profile Activity",  value: "200"  },
-      { label: "Accounts Reached",  value: "1.2K" },
-      { label: "Engagement Rate",   value: "8.4%" },
-      { label: "Posts Published",   value: "48"   },
-      { label: "Follower Growth",   value: "+320" },
-    ],
-    analyticsImg: "/StealandStyle/Analytics_Screenshot.png",
+      "A single, consistent growth system — paid and organic run by one person, so creative, targeting, and brand always stay in sync.",
   },
 
+  {
+    id: "roselyn-atelier",
+    title: "Roselyn Atelier",
+    client: "Roselyn Atelier",
+    tag: "Instagram · TikTok · Fashion",
+    category: "Full-Stack Growth",
+    color: "oklch(0.55 0.08 10)",
+    platform: "Instagram · TikTok · Meta Ads · Google Ads",
+    duration: "Ongoing",
+    tools: ["Meta Ads Manager", "Google Ads", "Canva", "Photoshop", "CapCut", "Notion"],
+
+    overview:
+      "Roselyn Atelier is a UK-based fashion atelier with a polished, editorial aesthetic. I handle the full marketing stack — Google Ads, Meta Ads, social media management, branding, and account management.",
+
+    challenge:
+      "An atelier brand lives or dies on aesthetics — the ads have to feel as premium as the product. The challenge was building performance marketing that converts without ever cheapening the editorial look the brand is built on.",
+
+    approach:
+      "Editorial-first, performance-backed. Every creative — organic or paid — holds the atelier's visual standard, while campaign structure, audiences, and budgets are handled with pure performance discipline underneath.",
+
+    workflow: [
+      "Brand immersion — studied the atelier's aesthetic and audience",
+      "Visual system — refined the brand's look into a repeatable content style",
+      "Editorial calendar — planned content around collections and key dates",
+      "Paid campaigns — Meta and Google Ads structured for e-commerce conversion",
+      "Creative production — premium ad creatives matching the editorial feed",
+      "Management — publishing, engagement, and continuous ad optimization",
+    ],
+
+    what: [
+      "Google Ads campaign management",
+      "Meta Ads campaigns & retargeting",
+      "Social media management (Instagram · TikTok)",
+      "Brand aesthetics & editorial direction",
+      "Ad creative design",
+      "Ongoing account management",
+    ],
+
+    result:
+      "A premium, editorial presence with a real performance engine behind it — the brand looks like an atelier and markets like an e-commerce operation.",
+  },
+
+  {
+    id: "lirenne-wear",
+    title: "Lirenne Wear",
+    client: "Lirenne Wear",
+    tag: "Instagram · TikTok · Fashion",
+    category: "Full-Stack Growth",
+    color: "oklch(0.38 0.10 260)",
+    platform: "Instagram · TikTok · Meta Ads · Google Ads",
+    duration: "Ongoing",
+    tools: ["Meta Ads Manager", "Google Ads", "Canva", "Photoshop", "CapCut", "Notion"],
+
+    overview:
+      "Lirenne Wear is a US-based fashion label. I run the complete marketing operation — Google Ads, Meta Ads, social media management, branding, and account management — bringing consistency and personality to the brand from the ground up.",
+
+    challenge:
+      "The label needed everything working at once: a recognizable identity, a content system that could sustain daily presence, and paid campaigns that turn attention into sales — without the overhead of a full team.",
+
+    approach:
+      "Build the system once, then run it hard. I established the visual identity and content pillars first, then layered Meta and Google campaigns on top so every ad dollar lands on a brand that already looks credible.",
+
+    workflow: [
+      "Identity groundwork — visual direction, templates, and brand rules",
+      "Content engine — pillars, calendar, and batch production workflow",
+      "Paid structure — Meta and Google Ads campaigns with e-commerce tracking",
+      "Creative testing — iterating ad creatives against real performance data",
+      "Daily management — posting, community, budgets, and optimization",
+      "Reporting — clear monthly reviews across the whole funnel",
+    ],
+
+    what: [
+      "Google Ads management",
+      "Meta Ads management",
+      "Full social media management",
+      "Brand identity & content system",
+      "Ad creative design & testing",
+      "Account management & reporting",
+    ],
+
+    result:
+      "One coherent brand across every touchpoint — organic feed, stories, and ads all pull in the same direction, managed end-to-end by one person.",
+  },
+
+  {
+    id: "bella-monza",
+    title: "Bella Monza",
+    client: "Bella Monza",
+    tag: "Instagram · TikTok · Fashion",
+    category: "Full-Stack Growth",
+    color: "oklch(0.45 0.16 350)",
+    platform: "Instagram · TikTok · Meta Ads · Google Ads",
+    duration: "Ongoing",
+    tools: ["Meta Ads Manager", "Google Ads", "Canva", "Photoshop", "CapCut", "Notion"],
+
+    overview:
+      "Bella Monza is a fashion store where I own the entire marketing stack — Google Ads, Meta Ads, social media management, branding, and account management. Strategy through execution, one accountable person.",
+
+    challenge:
+      "Fashion retail moves fast: drops, seasons, trends. The brand needed marketing that could keep pace — fresh creative weekly, campaigns adjusted to what's selling, and a consistent identity holding it all together.",
+
+    approach:
+      "Speed with standards. A locked brand system makes fast creative possible without drift, and tight feedback loops between ad performance and organic content mean what works anywhere gets amplified everywhere.",
+
+    workflow: [
+      "Brand system — identity, templates, and creative rules built for speed",
+      "Content calendar — planned around drops, seasons, and trends",
+      "Paid campaigns — Meta and Google Ads aligned to product priorities",
+      "Creative cycle — weekly production and performance-based iteration",
+      "Management — publishing, engagement, budgets, and optimization",
+    ],
+
+    what: [
+      "Google Ads campaigns",
+      "Meta Ads campaigns",
+      "Social media management",
+      "Branding & creative direction",
+      "Ad creative production",
+      "Full account management",
+    ],
+
+    result:
+      "A fashion brand that ships fast without looking rushed — consistent identity, active feed, and paid campaigns that keep pace with the product.",
+  },
+
+  {
+    id: "stealandstyle",
+    title: "StealandStyle",
+    client: "StealandStyle",
+    tag: "Instagram · Fashion",
+    category: "Social Media Management",
+    color: "oklch(0.50 0.16 320)",
+    platform: "Instagram",
+    duration: "Ongoing",
+    tools: ["Canva", "Photoshop", "CapCut", "Notion"],
+
+    overview:
+      "StealandStyle is a fashion-focused Instagram brand. I manage its social presence end-to-end — content, design, and community — building a feed that turns style inspiration into an engaged following.",
+
+    challenge:
+      "Fashion content on Instagram is saturated. Standing out means a distinct visual voice and a posting rhythm consistent enough to compound — not occasional posts that get lost in the feed.",
+
+    approach:
+      "I built a recognizable content system for the brand — consistent templates, a clear aesthetic, and short-form video that stops the scroll — then kept it running with a steady calendar and active community management.",
+
+    workflow: [
+      "Account audit — reviewed the feed, voice, and audience",
+      "Visual system — templates and aesthetic for a consistent look",
+      "Content calendar — planned posts, stories, and reels",
+      "Creative production — designed posts and edited short-form video",
+      "Management — daily publishing and community engagement",
+    ],
+
+    what: [
+      "Instagram content design",
+      "Reels & short-form editing",
+      "Content calendar & strategy",
+      "Caption writing & brand voice",
+      "Community management",
+    ],
+
+    result:
+      "A consistent, recognizable Instagram presence with a feed and posting rhythm built to grow an engaged fashion audience.",
+  },
+
+  {
+    id: "novanoir",
+    title: "novanoir.us",
+    client: "Nova Noir",
+    tag: "Instagram · TikTok · Fashion",
+    category: "Full-Stack Growth",
+    color: "oklch(0.28 0.03 285)",
+    platform: "Instagram · TikTok · Meta Ads · Google Ads",
+    duration: "Ongoing",
+    tools: ["Meta Ads Manager", "Google Ads", "Canva", "Photoshop", "CapCut", "Notion"],
+
+    overview:
+      "Nova Noir (novanoir.us) is a US-based fashion brand with a dark, modern aesthetic. I run the full marketing stack — Google Ads, Meta Ads, social media management, branding, and account management — as one connected system.",
+
+    challenge:
+      "A new-wave fashion brand needs its paid and organic to feel like one voice — ads that convert while the feed and identity stay unmistakably Nova Noir in a crowded US market.",
+
+    approach:
+      "One funnel, one look. Organic content builds the brand and warms the audience; Meta and Google campaigns capture and retarget demand; the branding keeps every touchpoint sharp, dark, and on-brand.",
+
+    workflow: [
+      "Brand & account audit — identity, content, and ad accounts",
+      "Positioning — visual direction and voice for the US fashion audience",
+      "Content system — pillars, calendar, and template kit",
+      "Paid setup — Meta and Google Ads with clean tracking",
+      "Creative production — ad creatives and organic posts to one system",
+      "Management — posting, community, and budget optimization",
+      "Reporting — performance reviews across paid and organic",
+    ],
+
+    what: [
+      "Google Ads campaign management",
+      "Meta Ads (Facebook & Instagram) campaigns",
+      "Full social media management",
+      "Brand identity & visual direction",
+      "Ad creative & content design",
+      "Account management & reporting",
+    ],
+
+    result:
+      "A single, consistent growth system for Nova Noir — paid and organic in sync, with a dark, modern identity carried across every touchpoint.",
+  },
+
+  /* ───────── CREATIVE STRATEGY ───────── */
   {
     id: "masinloc-tourism",
     title: "Masinloc Tourism Office",
     client: "Masinloc Tourism Office",
-    tag: "Facebook · Government",
-    category: "Social Media Management",
+    tag: "Facebook · Creative Strategy",
+    category: "Creative Strategy",
     color: "oklch(0.58 0.14 200)",
     platform: "Facebook",
     duration: "Ongoing",
     tools: ["Canva", "Photoshop", "CapCut"],
     logo: "/MasinlocTourism/logo.jpg",
-    overview: "The Masinloc Tourism Office is the official government body promoting tourism in Masinloc, Zambales. The municipality has beautiful beaches, heritage sites, and local events — but the social media presence wasn't doing them justice.",
+    overview: "The Masinloc Tourism Office is the official government body promoting tourism in Masinloc, Zambales. As Creative Strategist, I shape how the municipality presents itself — the campaigns, the content, and the ideas that bring visitors in.",
     challenge: "The page was inconsistent and underutilized. Posts were infrequent, visuals were low quality, and the content didn't inspire people to actually visit. A government tourism page needs to feel both official and inviting — a hard balance to strike.",
-    approach: "I focused on making the content feel aspirational — the kind of posts that make someone say 'I want to go there.' Better visuals, storytelling captions, and a consistent rhythm that kept Masinloc top of mind.",
+    approach: "I focused on making the content feel aspirational — the kind of posts that make someone say 'I want to go there.' Better visuals, storytelling captions, campaign ideas like the Joiners Program, and a consistent rhythm that kept Masinloc top of mind.",
     beforePoints: [
       { icon: "💬", text: "I was the one who reached out first — DM'd the tourism office because I saw the potential they weren't tapping into." },
       { icon: "📋", text: "No content strategy. No visual system. Posts were scattered and the page wasn't inspiring anyone to visit." },
@@ -216,25 +317,26 @@ export const WORK_ITEMS: WorkItem[] = [
     ],
     afterPoints: [
       { icon: "◈", text: "Organized and planned a full content system — destination features, event coverage, and a consistent visual identity." },
-      { icon: "↑", text: "Generated significant revenue and tourism growth, bringing real visitors to Masinloc's nature rivers and heritage sites." },
+      { icon: "↑", text: "Pitched the Joiners Program — a campaign that generated significant revenue and tourism growth, bringing real visitors to Masinloc's nature rivers and heritage sites." },
       { icon: "✦", text: "The page became an actual tourism resource — aspirational, official, and worth sharing." },
     ],
     workflow: [
       "Content audit — reviewed existing posts and identified gaps",
       "Destination mapping — catalogued key spots, events, and stories worth featuring",
+      "Campaign ideation — pitched creative programs like the Joiners Program to drive visits",
       "Visual direction — established a clean, bright aesthetic that matched the destination",
       "Coordination — worked with the tourism office on event coverage and announcements",
       "Execution — wrote copy, designed graphics, published and managed the page",
     ],
     what: [
+      "Creative strategy & campaign ideation",
       "Regular tourism content (destinations, events, culture)",
       "Visual direction for photography",
       "Caption writing that highlights Masinloc's appeal",
       "Event coverage coordination",
-      "Consistent posting schedule",
       "Promotional graphics for local events",
     ],
-    result: "Increased reach on tourism posts and a stronger, more professional local presence. The page started functioning as an actual tourism resource rather than an afterthought.",
+    result: "The Joiners Program and revitalized content brought measurable revenue and tourism growth. The page started functioning as an actual tourism resource rather than an afterthought.",
     graphics: [
       {
         src: "/MasinlocTourism/BrandKit.jpg",
@@ -283,229 +385,7 @@ export const WORK_ITEMS: WorkItem[] = [
     ],
   },
 
-  {
-    id: "junz-restaurant",
-    title: "Junz Restaurant",
-    client: "Junz Restaurant",
-    tag: "Facebook Â· Food & Beverage",
-    category: "Social Media Management",
-    color: "oklch(0.70 0.14 55)",
-    platform: "Facebook",
-    duration: "Ongoing",
-    tools: ["Canva", "Photoshop"],
-    logo: "/JunzRestaurant/logo.jpg",
-
-    overview:
-      "Junz Restaurant is a local food business that needed a social media presence to drive foot traffic and build a loyal customer base. Food businesses live and die by their online presence â€” a good-looking page can fill tables.",
-
-    challenge:
-      "The restaurant had no consistent social media strategy. Posts were random, visuals were inconsistent, and there was no system for promoting specials or new menu items. The page wasn't working as a marketing tool.",
-
-    approach:
-      "Food content is about making people hungry. I focused on high-quality visuals, appetite-driven copy, and a posting rhythm that kept the restaurant top of mind â€” especially around meal times and weekends.",
-
-    workflow: [
-      "Menu review â€” understood the offerings and identified hero items worth featuring",
-      "Visual direction â€” established a warm, appetizing aesthetic for food photography",
-      "Content calendar â€” planned posts around meal times, specials, and local events",
-      "Template design â€” built Canva templates for menu features and promotions",
-      "Caption writing â€” wrote copy that made the food sound as good as it looks",
-      "Community management â€” responded to comments and messages",
-    ],
-
-    what: [
-      "Food photography direction",
-      "Promotional content for menu items and specials",
-      "Facebook page management",
-      "Consistent weekly posting schedule",
-      "Promotional graphics design",
-      "Community engagement",
-    ],
-
-    result:
-      "Regular weekly content and increased customer engagement. The page became a functional marketing tool that drove awareness and kept existing customers coming back.",
-  },
-
-
-  {
-    id: "psg-hits",
-    title: "PSG Hits",
-    client: "PSG Hits",
-    tag: "Facebook · Music",
-    category: "Social Media Management",
-    color: "oklch(0.45 0.20 27)",
-    platform: "Facebook · Instagram",
-    duration: "Ongoing",
-    tools: ["Canva", "Photoshop", "CapCut"],
-    logo: "/PSGHits/Logo.png?v=2",
-    beforeImg: "/PSGHits/Before.jpg?v=2",
-    overview: "PSG Hits is a clothing apparel brand. I managed their social media presence, built their brand identity from scratch, and created all visual assets — from social posts to physical merch mockups and print materials.",
-    challenge: "The page had no visual consistency and no content system. Posts were random and didn't reflect the brand's energy or identity.",
-    approach: "Built a content system around the brand's music identity — consistent visuals, engaging captions, and a posting rhythm that matched the audience.",
-    workflow: [
-      "Brand audit — reviewed existing content and identified gaps",
-      "Visual direction — established a consistent aesthetic for music content",
-      "Content calendar — planned posts around releases and events",
-      "Template system — built reusable Canva templates",
-      "Execution — designed graphics, wrote captions, published",
-    ],
-    what: [
-      "Social media management",
-      "Graphic design for posts and stories",
-      "Content calendar and strategy",
-      "Caption writing",
-    ],
-    result: "Consistent brand presence and growing engagement. The page started looking and feeling like a real music brand.",
-    calendarImg: "/PSGHits/ContentCalendar.png?v=2",
-    analyticsImg: "/PSGHits/Analytics.png?v=2",
-    graphics: [
-      {
-        src: "/PSGHits/OverallBrandBoard.png?v=2",
-        title: "Overall Brand Board",
-        description: "Full brand overview — colors, typography, logo usage, and visual direction for PSG Hits.",
-        tools: ["Canva", "Photoshop"],
-        process: [
-          "Audited the existing brand assets to identify inconsistencies",
-          "Defined a cohesive color palette and typography system",
-          "Assembled a brand board to serve as the visual reference for all content",
-        ],
-      },
-      {
-        src: "/PSGHits/Brand-Kit-Vertical.png?v=2",
-        title: "Brand Kit",
-        description: "Detailed vertical brand kit documenting all brand elements — logo variations, color codes, fonts, and usage guidelines.",
-        tools: ["Canva"],
-        portrait: true,
-        process: [
-          "Documented all approved logo variations and clear space rules",
-          "Defined primary and secondary color palettes with hex codes",
-          "Set typography hierarchy for headings, body, and captions",
-          "Compiled into a shareable brand kit for consistent content creation",
-        ],
-      },
-      {
-        src: "/PSGHits/Main-Banner.png?v=2",
-        title: "Main Banner",
-        description: "Hero banner for the PSG Hits Facebook page — sets the tone and brand identity at first glance.",
-        tools: ["Canva", "Photoshop"],
-        process: [
-          "Designed to immediately communicate the brand's music and entertainment identity",
-          "Used brand colors and typography to create a strong first impression",
-        ],
-      },
-      {
-        src: "/PSGHits/Poster-Banner.png?v=2",
-        title: "Poster Banner",
-        description: "Promotional poster banner for events and announcements.",
-        tools: ["Canva", "Photoshop"],
-        process: [
-          "Designed for high visibility — bold type, strong contrast",
-          "Built as a reusable template for future events",
-        ],
-      },
-      {
-        src: "/PSGHits/Poster-Banner2.png?v=2",
-        title: "Poster Banner 2",
-        description: "Second variation of the promotional poster banner — alternate layout for different content types.",
-        tools: ["Canva", "Photoshop"],
-        process: [
-          "Created as a variation to keep the feed visually dynamic",
-          "Maintains brand consistency while offering layout variety",
-        ],
-      },
-      {
-        src: "/PSGHits/PSGHITS_SALE_BANNER.png?v=2",
-        title: "Sale Banner",
-        description: "Sale announcement banner — direct, high-contrast design built to stop the scroll.",
-        tools: ["Canva"],
-        process: [
-          "Prioritized clarity — offer and brand name visible at thumbnail size",
-          "Used urgency-driven layout to drive engagement",
-        ],
-      },
-      {
-        src: "/PSGHits/OnboardingPost.png?v=2",
-        title: "Onboarding Post",
-        description: "Welcome/onboarding post introducing the brand to new followers.",
-        tools: ["Canva"],
-        process: [
-          "Designed to communicate brand identity and what followers can expect",
-          "Kept copy concise and visual-forward",
-        ],
-      },
-      {
-        src: "/PSGHits/ClothingTag_Mockup.png?v=2",
-        title: "Clothing Tag Mockup",
-        description: "Branded clothing tag mockup for merch and product photography.",
-        tools: ["Photoshop"],
-        process: [
-          "Applied brand logo and colors to a clothing tag template",
-          "Used for social content showcasing merch",
-        ],
-      },
-      {
-        src: "/PSGHits/ClothTag_Mockup.png?v=2",
-        title: "Cloth Tag Mockup",
-        description: "Alternative cloth tag mockup — woven label style.",
-        tools: ["Photoshop"],
-        process: [
-          "Created a woven-label style mockup for a premium merch feel",
-        ],
-      },
-      {
-        src: "/PSGHits/HangerMockup.png?v=2",
-        title: "Hanger Mockup",
-        description: "Clothing hanger mockup for merchandise presentation on social media.",
-        tools: ["Photoshop"],
-        process: [
-          "Placed branded garment on hanger for a clean, retail-style presentation",
-          "Used for product announcement posts",
-        ],
-      },
-      {
-        src: "/PSGHits/SaleTag_MockUp.png?v=2",
-        title: "Sale Tag Mockup",
-        description: "Physical sale tag mockup for merch promotions.",
-        tools: ["Photoshop"],
-        process: [
-          "Designed a branded sale tag and applied it to a product mockup",
-          "Used to make promotions feel tangible and premium",
-        ],
-      },
-      {
-        src: "/PSGHits/MirrorSticker.png?v=2",
-        title: "Mirror Sticker",
-        description: "Branded mirror sticker design — used for physical branding and social content.",
-        tools: ["Canva", "Photoshop"],
-        process: [
-          "Designed a circular sticker with the brand logo",
-          "Applied to mirror mockup for lifestyle content",
-        ],
-      },
-      {
-        src: "/PSGHits/PosterMockup.png?v=2",
-        title: "Poster Mockup",
-        description: "Real-world poster mockup showing the brand's print presence.",
-        tools: ["Photoshop"],
-        process: [
-          "Placed PSG Hits poster design into a real-world wall mockup",
-          "Used to show the brand's physical print potential",
-        ],
-      },
-      {
-        src: "/PSGHits/3D-model.jpg?v=2",
-        title: "3D Brand Model",
-        description: "3D rendered brand visualization — adds depth and premium feel to brand presentation.",
-        tools: ["Photoshop"],
-        process: [
-          "Created a 3D mockup of brand assets for a premium visual presentation",
-          "Used for brand reveal and announcement content",
-        ],
-      },
-    ],
-    flipbookUrl: "https://online.visual-paradigm.com/share/book/untitled-2l2sihx7jr?p=1",
-  },
-
+  /* ───────── LOCAL SERVICE ───────── */
   {
     id: "fast-snaking",
     title: "Fast Snaking Services",
@@ -687,21 +567,22 @@ export const WORK_ITEMS: WorkItem[] = [
     ],
   },
 
+  /* ───────── PERSONAL BRAND — BRANDING STRATEGY ───────── */
   {
     id: "snappy-nomad",
     title: "The Snappy Nomad",
     client: "The Snappy Nomad",
-    tag: "Instagram · Travel",
-    category: "Social Media Management",
+    tag: "Branding · Travel Camera",
+    category: "Branding Strategy",
     color: "oklch(0.62 0.16 255)",
     platform: "Instagram · Facebook",
-    duration: "Coming Soon",
-    tools: ["Canva", "Photoshop", "CapCut"],
-    overview: "A travel and lifestyle brand currently in pre-launch — building the content strategy, brand identity, and social media presence ahead of launch.",
+    duration: "Pre-launch",
+    tools: ["Illustrator", "Canva", "Photoshop", "Notion"],
+    overview: "The Snappy Nomad is a personal business built around a travel camera. I run it end-to-end — the branding strategy (positioning, identity, launch plan) and the ongoing management of the brand and its social presence. Currently in pre-launch.",
     challenge: "Coming soon.",
     approach: "Coming soon.",
     workflow: ["Coming soon — details will be revealed at launch."],
-    what: ["Social Media Management", "Content Strategy", "Brand Identity"],
+    what: ["Branding Strategy", "Brand Identity", "Positioning", "Launch Planning", "Social Media Management"],
     result: "Coming soon — follow the journey.",
   },
 ];

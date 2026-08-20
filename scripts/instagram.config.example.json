@@ -1,0 +1,14 @@
+{
+  "graphVersion": "v21.0",
+  "accessToken": "PASTE_LONG_LIVED_TOKEN_HERE",
+  "_comment": "accessToken above is the default/shared token. If an account uses a different token, set accessToken on that account to override. igUserId is the Instagram Business account id (see README-instagram.md).",
+  "accounts": [
+    { "id": "oaklynwear",      "igUserId": "" },
+    { "id": "roselyn-atelier", "igUserId": "" },
+    { "id": "lirenne-wear",    "igUserId": "" },
+    { "id": "bella-monza",     "igUserId": "" },
+    { "id": "novanoir",        "igUserId": "" },
+    { "id": "stealandstyle",   "igUserId": "" },
+    { "id": "snappy-nomad",    "igUserId": "" }
+  ]
+}

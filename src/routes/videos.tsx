@@ -1,6 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { NavBar } from "@/components/NavBar";
+import { TrafficLights } from "@/components/TrafficLights";
+import { type Video } from "@/lib/videos-data";
+import { useVideos } from "@/lib/content";
+import { EditableText, useEdit } from "@/lib/edit-mode";
 
 /* ─── Coming Soon Modal ─── */
 function ComingSoonModal({ onClose }: { onClose: () => void }) {
@@ -17,11 +21,7 @@ function ComingSoonModal({ onClose }: { onClose: () => void }) {
       >
         {/* Title bar */}
         <div className="flex h-10 items-center justify-between border-b border-border bg-secondary/60 px-4" style={{ borderRadius: "20px 20px 0 0" }}>
-          <div className="flex items-center gap-1.5">
-            <button onClick={onClose} className="h-[11px] w-[11px] rounded-full hover:opacity-80 transition" style={{ background: "var(--traffic-red)" }} />
-            <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-yellow)" }} />
-            <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-green)" }} />
-          </div>
+          <TrafficLights onClose={onClose} />
           <span className="text-[11px] tracking-tight text-foreground/45">Videos & Reels</span>
           <button onClick={onClose} className="text-[11px] tracking-tight text-foreground/35 hover:text-foreground transition">✕ close</button>
         </div>
@@ -82,32 +82,13 @@ export const Route = createFileRoute("/videos")({
   }),
 });
 
-/* ─── DATA ─── */
-type Video = {
-  id: string;
-  title: string;
-  client: string;
-  category: string;
-  bg: string;
-  src?: string;
-};
-
-const VIDEOS: Video[] = [
-  { id: "v1", title: "Collection Launch Reel",   client: "Steal & Style",    category: "Reel",       bg: "linear-gradient(135deg, oklch(0.14 0.02 240), oklch(0.28 0.06 250))" },
-  { id: "v2", title: "Promotional Video",        client: "Masinloc Tourism", category: "Promo",      bg: "linear-gradient(135deg, oklch(0.18 0.03 240), oklch(0.32 0.08 245))" },
-  { id: "v3", title: "Vlog Edit",                client: "Steal & Style",    category: "Vlog",       bg: "linear-gradient(135deg, oklch(0.22 0.04 240), oklch(0.40 0.10 255))" },
-  { id: "v4", title: "Motion Caption Overlay",   client: "Steal & Style",    category: "Motion",     bg: "linear-gradient(135deg, oklch(0.16 0.02 240), oklch(0.30 0.07 248))" },
-  { id: "v5", title: "Freeze Frame Reel",        client: "Steal & Style",    category: "Reel",       bg: "linear-gradient(135deg, oklch(0.20 0.03 240), oklch(0.35 0.09 252))" },
-  { id: "v6", title: "Restaurant Promo",         client: "Junz Restaurant",  category: "Promo",      bg: "linear-gradient(135deg, oklch(0.18 0.02 240), oklch(0.28 0.06 248))" },
-  { id: "v7", title: "Behind the Scenes",        client: "Steal & Style",    category: "BTS",        bg: "linear-gradient(135deg, oklch(0.15 0.02 240), oklch(0.26 0.06 246))" },
-  { id: "v8", title: "Product Showcase Video",   client: "CSA Print",        category: "Showcase",   bg: "linear-gradient(135deg, oklch(0.19 0.03 240), oklch(0.33 0.08 250))" },
-];
 
 /* ─── VIDEO CARD ─── */
 function VideoCard({ video, onClick }: { video: Video; onClick: () => void }) {
+  const { editing } = useEdit();
   return (
-    <button 
-      onClick={onClick}
+    <button
+      onClick={() => { if (!editing) onClick(); }}
       className="group relative w-full text-left cursor-pointer"
     >
       {/* Video Preview */}
@@ -143,20 +124,14 @@ function VideoCard({ video, onClick }: { video: Video; onClick: () => void }) {
         
         {/* Category Badge */}
         <div className="absolute top-3 left-3">
-          <span className="inline-block px-2.5 py-1 rounded-full bg-background/90 backdrop-blur-sm text-[9px] uppercase tracking-[0.2em] text-foreground/60 border border-border/30">
-            {video.category}
-          </span>
+          <EditableText collection="videos" id={video.id} item={video} path={["category"]} value={video.category} className="inline-block px-2.5 py-1 rounded-full bg-background/90 backdrop-blur-sm text-[9px] uppercase tracking-[0.2em] text-foreground/60 border border-border/30" />
         </div>
       </div>
 
       {/* Info */}
       <div className="mt-3">
-        <h3 className="text-[13px] font-semibold tracking-tight text-foreground leading-snug group-hover:text-foreground/70 transition-colors">
-          {video.title}
-        </h3>
-        <p className="text-[11px] tracking-tight text-foreground/50 mt-1">
-          {video.client}
-        </p>
+        <EditableText collection="videos" id={video.id} item={video} path={["title"]} value={video.title} as="h3" className="text-[13px] font-semibold tracking-tight text-foreground leading-snug group-hover:text-foreground/70 transition-colors" />
+        <EditableText collection="videos" id={video.id} item={video} path={["client"]} value={video.client} as="p" className="text-[11px] tracking-tight text-foreground/50 mt-1" />
       </div>
     </button>
   );
@@ -274,6 +249,7 @@ function FullViewModal({
 
 /* ─── PAGE ─── */
 function VideosPage() {
+  const { items: VIDEOS } = useVideos();
   const [showComingSoon, setShowComingSoon] = useState(false);
 
   return (

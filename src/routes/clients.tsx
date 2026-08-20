@@ -1,6 +1,11 @@
 ﻿﻿import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { NavBar } from "@/components/NavBar";
+import { TrafficLights } from "@/components/TrafficLights";
+import { Reveal } from "@/hooks/useScrollReveal";
+import { type Client } from "@/lib/clients-data";
+import { useClients, useClientsMeta } from "@/lib/content";
+import { EditableText, EditableImage, useEdit } from "@/lib/edit-mode";
 
 export const Route = createFileRoute("/clients")({
   component: ClientsPage,
@@ -12,118 +17,8 @@ export const Route = createFileRoute("/clients")({
   }),
 });
 
-type ClientScreenshot = {
-  src?: string;
-  caption: string;
-};
 
-type Client = {
-  id: string;
-  name: string;
-  handle: string;
-  platform: string;
-  category: string;
-  description: string;
-  services: string[];
-  link: string;
-  color: string;
-  status: string;
-  // Visual
-  logo?: string;
-  coverImg?: string;
-  // Modal content
-  screenshots?: ClientScreenshot[];
-  interviews?: ClientScreenshot[];
-  meetings?: ClientScreenshot[];
-  replies?: ClientScreenshot[];
-};
 
-const CLIENTS: Client[] = [
-  {
-    id: "steal-and-style",
-    name: "Steal & Style",
-    handle: "@stealandstyle.co",
-    platform: "Instagram",
-    category: "Fashion Brand",
-    description: "A Filipino fashion brand built around affordable, trendy pieces. I managed their full Instagram presence — brand voice, content calendar, templates, and community management. Also secured a B2B collab.",
-    services: ["Social Media Management", "Content Strategy", "Video Editing", "Brand Identity"],
-    link: "https://instagram.com/stealandstyle.co",
-    color: "oklch(0.16 0.02 240)",
-    status: "Active",
-    logo: "/StealandStyle/logo.jpg",
-  },
-  {
-    id: "psg-hits",
-    name: "PSG Hits",
-    handle: "@psghits",
-    platform: "Facebook · Instagram",
-    category: "Clothing Apparel",
-    description: "A clothing apparel brand. I built their full brand identity and managed their social media — content creation, graphic design, mockups, and print materials.",
-    services: ["Social Media Management", "Graphic Design", "Brand Identity", "Print Design"],
-    link: "https://facebook.com/psghits",
-    logo: "/PSGHits/Logo.png?v=2",
-    color: "oklch(0.45 0.20 27)",
-    status: "Active",
-  },
-  {
-    id: "fast-snaking",
-    name: "Fast Snaking Services",
-    handle: "Fast Snaking Services",
-    platform: "Facebook",
-    category: "Local Service · Philadelphia",
-    description: "A Philadelphia-based plumbing business built from a single DM — zero budget, zero brand. I created everything from scratch. Now receiving 3–5 calls a week.",
-    services: ["Social Media Management", "Brand Identity", "Graphic Design", "Print Design"],
-    link: "https://fastsnakingservices.vercel.app",
-    logo: "/FastToiletSnaking/logo.png",
-    color: "oklch(0.55 0.14 25)",
-    status: "Active",
-  },
-  {
-    id: "masinloc-tourism",
-    name: "Masinloc Tourism Office",
-    handle: "Masinloc Tourism Office",
-    platform: "Facebook",
-    category: "Government · Tourism",
-    description: "The official tourism office of Masinloc, Zambales. I managed their Facebook page — creating content that showcased local destinations, events, and culture to drive tourism.",
-    services: ["Social Media Management", "Content Strategy", "Graphic Design"],
-    link: "https://facebook.com/masinloctourismoffice",
-    color: "oklch(0.58 0.14 200)",
-    status: "Active",
-    logo: "/MasinlocTourism/logo.jpg",
-  },
-  {
-    id: "junz-restaurant",
-    name: "Junz Restaurant",
-    handle: "Junz Restaurant",
-    platform: "Facebook",
-    category: "Food & Beverage",
-    description: "A local restaurant. I handled their Facebook social media — food photography direction, promotional posts, and community engagement to drive foot traffic.",
-    services: ["Social Media Management", "Graphic Design"],
-    link: "https://facebook.com/junzrestaurant",
-    color: "oklch(0.70 0.14 55)",
-    status: "Active",
-    logo: "/JunzRestaurant/logo.jpg",
-  },
-  {
-    id: "snappy-nomad",
-    name: "The Snappy Nomad",
-    handle: "@thesnappynomad",
-    platform: "Instagram · Facebook",
-    category: "Travel & Lifestyle",
-    description: "A travel and lifestyle brand — currently in pre-launch strategy and content planning phase.",
-    services: ["Social Media Management", "Content Strategy", "Brand Identity"],
-    link: "https://instagram.com",
-    color: "oklch(0.62 0.16 255)",
-    status: "Coming Soon",
-  },
-];
-
-const STATS = [
-  { v: "6",    l: "clients"           },
-  { v: "100s", l: "posts published"   },
-  { v: "2+",   l: "years freelancing" },
-  { v: "3",    l: "platforms"         },
-];
 
 /* ─── Image placeholder ─── */
 function ImgSlot({ src, caption, color }: { src?: string; caption: string; color: string }) {
@@ -183,11 +78,7 @@ function ClientModal({ client, onClose }: { client: Client; onClose: () => void 
           className="flex h-10 items-center justify-between border-b border-border bg-secondary/60 px-5 sticky top-0 z-10"
           style={{ borderRadius: "20px 20px 0 0" }}
         >
-          <div className="flex items-center gap-1.5">
-            <button onClick={onClose} className="h-[11px] w-[11px] rounded-full hover:opacity-80 transition" style={{ background: "var(--traffic-red)" }} />
-            <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-yellow)" }} />
-            <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-green)" }} />
-          </div>
+          <TrafficLights onClose={onClose} />
           <span className="text-[11px] tracking-tight text-foreground/50">{client.handle}</span>
           <button onClick={onClose} className="text-[11px] tracking-tight text-foreground/35 hover:text-foreground transition">✕ close</button>
         </div>
@@ -291,10 +182,161 @@ function ClientModal({ client, onClose }: { client: Client; onClose: () => void 
   );
 }
 
+
+/* ─── Count-up stat value ─── */
+function CountUp({ value, duration = 900 }: { value: string; duration?: number }) {
+  const match = value.match(/^(\d+)(.*)$/);
+  const target = match ? parseInt(match[1], 10) : null;
+  const suffix = match ? match[2] : "";
+  const ref = useRef<HTMLSpanElement>(null);
+  const [display, setDisplay] = useState(target === null ? value : "0");
+
+  useEffect(() => {
+    if (target === null) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setDisplay(`${target}${suffix}`);
+      return;
+    }
+    const el = ref.current;
+    if (!el) return;
+
+    let raf = 0;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        observer.disconnect();
+        const start = performance.now();
+        const tick = (now: number) => {
+          const t = Math.min(1, (now - start) / duration);
+          const eased = 1 - Math.pow(1 - t, 3);
+          setDisplay(`${Math.round(eased * target)}${t === 1 ? suffix : ""}`);
+          if (t < 1) raf = requestAnimationFrame(tick);
+        };
+        raf = requestAnimationFrame(tick);
+      },
+      { threshold: 0.5 }
+    );
+    observer.observe(el);
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(raf);
+    };
+  }, [target, suffix, duration]);
+
+  return <span ref={ref}>{display}</span>;
+}
+
+/* ─── Desktop icon (grid view) ─── */
+function ClientIcon({ client, index, onOpen }: { client: Client; index: number; onOpen: (c: Client) => void }) {
+  const { editing } = useEdit();
+  const isComingSoon = client.status === "Coming Soon";
+  return (
+    <button
+      className="group flex flex-col items-center gap-2.5 cursor-default select-none"
+      onClick={() => { if (!editing) onOpen(client); }}
+      style={{ animation: `fade-up-in 0.45s cubic-bezier(.2,.8,.2,1) ${index * 45}ms both` }}
+    >
+      {/* Icon */}
+      <div
+        className="relative rounded-[20px] overflow-hidden transition-all duration-200 group-hover:scale-105 group-hover:shadow-[0_12px_32px_-8px_oklch(0.2_0.02_240/0.25)]"
+        style={{ width: 120, height: 120 }}
+      >
+        {editing ? (
+          <EditableImage collection="clients" id={client.id} item={client} path={["coverImg"]} src={client.coverImg ?? client.logo ?? ""} alt={client.name} wrapperClassName="block w-full h-full" className="w-full h-full object-cover" />
+        ) : client.coverImg || client.logo ? (
+          <img
+            src={client.coverImg ?? client.logo}
+            alt={client.name}
+            className={`w-full h-full object-cover ${isComingSoon ? "opacity-50" : ""}`}
+          />
+        ) : (
+          <div
+            className={`w-full h-full flex items-center justify-center ${isComingSoon ? "opacity-50" : ""}`}
+            style={{ background: `linear-gradient(145deg, ${client.color}, ${client.color}88)` }}
+          >
+            <span className="text-[48px] font-bold text-white/25 tracking-tightest leading-none">
+              {client.name[0]}
+            </span>
+          </div>
+        )}
+        {isComingSoon ? (
+          <div
+            className="absolute top-2 right-2 rounded-full px-1.5 py-0.5 text-[8px] uppercase tracking-[0.12em] font-medium border"
+            style={{ background: "oklch(0.15 0.01 240 / 0.75)", color: "oklch(0.75 0.12 255)", borderColor: "oklch(0.62 0.16 255 / 0.4)", backdropFilter: "blur(4px)" }}
+          >
+            Soon
+          </div>
+        ) : (
+          <div
+            className="absolute top-2.5 right-2.5 h-2.5 w-2.5 rounded-full border-2 border-white"
+            style={{ background: "var(--traffic-green)" }}
+          />
+        )}
+      </div>
+
+      {/* Label — Finder selection highlight on hover */}
+      <div className="px-2 py-0.5 rounded-[4px] text-center text-foreground transition-colors duration-150 group-hover:bg-[oklch(0.62_0.18_255)] group-hover:text-white">
+        <EditableText collection="clients" id={client.id} item={client} path={["name"]} value={client.name} as="p" className="text-[12px] font-medium tracking-tight leading-tight" />
+        <p className="text-[10px] tracking-tight opacity-60 mt-0.5">{client.platform}</p>
+      </div>
+    </button>
+  );
+}
+
+/* ─── List row (list view) ─── */
+function ClientRow({ client, index, onOpen }: { client: Client; index: number; onOpen: (c: Client) => void }) {
+  const { editing } = useEdit();
+  const isComingSoon = client.status === "Coming Soon";
+  return (
+    <button
+      onClick={() => { if (!editing) onOpen(client); }}
+      className="w-full grid grid-cols-[1fr_auto] sm:grid-cols-[2fr_1.6fr_1.4fr_auto] gap-4 items-center px-6 py-3 text-left hover:bg-secondary/60 transition-colors"
+      style={{ animation: `fade-up-in 0.35s cubic-bezier(.2,.8,.2,1) ${index * 35}ms both` }}
+    >
+      <div className="flex items-center gap-3 min-w-0">
+        <div
+          className="h-8 w-8 rounded-[8px] overflow-hidden shrink-0 flex items-center justify-center"
+          style={{ background: `linear-gradient(145deg, ${client.color}, ${client.color}88)` }}
+        >
+          {editing
+            ? <EditableImage collection="clients" id={client.id} item={client} path={["logo"]} src={client.logo ?? ""} alt={client.name} wrapperClassName="block w-full h-full" className="w-full h-full object-cover" />
+            : client.logo
+            ? <img src={client.logo} alt={client.name} className="w-full h-full object-cover" />
+            : <span className="text-[13px] font-bold text-white/40">{client.name[0]}</span>
+          }
+        </div>
+        <div className="min-w-0">
+          <EditableText collection="clients" id={client.id} item={client} path={["name"]} value={client.name} as="p" className="text-[13px] font-medium tracking-tight text-foreground truncate" />
+          <p className="sm:hidden text-[10px] tracking-tight text-foreground/40 truncate">{client.category}</p>
+        </div>
+      </div>
+      <EditableText collection="clients" id={client.id} item={client} path={["category"]} value={client.category} as="span" className="hidden sm:block text-[12px] tracking-tight text-foreground/50 truncate" />
+      <span className="hidden sm:block text-[12px] tracking-tight text-foreground/50 truncate">{client.platform}</span>
+      <span className="flex items-center gap-1.5 justify-end">
+        <span
+          className="h-1.5 w-1.5 rounded-full"
+          style={{ background: isComingSoon ? "oklch(0.62 0.16 255)" : "var(--traffic-green)" }}
+        />
+        <span className="text-[11px] tracking-tight text-foreground/45">{isComingSoon ? "Soon" : "Active"}</span>
+      </span>
+    </button>
+  );
+}
+
 /* ─── Main page ─── */
 function ClientsPage() {
+  const { items: CLIENTS } = useClients();
+  const { data: clientsMeta } = useClientsMeta();
+  const STATS = clientsMeta.stats;
+  const FILTERS = clientsMeta.filters;
   const [active, setActive] = useState<Client | null>(null);
   const [showComingSoon, setShowComingSoon] = useState(false);
+  const [view, setView] = useState<"grid" | "list">("grid");
+  const [filter, setFilter] = useState("All");
+
+  const visibleClients = filter === "All" ? CLIENTS : CLIENTS.filter((c) => c.group === filter);
+  const openClient = (c: Client) =>
+    c.status === "Coming Soon" ? setShowComingSoon(true) : setActive(c);
 
   return (
     <div className="min-h-screen bg-background pb-32">
@@ -315,11 +357,7 @@ function ClientsPage() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex h-10 items-center justify-between border-b border-border bg-secondary/60 px-4" style={{ borderRadius: "20px 20px 0 0" }}>
-              <div className="flex items-center gap-1.5">
-                <button onClick={() => setShowComingSoon(false)} className="h-[11px] w-[11px] rounded-full hover:opacity-80 transition" style={{ background: "var(--traffic-red)" }} />
-                <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-yellow)" }} />
-                <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-green)" }} />
-              </div>
+              <TrafficLights onClose={() => setShowComingSoon(false)} />
               <span className="text-[11px] tracking-tight text-foreground/45">The Snappy Nomad</span>
               <button onClick={() => setShowComingSoon(false)} className="text-[11px] tracking-tight text-foreground/35 hover:text-foreground transition">✕ close</button>
             </div>
@@ -387,221 +425,121 @@ function ClientsPage() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-4 divide-x divide-border border border-border rounded-[14px] overflow-hidden bg-card mb-10">
+        <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-border border border-border rounded-[14px] overflow-hidden bg-card mb-10">
           {STATS.map(({ v, l }) => (
             <div key={l} className="px-6 py-5">
-              <p className="text-[28px] font-bold tracking-tightest leading-none text-foreground">{v}</p>
+              <p className="text-[28px] font-bold tracking-tightest leading-none text-foreground">
+                <CountUp value={v} />
+              </p>
               <p className="mt-1 text-[10px] uppercase tracking-[0.14em] text-foreground/40">{l}</p>
             </div>
           ))}
         </div>
 
-        {/* Client grid – macOS desktop icons */}
+        {/* Client grid – macOS Finder window */}
+        <Reveal>
         <div className="rounded-[16px] border border-border bg-card overflow-hidden mac-shadow">
           {/* Finder title bar */}
           <div className="flex h-9 items-center justify-between border-b border-border bg-secondary/60 px-4">
-            <div className="flex items-center gap-1.5">
-              <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-red)" }} />
-              <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-yellow)" }} />
-              <span className="h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-green)" }} />
-            </div>
+            <TrafficLights size={11} />
             <span className="text-[11px] tracking-tight text-foreground/50">Finder — clients</span>
-            <span className="text-[10px] tracking-tight text-foreground/30">{CLIENTS.length} items</span>
+            <span className="text-[10px] tracking-tight text-foreground/30">{visibleClients.length} items</span>
           </div>
 
-          {/* Desktop icon grid */}
-          <div className="p-10 grid grid-cols-2 sm:grid-cols-4 gap-8">
-            {CLIENTS.map((client) => {
-              const isLocked = client.id === "junz-restaurant";
-              const isComingSoon = client.id === "snappy-nomad";
-
-              if (isLocked) {
-                return (
-                  <div
-                    key={client.id}
-                    className="flex flex-col items-center gap-2.5 select-none opacity-50"
-                  >
-                    {/* Icon with lock overlay */}
-                    <div
-                      className="relative rounded-[20px] overflow-hidden"
-                      style={{ width: 120, height: 120 }}
+          {/* Finder toolbar — filter tags + view toggle */}
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-secondary/30 px-4 py-2.5">
+            <div className="flex items-center gap-3">
+              {/* Back / forward chrome */}
+              <div className="hidden sm:flex items-center gap-2 text-foreground/25 select-none">
+                <span className="text-[15px] leading-none">‹</span>
+                <span className="text-[15px] leading-none">›</span>
+              </div>
+              {/* Filter tags */}
+              <div className="flex flex-wrap items-center gap-1.5">
+                {FILTERS.map((f) => {
+                  const isActive = filter === f.label;
+                  return (
+                    <button
+                      key={f.label}
+                      onClick={() => setFilter(f.label)}
+                      className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] tracking-tight transition ${
+                        isActive
+                          ? "border-foreground bg-foreground text-background"
+                          : "border-border bg-card text-foreground/55 hover:bg-secondary hover:text-foreground"
+                      }`}
                     >
-                      {client.coverImg || client.logo ? (
-                        <img
-                          src={client.coverImg ?? client.logo}
-                          alt={client.name}
-                          className="w-full h-full object-cover grayscale"
-                        />
-                      ) : (
-                        <div
-                          className="w-full h-full flex items-center justify-center"
-                          style={{ background: `linear-gradient(145deg, ${client.color}, ${client.color}88)` }}
-                        >
-                          <span className="text-[48px] font-bold text-white/25 tracking-tightest leading-none">
-                            {client.name[0]}
-                          </span>
-                        </div>
-                      )}
-                      {/* Lock overlay */}
-                      <div
-                        className="absolute inset-0 flex flex-col items-center justify-center gap-1"
-                        style={{ background: "oklch(0.1 0.01 240 / 0.6)", backdropFilter: "blur(3px)" }}
-                      >
-                        <span className="text-[22px]">🔒</span>
-                        <p className="text-[8px] uppercase tracking-[0.16em] text-white/60">ongoing</p>
-                      </div>
-                    </div>
+                      <span className="h-1.5 w-1.5 rounded-full shrink-0" style={{ background: f.dot }} />
+                      {f.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
 
-                    {/* Label */}
-                    <div className="px-2 py-0.5 rounded-[4px] text-center">
-                      <p className="text-[12px] font-medium tracking-tight text-foreground leading-tight">
-                        {client.name}
-                      </p>
-                      <p className="text-[10px] tracking-tight text-foreground/40 mt-0.5">
-                        {client.platform}
-                      </p>
-                    </div>
-                  </div>
-                );
-              }
-
-              if (isComingSoon) {
-                return (
-                  <button
-                    key={client.id}
-                    className="group flex flex-col items-center gap-2.5 cursor-default select-none"
-                    onClick={() => setShowComingSoon(true)}
-                  >
-                    {/* Icon with "Soon" overlay */}
-                    <div
-                      className="relative rounded-[20px] overflow-hidden transition-all duration-200 group-hover:scale-105"
-                      style={{ width: 120, height: 120 }}
-                    >
-                      {client.coverImg || client.logo ? (
-                        <img
-                          src={client.coverImg ?? client.logo}
-                          alt={client.name}
-                          className="w-full h-full object-cover opacity-50"
-                        />
-                      ) : (
-                        <div
-                          className="w-full h-full flex items-center justify-center opacity-50"
-                          style={{ background: `linear-gradient(145deg, ${client.color}, ${client.color}88)` }}
-                        >
-                          <span className="text-[48px] font-bold text-white/25 tracking-tightest leading-none">
-                            {client.name[0]}
-                          </span>
-                        </div>
-                      )}
-                      {/* Soon badge */}
-                      <div
-                        className="absolute top-2 right-2 rounded-full px-1.5 py-0.5 text-[8px] uppercase tracking-[0.12em] font-medium border"
-                        style={{ background: "oklch(0.15 0.01 240 / 0.75)", color: "oklch(0.75 0.12 255)", borderColor: "oklch(0.62 0.16 255 / 0.4)", backdropFilter: "blur(4px)" }}
-                      >
-                        Soon
-                      </div>
-                    </div>
-                    {/* Label */}
-                    <div
-                      className="px-2 py-0.5 rounded-[4px] transition-colors duration-150 text-center"
-                      style={{ background: "transparent" }}
-                      onMouseEnter={(e) => {
-                        (e.currentTarget as HTMLElement).style.background = "oklch(0.62 0.18 255)";
-                        (e.currentTarget as HTMLElement).style.color = "white";
-                      }}
-                      onMouseLeave={(e) => {
-                        (e.currentTarget as HTMLElement).style.background = "transparent";
-                        (e.currentTarget as HTMLElement).style.color = "";
-                      }}
-                    >
-                      <p className="text-[12px] font-medium tracking-tight text-foreground leading-tight">
-                        {client.name}
-                      </p>
-                      <p className="text-[10px] tracking-tight text-foreground/40 mt-0.5">
-                        {client.platform}
-                      </p>
-                    </div>
-                  </button>
-                );
-              }
-
-              return (
-                <button
-                  key={client.id}
-                  className="group flex flex-col items-center gap-2.5 cursor-default select-none"
-                  onClick={() => setActive(client)}
-                >
-                  {/* Icon */}
-                  <div
-                    className="relative rounded-[20px] overflow-hidden transition-all duration-200 group-hover:scale-105 group-hover:shadow-[0_12px_32px_-8px_oklch(0.2_0.02_240/0.25)]"
-                    style={{ width: 120, height: 120 }}
-                  >
-                    {client.coverImg || client.logo ? (
-                      <img
-                        src={client.coverImg ?? client.logo}
-                        alt={client.name}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div
-                        className="w-full h-full flex items-center justify-center"
-                        style={{ background: `linear-gradient(145deg, ${client.color}, ${client.color}88)` }}
-                      >
-                        <span className="text-[48px] font-bold text-white/25 tracking-tightest leading-none">
-                          {client.name[0]}
-                        </span>
-                      </div>
-                    )}
-                    {/* Status dot */}
-                    {client.status === "Coming Soon" ? (
-                      <div
-                        className="absolute top-2 right-2 rounded-full px-1.5 py-0.5 text-[8px] uppercase tracking-[0.12em] font-medium border"
-                        style={{ background: "oklch(0.15 0.01 240 / 0.75)", color: "oklch(0.75 0.12 255)", borderColor: "oklch(0.62 0.16 255 / 0.4)", backdropFilter: "blur(4px)" }}
-                      >
-                        Soon
-                      </div>
-                    ) : (
-                      <div
-                        className="absolute top-2.5 right-2.5 h-2.5 w-2.5 rounded-full border-2 border-white"
-                        style={{ background: "var(--traffic-green)" }}
-                      />
-                    )}
-                  </div>
-
-                  {/* Label – selected style on hover */}
-                  <div
-                    className="px-2 py-0.5 rounded-[4px] transition-colors duration-150 text-center"
-                    style={{ background: "transparent" }}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.background = "oklch(0.62 0.18 255)";
-                      (e.currentTarget as HTMLElement).style.color = "white";
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLElement).style.background = "transparent";
-                      (e.currentTarget as HTMLElement).style.color = "";
-                    }}
-                  >
-                    <p className="text-[12px] font-medium tracking-tight text-foreground leading-tight">
-                      {client.name}
-                    </p>
-                    <p className="text-[10px] tracking-tight text-foreground/40 mt-0.5">
-                      {client.platform}
-                    </p>
-                  </div>
-                </button>
-              );
-            })}
+            {/* View toggle — icon / list */}
+            <div className="flex items-center rounded-[8px] border border-border bg-card overflow-hidden">
+              <button
+                onClick={() => setView("grid")}
+                aria-label="Icon view"
+                className={`px-2.5 py-1.5 transition ${view === "grid" ? "bg-secondary text-foreground" : "text-foreground/35 hover:text-foreground/70"}`}
+              >
+                <svg width="13" height="13" viewBox="0 0 14 14" fill="currentColor" aria-hidden>
+                  <rect x="0" y="0" width="6" height="6" rx="1.5" />
+                  <rect x="8" y="0" width="6" height="6" rx="1.5" />
+                  <rect x="0" y="8" width="6" height="6" rx="1.5" />
+                  <rect x="8" y="8" width="6" height="6" rx="1.5" />
+                </svg>
+              </button>
+              <button
+                onClick={() => setView("list")}
+                aria-label="List view"
+                className={`px-2.5 py-1.5 border-l border-border transition ${view === "list" ? "bg-secondary text-foreground" : "text-foreground/35 hover:text-foreground/70"}`}
+              >
+                <svg width="13" height="13" viewBox="0 0 14 14" fill="currentColor" aria-hidden>
+                  <rect x="0" y="1" width="14" height="2" rx="1" />
+                  <rect x="0" y="6" width="14" height="2" rx="1" />
+                  <rect x="0" y="11" width="14" height="2" rx="1" />
+                </svg>
+              </button>
+            </div>
           </div>
+
+          {/* ── Grid view ── */}
+          {view === "grid" ? (
+            <div className="p-10 grid grid-cols-2 sm:grid-cols-4 gap-8">
+              {visibleClients.map((client, i) => (
+                <ClientIcon key={`${filter}-${client.id}`} client={client} index={i} onOpen={openClient} />
+              ))}
+            </div>
+          ) : (
+            /* ── List view ── */
+            <div>
+              <div className="hidden sm:grid grid-cols-[2fr_1.6fr_1.4fr_auto] gap-4 px-6 py-2 border-b border-border bg-secondary/20 text-[10px] uppercase tracking-[0.14em] text-foreground/35">
+                <span>Name</span>
+                <span>Category</span>
+                <span>Platform</span>
+                <span className="text-right">Status</span>
+              </div>
+              <div className="divide-y divide-border">
+                {visibleClients.map((client, i) => (
+                  <ClientRow key={`${filter}-${client.id}`} client={client} index={i} onOpen={openClient} />
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Finder status bar */}
           <div className="border-t border-border px-5 py-2 flex items-center justify-between bg-secondary/30">
-            <p className="text-[10px] tracking-tight text-foreground/35">{CLIENTS.length} items · click to open</p>
+            <p className="text-[10px] tracking-tight text-foreground/35">
+              Macintosh HD ▸ shanzster ▸ Clients{filter !== "All" ? ` ▸ ${filter}` : ""} · click to open
+            </p>
             <div className="flex items-center gap-1.5">
               <span className="h-1.5 w-1.5 rounded-full" style={{ background: "var(--traffic-green)" }} />
-              <p className="text-[10px] tracking-tight text-foreground/35">All active</p>
+              <p className="text-[10px] tracking-tight text-foreground/35">{visibleClients.length} of {CLIENTS.length} shown</p>
             </div>
           </div>
         </div>
+        </Reveal>
 
         {/* CTA */}
         <div className="mt-8 rounded-[14px] border border-border bg-card px-8 py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">

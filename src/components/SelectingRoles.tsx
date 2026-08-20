@@ -2,6 +2,7 @@ const ROLES = [
   "content strategist",
   "growth marketer",
   "social media manager",
+  "paid ads manager",
   "brand storyteller",
   "video editor",
 ];

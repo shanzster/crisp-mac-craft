@@ -1,5 +1,7 @@
 import { getApp, getApps, initializeApp, type FirebaseApp } from "firebase/app";
 import { getAnalytics, isSupported, type Analytics } from "firebase/analytics";
+import { getFirestore, type Firestore } from "firebase/firestore";
+import { getAuth, type Auth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCdNY8FB8QMw-8RAm-yJdlaxwjyyDjVgGE",
@@ -12,6 +14,12 @@ const firebaseConfig = {
 };
 
 export const firebaseApp: FirebaseApp = getApps().length ? getApp() : initializeApp(firebaseConfig);
+
+// Firestore database — the CMS content store.
+export const db: Firestore = getFirestore(firebaseApp);
+
+// Firebase Authentication — gates the /admin editor.
+export const auth: Auth = getAuth(firebaseApp);
 
 export const firebaseAnalyticsPromise: Promise<Analytics | null> =
   typeof window === "undefined"

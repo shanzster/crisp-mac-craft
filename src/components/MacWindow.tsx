@@ -1,3 +1,5 @@
+import { TrafficLights } from "@/components/TrafficLights";
+
 type Props = {
   label?: string;
   title: string;
@@ -14,11 +16,7 @@ export function MacWindow({ label, title, children, rightChip, className = "" }:
     <div className={`mac-shadow overflow-hidden rounded-[12px] border border-border bg-card ${className}`}>
       {/* Title bar */}
       <div className="flex h-9 items-center justify-between border-b border-border bg-secondary/60 px-3 backdrop-blur">
-        <div className="flex items-center gap-1.5">
-          <span className="block h-[11px] w-[11px] rounded-full bg-[var(--traffic-red)]" />
-          <span className="block h-[11px] w-[11px] rounded-full bg-[var(--traffic-yellow)]" />
-          <span className="block h-[11px] w-[11px] rounded-full bg-[var(--traffic-green)]" />
-        </div>
+        <TrafficLights size={11} />
         <div className="text-[11px] tracking-tight text-foreground/70">
           {label ? <span className="mr-2 text-foreground/40">{label}</span> : null}
           <span>{title}</span>

@@ -1,15 +1,21 @@
 import profileImage from "@/image_reference/profile.png";
+import { useHome } from "@/lib/content";
+import { EditableImage } from "@/lib/edit-mode";
 
 export function AboutScene() {
+  const { data: home } = useHome();
   return (
     <div
       className="relative w-full h-full rounded-[16px] overflow-hidden"
       style={{ minHeight: 500 }}
     >
       {/* Full-bleed profile photo */}
-      <img
-        src={profileImage}
+      <EditableImage
+        page="home"
+        path={["profileImage"]}
+        src={home.profileImage || profileImage}
         alt="Shanzster"
+        wrapperClassName="absolute inset-0"
         className="absolute inset-0 w-full h-full object-cover object-top"
         style={{ mixBlendMode: "multiply" }}
       />
@@ -42,18 +48,14 @@ export function AboutScene() {
 
         {/* Quick stat pills */}
         <div className="mt-4 flex flex-wrap gap-2">
-          {[
-            { v: "4+",   l: "pages managed" },
-            { v: "3",    l: "brands built"  },
-            { v: "2+",   l: "yrs freelance" },
-          ].map(({ v, l }) => (
+          {home.site.aboutPills.map(({ value, label }) => (
             <div
-              key={l}
+              key={label}
               className="flex items-center gap-1.5 rounded-full border border-border/60 bg-background/80 px-3 py-1"
               style={{ backdropFilter: "blur(8px)" }}
             >
-              <span className="text-[13px] font-bold tracking-tightest text-foreground">{v}</span>
-              <span className="text-[10px] tracking-tight text-foreground/45">{l}</span>
+              <span className="text-[13px] font-bold tracking-tightest text-foreground">{value}</span>
+              <span className="text-[10px] tracking-tight text-foreground/45">{label}</span>
             </div>
           ))}
         </div>

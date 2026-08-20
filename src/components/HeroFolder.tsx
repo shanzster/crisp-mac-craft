@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import photoshopLogo from "@/image_reference/logos/PS.png";
 import capcutLogo from "@/image_reference/logos/capcut.png";
@@ -6,6 +6,7 @@ import illustratorLogo from "@/image_reference/logos/AI.png";
 import metaLogo from "@/image_reference/logos/meta.png";
 import canvaLogo from "@/image_reference/logos/canva.png";
 import { useIsClient } from "@/hooks/useIsClient";
+import { TrafficLights } from "@/components/TrafficLights";
 
 function getIsCompactDevice() {
   const isNarrowViewport = window.matchMedia("(max-width: 767px)").matches;
@@ -49,8 +50,8 @@ const SERVICES: Service[] = [
     icon: "◈",
     tagline: "Scroll-stopping content for real audiences.",
     story: [
-      "I've managed social pages for local businesses, tourism offices, and fashion brands — each with a completely different voice, audience, and goal.",
-      "For Steal & Style, I built a playful, witty brand voice that blends Filipino internet humor with trendy aesthetics. For Masinloc Tourism, I created content that made people actually want to visit.",
+      "I've managed social pages for fashion e-commerce brands, tourism offices, and local businesses — each with a completely different voice, audience, and goal.",
+      "For fashion stores like Oaklynwear, Roselyn Atelier, Lirenne Wear, Bella Monza, and Nova Noir, I run everything — content, ads, branding, and management. I also handle StealandStyle on Instagram, and for Masinloc Tourism I created strategy and content that made people actually want to visit.",
       "I understand the algorithm, but more importantly I understand people. Engagement isn't a metric I chase — it's a result of content that genuinely resonates.",
     ],
     tags: ["Instagram", "Facebook", "Reels", "Community Building", "Brand Voice"],
@@ -92,10 +93,10 @@ const SERVICES: Service[] = [
     tagline: "From idea to execution, start to finish.",
     story: [
       "A campaign without strategy is just noise. I plan launches, promotions, and awareness pushes with a clear narrative arc — what we're saying, who we're saying it to, and why they should care.",
-      "I've run campaigns for local businesses with zero budget that outperformed paid ads, purely through timing, creative, and community leverage.",
+      "I run paid campaigns on both Meta and Google Ads for fashion e-commerce brands — and I've also run zero-budget organic campaigns for local businesses that outperformed paid, purely through timing, creative, and community leverage.",
       "My process: define the goal, reverse-engineer the audience journey, build the content stack, then execute with consistency. No guesswork.",
     ],
-    tags: ["Launch Strategy", "Campaign Planning", "Organic Growth", "Local Marketing"],
+    tags: ["Launch Strategy", "Meta Ads", "Google Ads", "Campaign Planning", "Organic Growth"],
     angle: 26,
     x: 260,
     y: -80,
@@ -301,16 +302,7 @@ function ServiceModal({
       >
         {/* Title bar */}
         <div className="flex h-9 items-center justify-between border-b border-border bg-secondary/60 px-3">
-          <div className="flex items-center gap-1.5">
-            <button
-              onClick={onClose}
-              className="flex h-[11px] w-[11px] items-center justify-center rounded-full transition hover:opacity-80"
-              style={{ background: "var(--traffic-red)" }}
-              aria-label="Close"
-            />
-            <span className="block h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-yellow)" }} />
-            <span className="block h-[11px] w-[11px] rounded-full" style={{ background: "var(--traffic-green)" }} />
-          </div>
+          <TrafficLights onClose={onClose} />
           <span className="text-[11px] tracking-tight text-foreground/60">
             {service.label}.md
           </span>
@@ -410,7 +402,11 @@ function ServicePaper({
       }}
       onMouseEnter={() => open && onHover(index)}
       onMouseLeave={() => open && onLeave()}
-      onClick={() => open && onClick(service)}
+      onClick={(e) => {
+        if (!open) return;
+        e.stopPropagation();
+        onClick(service);
+      }}
     >
       <div
         className="rounded-[10px] border bg-paper transition-all duration-300"
@@ -527,9 +523,11 @@ export function HeroFolder() {
   const [isCompactDevice, setIsCompactDevice] = useState<boolean>(false);
   const [mobileModalOpen, setMobileModalOpen] = useState(false);
   const isClient = useIsClient();
+  const closeTimer = useRef<number | null>(null);
 
   // Guard: only true after client hydration — prevents SSR mismatch
   const isMobile = isClient && isCompactDevice;
+
 
   useEffect(() => {
     const m = () => {
@@ -594,25 +592,39 @@ export function HeroFolder() {
         </div>, document.body)
       }
 
-      {/* Fill parent height entirely */}
-      <div className="relative w-full h-full">
+      {/* Owns the hover state so the fanned-out papers stay open while the
+          cursor travels to them. The stage below is an in-flow, fixed-height
+          box centered in this canvas — because it is NOT absolutely positioned
+          it can never escape the canvas (which sits below the title), so the
+          folder + fan can't overlap the headline at any viewport height. */}
+      <div
+        className="relative w-full h-full flex items-center justify-center"
+        onMouseEnter={() => {
+          if (isMobile) return;
+          if (closeTimer.current) { clearTimeout(closeTimer.current); closeTimer.current = null; }
+          setOpen(true);
+        }}
+        onMouseLeave={() => {
+          if (isMobile) return;
+          // grace period so brief pointer exits don't slam the folder shut
+          closeTimer.current = window.setTimeout(() => {
+            setOpen(false);
+            setHoveredIndex(null);
+          }, 300);
+        }}
+      >
 
         {/* ── Static desktop elements (hidden on small screens) ── */}
         <div className="hidden md:block">{DESKTOP_ELEMENTS.map((el) => (
           <DesktopItem key={el.id} el={el} />
         ))}</div>
 
-        {/* ── Interactive folder zone (block-level, centered) ── */}
+        {/* ── Folder stage — self-contained, fixed height reserves room for the
+            fully-fanned cards. Positioned (relative) so it is the containing
+            block for the absolutely-positioned papers and the folder. ── */}
         <div
-          className="w-full flex items-center justify-center"
-          style={{ width: '90vw', maxWidth: 700, margin: '0 auto' }}
-          onMouseEnter={() => !isMobile && setOpen(true)}
-          onMouseLeave={() => {
-            if (!isMobile) {
-              setOpen(false);
-              setHoveredIndex(null);
-            }
-          }}
+          className="relative"
+          style={{ width: '90vw', maxWidth: 700, height: 460 }}
           onClick={() => {
             if (isMobile) {
               setMobileModalOpen(true);
@@ -621,7 +633,7 @@ export function HeroFolder() {
             }
           }}
         >
-          {/* Papers (desktop only) */}
+          {/* Papers (desktop only) — fan up from bottom:168 within the stage */}
           <div className="hidden md:block">{SERVICES.map((s, i) => (
             <ServicePaper
               key={s.label}
@@ -637,9 +649,9 @@ export function HeroFolder() {
 
           {/* Mobile grid hidden — rely on modal when folder is clicked on mobile */}
 
-          {/* Big folder (visible on all sizes) */}
-          <div className="flex justify-center pb-6 mt-6">
-            <BigFolder open={open} isMobile={isMobile} />
+          {/* Big folder (visible on all sizes) — pinned to the stage bottom */}
+          <div className="absolute inset-x-0 bottom-0 flex justify-center pb-6">
+            <BigFolder open={open} />
           </div>
         </div>
 

@@ -1,0 +1,12 @@
+rules_version = '2';
+
+// Content is public to read (the portfolio site shows it to everyone) but only
+// a signed-in admin (you) may create, edit, or delete it.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{collection}/{docId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+  }
+}

@@ -10,11 +10,15 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VideosRouteImport } from './routes/videos'
+import { Route as SocialsRouteImport } from './routes/socials'
+import { Route as SkimRouteImport } from './routes/skim'
+import { Route as ServicesRouteImport } from './routes/services'
 import { Route as GraphicsRouteImport } from './routes/graphics'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as ClientsRouteImport } from './routes/clients'
 import { Route as CalendarsRouteImport } from './routes/calendars'
 import { Route as AdsRouteImport } from './routes/ads'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WorkIdRouteImport } from './routes/work/$id'
@@ -22,6 +26,21 @@ import { Route as WorkIdRouteImport } from './routes/work/$id'
 const VideosRoute = VideosRouteImport.update({
   id: '/videos',
   path: '/videos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SocialsRoute = SocialsRouteImport.update({
+  id: '/socials',
+  path: '/socials',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SkimRoute = SkimRouteImport.update({
+  id: '/skim',
+  path: '/skim',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesRoute = ServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GraphicsRoute = GraphicsRouteImport.update({
@@ -49,6 +68,11 @@ const AdsRoute = AdsRouteImport.update({
   path: '/ads',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -68,22 +92,30 @@ const WorkIdRoute = WorkIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
   '/ads': typeof AdsRoute
   '/calendars': typeof CalendarsRoute
   '/clients': typeof ClientsRoute
   '/gallery': typeof GalleryRoute
   '/graphics': typeof GraphicsRoute
+  '/services': typeof ServicesRoute
+  '/skim': typeof SkimRoute
+  '/socials': typeof SocialsRoute
   '/videos': typeof VideosRoute
   '/work/$id': typeof WorkIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
   '/ads': typeof AdsRoute
   '/calendars': typeof CalendarsRoute
   '/clients': typeof ClientsRoute
   '/gallery': typeof GalleryRoute
   '/graphics': typeof GraphicsRoute
+  '/services': typeof ServicesRoute
+  '/skim': typeof SkimRoute
+  '/socials': typeof SocialsRoute
   '/videos': typeof VideosRoute
   '/work/$id': typeof WorkIdRoute
 }
@@ -91,11 +123,15 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
   '/ads': typeof AdsRoute
   '/calendars': typeof CalendarsRoute
   '/clients': typeof ClientsRoute
   '/gallery': typeof GalleryRoute
   '/graphics': typeof GraphicsRoute
+  '/services': typeof ServicesRoute
+  '/skim': typeof SkimRoute
+  '/socials': typeof SocialsRoute
   '/videos': typeof VideosRoute
   '/work/$id': typeof WorkIdRoute
 }
@@ -104,33 +140,45 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/admin'
     | '/ads'
     | '/calendars'
     | '/clients'
     | '/gallery'
     | '/graphics'
+    | '/services'
+    | '/skim'
+    | '/socials'
     | '/videos'
     | '/work/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
+    | '/admin'
     | '/ads'
     | '/calendars'
     | '/clients'
     | '/gallery'
     | '/graphics'
+    | '/services'
+    | '/skim'
+    | '/socials'
     | '/videos'
     | '/work/$id'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/admin'
     | '/ads'
     | '/calendars'
     | '/clients'
     | '/gallery'
     | '/graphics'
+    | '/services'
+    | '/skim'
+    | '/socials'
     | '/videos'
     | '/work/$id'
   fileRoutesById: FileRoutesById
@@ -138,11 +186,15 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AdminRoute: typeof AdminRoute
   AdsRoute: typeof AdsRoute
   CalendarsRoute: typeof CalendarsRoute
   ClientsRoute: typeof ClientsRoute
   GalleryRoute: typeof GalleryRoute
   GraphicsRoute: typeof GraphicsRoute
+  ServicesRoute: typeof ServicesRoute
+  SkimRoute: typeof SkimRoute
+  SocialsRoute: typeof SocialsRoute
   VideosRoute: typeof VideosRoute
   WorkIdRoute: typeof WorkIdRoute
 }
@@ -154,6 +206,27 @@ declare module '@tanstack/react-router' {
       path: '/videos'
       fullPath: '/videos'
       preLoaderRoute: typeof VideosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/socials': {
+      id: '/socials'
+      path: '/socials'
+      fullPath: '/socials'
+      preLoaderRoute: typeof SocialsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/skim': {
+      id: '/skim'
+      path: '/skim'
+      fullPath: '/skim'
+      preLoaderRoute: typeof SkimRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services': {
+      id: '/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof ServicesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/graphics': {
@@ -191,6 +264,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -218,11 +298,15 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AdminRoute: AdminRoute,
   AdsRoute: AdsRoute,
   CalendarsRoute: CalendarsRoute,
   ClientsRoute: ClientsRoute,
   GalleryRoute: GalleryRoute,
   GraphicsRoute: GraphicsRoute,
+  ServicesRoute: ServicesRoute,
+  SkimRoute: SkimRoute,
+  SocialsRoute: SocialsRoute,
   VideosRoute: VideosRoute,
   WorkIdRoute: WorkIdRoute,
 }
